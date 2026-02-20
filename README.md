@@ -12,7 +12,7 @@ The primary goal is the recovery and processing of GNSS data (specifically from 
 ## Technical Environment
 * **OS:** Debian (WSL)
 * **Tools:** `gfzrnx`, `convbin`, `gzip`
-* **Language:** Bas
+* **Language:** Bash
 
 ## Contact
 **alex.koloskov@unb.ca** Radio Science and Plasma Laboratory (RSPL)  
