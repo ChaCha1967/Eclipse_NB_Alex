@@ -39,13 +39,6 @@ fi
 OUTFILE="${STATION}00CAN_R_${YEAR}${DOY}${HOUR}"
 
 echo "There were $FILECOUNT files in quarter $QUARTER"
-echo "There were $FILECOUNT files in quarter $QUARTER"
-echo "There were $FILECOUNT files in quarter $QUARTER"
-echo "There were $FILECOUNT files in quarter $QUARTER"
-echo "There were $FILECOUNT files in quarter $QUARTER"
-echo "There were $FILECOUNT files in quarter $QUARTER"
-echo "There were $FILECOUNT files in quarter $QUARTER"
-echo "There were $FILECOUNT files in quarter $QUARTER"
 
 # QUATER 1,2,3
 if [[ "$QUARTER" -lt "4" && "$FILECOUNT" -gt "1" ]]; then
