@@ -15,5 +15,5 @@ The primary goal is the recovery and processing of GNSS data (specifically from 
 * **Language:** Bas
 
 ## Contact
-**alex.koloskoc@unb.ca** Radio Science and Plasma Laboratory (RSPL)  
+**alex.koloskov@unb.ca** Radio Science and Plasma Laboratory (RSPL)  
 University of New Brunswick
