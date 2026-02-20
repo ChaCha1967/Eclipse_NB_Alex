@@ -31,7 +31,7 @@ DOY=`date -u +"%j"`
 HOUR=`date -u +"%H"`
 FILENAMES=`ls -t *."$binEXT"`
 FILECOUNT=`ls *."$binEXT" | wc -w`
-if [ "$QUARTER" -lt "4"]; then
+if [[ "$QUARTER" -lt "4" ]]; then
     WORKFILE=`echo $FILENAMES | cut -f 1 -d " "`
 else
     WORKFILE=`echo $FILENAMES | cut -f 2 -d " "`
