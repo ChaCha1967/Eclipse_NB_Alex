@@ -1,0 +1,11 @@
+# Ignore GNSS data and archives
+*.rnx
+*.crx
+*.gz
+*.ubx
+*.bin
+# Ignore temporary processing folders
+temp_recovery/
+# Ignore Windows-specific metadata
+Thumbs.db
+desktop.ini
