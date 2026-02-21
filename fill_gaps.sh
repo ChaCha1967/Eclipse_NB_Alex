@@ -41,6 +41,7 @@ for file_a in *"${SUFFIX}${EXTENSION}"; do
     else
         mv "$file_a" "$PROC_DIR"
     fi
+	
 done
 
 
