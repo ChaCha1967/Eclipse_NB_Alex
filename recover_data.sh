@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Recovery data by converting bin -> rnx -> crx -> crx.gz after outages or other data acquisition failure
+
 # Configuration for maual input
 rpiUSER="alexk"
 STATION="ANTC"
