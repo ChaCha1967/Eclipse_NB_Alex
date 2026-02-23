@@ -52,7 +52,8 @@ gfzrnx -finp "$TEMP_DIR/*.rnx" \
        -fout "$FINAL_DIR/${STATION}_%Y%j%H%M00_01Sa.rnx::RX3::" \
        -split 900  \
        -f \
-       -vo 3.04 
+       -vo 3.04 \
+       -chk 
 
 # 4. Final cleaning and header fixing AFTER gfzrnx
 echo "Finalizing output RINEX files..."

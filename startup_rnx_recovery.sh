@@ -3,9 +3,10 @@
 # Recovery data by converting bin -> rnx -> crx -> crx.gz after outages or other data acquisition failure
 
 # Configuration for manual input
-rpiUSER="alexk"
-STATION="ANTC"
-binEXT="ubx"
+rpiUSER="alexk" # user name
+STATION="ANTC" # station name
+binEXT="ubx" # bin file extention
+nSEC2keep=32 # if 15 min rinex file conatins less seconds than this value not keep such file
 
 # Prepare Folders structure
 RAW_DIR="/home/$rpiUSER/record"  # Folder with raw data
@@ -83,24 +84,29 @@ for RNX_FILE in "$RAW_DIR"/*.rnx; do
 done
 
 # Step 5: Merge and split into the 15-min grid. and move resulting rnx to $TEMP_DIR
-# Note: Using "$RAW_DIR/*.rnx" to include ALL files in the batch.
+# Note: Using $RAW_DIR/*.rnx to include ALL files in the batch.
 echo "Merging and splitting into 15-min grid..."
 gfzrnx -finp "$RAW_DIR/*.rnx" \
        -fout "$TEMP_DIR/${STATION}_%Y%j%H%M00_01Sa.rnx::RX3::" \
        -split 900  \
        -f \
-       -vo 3.04 >/dev/null 2>&1
+       -vo 3.04 \
+       -chk >/dev/null 2>&1
 
 # echo error if gfzrnx fail
 if [[ $? != 0 ]]; then
 	echo "There was an error with gfzrnx"
 fi
 
-# Step 5. Final cleaning and header fixing AFTER gfzrnx
+# Step 6. Final cleaning and header fixing AFTER gfzrnx in $TEMP_DIR folder
 echo "Finalizing output RINEX files..."
 COUNT=0
-for RNX_FILE in "$FINAL_DIR"/*01S*.rnx; do
+for RNX_FILE in "$TEMP_DIR"/*01S*.rnx; do
     [ -f "$RNX_FILE" ] || continue
+
+    # A. Copy $RNX_FILE (with not final name to avoid overiting) from $TEMP_DIR to $RAW_DIR
+    # for further processing by make_15min_crx.sh if some overlaping data fragments exist
+    cp -f "$RNX_FILE" "$RAW_DIR"
 
     # A. Get the base filename (e.g., 202200XXX_R_20220410045_15M_01S_MO.rnx)
     BASE_NAME=$(basename "$RNX_FILE")
