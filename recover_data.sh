@@ -114,7 +114,8 @@ for RNX_FILE in "$FINAL_DIR"/*01S*.rnx; do
     # remove old crx if exist
     # rm -f "$NEW_FILE_PATHcrx"
     # convert rnx to crx
-    RNX2CRX -d ${NEW_FILE_PATHrnx}
+    # RNX2CRX -d ${NEW_FILE_PATHrnx}
+    RNX2CRX ${NEW_FILE_PATHrnx}
 	if [[ $? != 0 ]]; then
 	    echo "There was an error with RNX2CRX. Move corrupt RNX to archive"
             mv "$NEW_FILE_PATHrnx" "$ARCH_DIR" # move rnx if corrupt to archive 
