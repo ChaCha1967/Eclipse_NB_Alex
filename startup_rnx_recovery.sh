@@ -18,7 +18,7 @@ FINAL_DIR_BIN="/home/$rpiUSER/data_bin" # Folder with processed bin (and corrupt
 #STATION="ANTC"
 
 # Make Folders structure
-mkdir -p "$RAW_DIR"
+if [ ! -d "$RAW_DIR ]; then mkdir -p "$RAW_DIR"
 mkdir -p "$TEMP_DIR"
 mkdir -p "$FINAL_DIR"
 mkdir -p "$FINAL_DIR_BIN"
@@ -94,8 +94,9 @@ gfzrnx -finp "$RAW_DIR/*.rnx" \
        -chk >/dev/null 2>&1
 
 # echo error if gfzrnx fail
-if [[ $? != 0 ]]; then
-	echo "There was an error with gfzrnx"
+rc=$?
+if [[ $rc != 0 ]]; then
+	echo "There was an error with gfzrnx: $rc"
 fi
 
 # Step 6. Final cleaning and header fixing AFTER gfzrnx in $TEMP_DIR folder
