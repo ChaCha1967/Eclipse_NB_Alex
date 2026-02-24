@@ -26,9 +26,6 @@ echo `date -u`
 # First, what quarter of the hour is it.
 QUARTER=$1
 
-# Go to the record directory
-# cd "/home/$rpiUSER/record"
-
 # Get parts of the date and time
 if [[ "$QUARTER" -lt "4" ]]; then
 
@@ -49,19 +46,19 @@ fi
 
 case $QUARTER in
     1) # QUATER 1
-    START_TIME = "${YEAR}-${MONYH}-${DAY}T${HOUR}:00:00"
+    START_TIME="${YEAR}-${MONTH}-${DAY}T${HOUR}:00:00"
     ;;
 
     2) # QUATER 2
-    START_TIME = "${YEAR}-${MONYH}-${DAY}T${HOUR}:15:00"
+    START_TIME="${YEAR}-${MONTH}-${DAY}T${HOUR}:15:00"
     ;;
 
     3) # QUATER 3
-    START_TIME = "${YEAR}-${MONYH}-${DAY}T${HOUR}:30:00"
+    START_TIME="${YEAR}-${MONTH}-${DAY}T${HOUR}:30:00"
     ;;
 
     4) # QUATER 4
-    START_TIME = "${YEAR}-${MONYH}-${DAY}T${HOUR}:45:00"
+    START_TIME="${YEAR}-${MONTH}-${DAY}T${HOUR}:45:00"
     ;;
 
 esac
