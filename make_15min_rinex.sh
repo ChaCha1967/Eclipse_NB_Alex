@@ -207,7 +207,7 @@ echo "Archiving processed bin files..."
 # 1. ls -1t: List files, one per line, newest first
 # 2. tail -n +2: Start the list from the second line (skips the newest)
 # 3. read -r: Safely handle filenames with spaces or special characters
-ls -1t "$RAW_DIR"/*."$binEXT" 2>/dev/null | tail -n +2 | while read -r FILE; do
+ls -1t "$RAW_DIR"/*."$binEXT" 2>/dev/null | tail -n +3 | while read -r FILE; do
     echo "Archiving: $FILE"
     mv -f "$FILE" "$FINAL_DIR_BIN"
 done
