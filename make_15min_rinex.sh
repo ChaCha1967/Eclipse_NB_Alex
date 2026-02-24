@@ -81,19 +81,19 @@ done
 # preapare start time for gfzrnx
 case $QUARTER in
     1) # QUATER 1
-    START_TIME="${YEAR}-${MONTH}-${DAY}T${HOUR}:00:00"
+    START_TIME="${YEAR}${MONTH}${DAY}_${HOUR}0000"
     ;;
 
     2) # QUATER 2
-    START_TIME="${YEAR}-${MONTH}-${DAY}T${HOUR}:15:00"
+    START_TIME="${YEAR}${MONTH}${DAY}_${HOUR}1500"
     ;;
 
     3) # QUATER 3
-    START_TIME="${YEAR}-${MONTH}-${DAY}T${HOUR}:30:00"
+    START_TIME="${YEAR}${MONTH}${DAY}_${HOUR}3000"
     ;;
 
     4) # QUATER 4
-    START_TIME="${YEAR}-${MONTH}-${DAY}T${HOUR}:45:00"
+    START_TIME="${YEAR}${MONTH}${DAY}_${HOUR}4500"
     ;;
 
 esac
@@ -199,7 +199,7 @@ fi
 echo "Remove processed rnx files..."
 rm -f "$RAW_DIR"/*.rnx
 
-# Cleanup temp files
+## Cleanup temp files
 rm -rf "$TEMP_DIR"
 
 # Move processed bin files to archive except updeted by str2str 
@@ -211,4 +211,4 @@ for FILE in $FILES_TO_DELETE
 	mv -f $FILE "$FINAL_DIR_BIN"
     done
 
-echo "15-min *.crx.gz file (contained more than: ${nSEC2KEEP} sec) are cleaned and ready"
+echo "15-min file ${NEW_FILE_NAMEcrxgz} (with more than: ${nSEC2KEEP} 1S EPOCHs) are cleaned and ready"
