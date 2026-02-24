@@ -100,7 +100,6 @@ fi
 
 # Step 6. Final cleaning and header fixing AFTER gfzrnx in $TEMP_DIR folder
 echo "Finalizing output RINEX files..."
-COUNT=0
 for RNX_FILE in "$TEMP_DIR"/*01S*.rnx; do
     [ -f "$RNX_FILE" ] || continue
 
@@ -156,7 +155,7 @@ for RNX_FILE in "$TEMP_DIR"/*01S*.rnx; do
 
     	# Convert to crx
     	# remove old crx if exist
-    	# rm -f "$NEW_FILE_PATHcrx"
+    	rm -f "$NEW_FILE_PATHcrx"
     	# convert rnx to crx
     	RNX2CRX -d ${NEW_FILE_PATHrnx}
 	if [[ $? != 0 ]]; then

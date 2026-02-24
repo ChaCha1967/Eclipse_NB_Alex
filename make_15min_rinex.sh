@@ -149,7 +149,6 @@ else
     		NEW_FILE_NAMEcrxgz="${BASE_FILE_NAME}.crx.gz"
     		NEW_FILE_PATHrnx="$FINAL_DIR/$NEW_FILE_NAMErnx"
     		NEW_FILE_PATHcrx="$FINAL_DIR/$NEW_FILE_NAMEcrx"
-    		#NEW_FILE_PATHcrxgz="$FINAL_DIR/$NEW_FILE_NAMEcrxgz"
 
 		echo "Processing: $BASE_NAME -> $NEW_FILE_NAME"
 
