@@ -204,11 +204,19 @@ rm -rf "$TEMP_DIR"
 
 # Move processed bin files to archive except updeted by str2str 
 echo "Archiving processed bin files..."
-FILENAMES=`ls -t "$RAW_DIR"/*."$binEXT"`
-FILES_TO_DELETE=`echo $FILENAMES | cut --complement -f 1 -d " "`
-for FILE in $FILES_TO_DELETE
-    do
-	mv -f $FILE "$FINAL_DIR_BIN"
-    done
+# 1. ls -1t: List files, one per line, newest first
+# 2. tail -n +2: Start the list from the second line (skips the newest)
+# 3. read -r: Safely handle filenames with spaces or special characters
+ls -1t "$RAW_DIR"/*."$binEXT" 2>/dev/null | tail -n +2 | while read -r FILE; do
+    echo "Archiving: $FILE"
+    mv -f "$FILE" "$FINAL_DIR_BIN"
+done
+
+#FILENAMES=`ls -t "$RAW_DIR"/*."$binEXT"`
+#FILES_TO_DELETE=`echo $FILENAMES | cut --complement -f 1 -d " "`
+#for FILE in $FILES_TO_DELETE
+#    do
+#	mv -f $FILE "$FINAL_DIR_BIN"
+#    done
 
 echo "15-min file ${NEW_FILE_NAMEcrxgz} (with more than: ${nSEC2KEEP} 1S EPOCHs) are cleaned and ready"
