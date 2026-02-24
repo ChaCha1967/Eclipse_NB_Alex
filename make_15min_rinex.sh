@@ -105,7 +105,7 @@ echo "Start time: ${START_TIME}"
 echo "Merging and splitting into 15-min file start time: ${START_TIME}"
 gfzrnx -finp "$RAW_DIR/*.rnx" \
        -fout "$TEMP_DIR/${STATION}_%Y%j%H%M00_01Sa.rnx::RX3::" \
-       -epo_beg "$START_TIME"
+       -epo_beg "$START_TIME" \
        -d 900  \
        -f \
        -vo 3.04 \
@@ -117,5 +117,81 @@ if [[ $? != 0 ]]; then
 
 # preparing output files
 else
-	echo "No errors with gfzrnx"
+
+    for RNX_FILE in "$TEMP_DIR"/*01S*.rnx; do
+    	[ -f "$RNX_FILE" ] || continue
+
+    	# Count the number of epochs (lines starting with '>')
+    	EPOCH_COUNT=$(grep -c "^>" "$RNX_FILE")
+
+        # Check if the count is NOT less than nSEC2KEEP (Count >= nSEC2KEEP)
+        if [ "$EPOCH_COUNT" -ge "$nSEC2KEEP" ]; then
+
+		echo "Processing $RNX_FILE with  $EPOCH_COUNT epochs" 
+
+    		# A. Get the base filename (e.g., 202200XXX_R_20220410045_15M_01S_MO.rnx)
+    		BASE_NAME=$(basename "$RNX_FILE")
+
+    		# DYNAMIC RENAMING
+    		# We take everything from the 10th character onwards and
+    		# prepend your $STATION and "00CAN"
+    		# The 'cut -c 10-' command removes the first 9 characters (the wrong ID)
+    		SUFFIX=$(echo "$BASE_NAME" | cut -c 10-)
+    		NEW_FILE_NAME="${STATION}00CAN${SUFFIX}"
+      		# Extract the part before the last dot
+		BASE_FILE_NAME="${NEW_FILE_NAME%.*}"
+		# Extract the extension (including the dot)
+		EXT_NAME="${NEW_FILE_NAME##*.}"
+
+		# Reconstruct with "a" for first file and without a for all other files
+		NEW_FILE_NAMErnx="${BASE_FILE_NAME}.${EXT_NAME}"
+    		NEW_FILE_NAMEcrx="${BASE_FILE_NAME}.crx"
+    		NEW_FILE_NAMEcrxgz="${BASE_FILE_NAME}.crx.gz"
+    		NEW_FILE_PATHrnx="$FINAL_DIR/$NEW_FILE_NAMErnx"
+    		NEW_FILE_PATHcrx="$FINAL_DIR/$NEW_FILE_NAMEcrx"
+    		#NEW_FILE_PATHcrxgz="$FINAL_DIR/$NEW_FILE_NAMEcrxgz"
+
+		echo "Processing: $BASE_NAME -> $NEW_FILE_NAME"
+
+		echo "Cleaning: $(basename "$RNX_FILE")"
+
+    		# B. Remove trailing whitespace and 'log:' lines potentially re-introduced or left over
+    		sed -i -e 's/[ \t]*$//' -e '/log:/d' "$RNX_FILE"
+
+    		# C. Fix LEAP SECONDS if missing (Important for proper processing in RTKLIB/CHAIN)
+    		#if ! grep -q "LEAP SECONDS" "$RNX_FILE"; then
+    		#    # Inserts the Leap Second line at line 2
+    		#    sed -i '2i \    18                                                      LEAP SECONDS' "$RNX_FILE"
+    		#fi
+
+    		# C. Optional: Ensure end of header is clean (fixes issues with some older RINEX parsers)
+    		# This removes empty lines that might have been trapped at the end of the header
+    		sed -i '/END OF HEADER/s/[[:space:]]*$//' "$RNX_FILE"
+
+    		# D. PERFORM RENAME
+    		mv "$RNX_FILE" "$NEW_FILE_PATHrnx"
+
+    		# Convert to crx
+    		# remove old crx if exist
+    		rm -f "$NEW_FILE_PATHcrx"
+    		# convert rnx to crx
+    		RNX2CRX -d ${NEW_FILE_PATHrnx}
+		if [[ $? != 0 ]]; then
+			echo "There was an error with RNX2CRX. Move corrupt RNX to archive"
+        		mv "$NEW_FILE_PATHrnx" "$FINAL_DIR_BIN" # move rnx if corrupt to archive 
+		fi
+
+    		# gzip crx to crx.gz
+    		gzip -f ${NEW_FILE_PATHcrx}
+        	if [[ $? != 0 ]]; then
+	    		echo "There was an error with gzip crx 2 crx.gz. Move corrupt CRX to archive"
+            		mv "$NEW_FILE_PATHcrx" "$FINAL_DIR_BIN" # move crx if corrupt to archive
+        	fi
+
+        else
+		echo "Skipping $RNX_FILE: Only $EPOCH_COUNT epochs (less than $nSEC2KEEP)" 
+  	fi
+
+    done
+
 fi
