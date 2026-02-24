@@ -194,3 +194,21 @@ else
     done
 
 fi
+
+# Remove processed rnx files 
+echo "Remove processed rnx files..."
+rm -f "$RAW_DIR"/*.rnx
+
+# Cleanup temp files
+rm -rf "$TEMP_DIR"
+
+# Move processed bin files to archive except updeted by str2str 
+echo "Archiving processed bin files..."
+FILENAMES=`ls -t "$RAW_DIR"/*."$binEXT"`
+FILES_TO_DELETE=`echo $FILENAMES | cut --complement -f 1 -d " "`
+for FILE in $FILES_TO_DELETE
+    do
+	mv -f $FILE "$FINAL_DIR_BIN"
+    done
+
+echo "15-min *.crx.gz file (contained more than: ${nSEC2KEEP} sec) are cleaned and ready"
