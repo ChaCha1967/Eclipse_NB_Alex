@@ -71,7 +71,7 @@ for BINFILE in "$RAW_DIR"/*."$binEXT"; do
     # echo error if convbin fail
     if [[ $? != 0 ]]; then
 	echo "There was an error with convbin"
-    else  $ clean rnx files if convbin converted bin files correctly
+    else  # clean rnx files if convbin converted bin files correctly
     	# Clean the rnx file
     	sed -i -e 's/[ \t]*$//' -e '/log:/d' "$TEMP_OUT"
     fi
@@ -117,5 +117,5 @@ if [[ $? != 0 ]]; then
 
 # preparing output files
 else
-
+	echo "No errors with gfzrnx"
 fi
