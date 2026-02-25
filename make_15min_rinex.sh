@@ -1,20 +1,62 @@
-#!/bin/bash
+mkdir -p "$RAW_DIR"mkdir -p "$RAW_DIR"#!/bin/bash
 
 # The script takes the UBX bin recorded data and translates it into a RINEX version 3 file
 
 # Configuration for manual input
-rpiUSER="alexk" # user name
+# rpiUSER="alexk" # user name
 STATION="ANTC" # station name
 binEXT="ubx" # bin file extention
-nSEC2KEEP=452 # if 15 min rinex file conatins less seconds than this value not keep such file
+nSEC2KEEP=32 # if 15 min rinex file conatins less seconds than this value not keep such file
 
-# Prepare Folders structure
-RAW_DIR="/home/$rpiUSER/record"  # Folder with raw data
-TEMP_DIR="/home/$rpiUSER/record/temp_recovery" # Temporary folder for processing
-FINAL_DIR="/home/$rpiUSER/data"  # Folder with output compressed rinex (.crx.gz) 
-FINAL_DIR_BIN="/home/$rpiUSER/data_bin" # Folder with processed bin (and corrupt rnx if any) data. For further remove
+RAW_DIR="$HOME/record" # Temporary folder for processing
+TEMP_DIR="$HOME/record/temp_recovery" # Temporary folder for processing
+FINAL_DIR="$HOME/data"  # Folder with output compressed rinex (.crx.gz) 
+FINAL_DIR_BIN="$HOME/archive" # Folder with processed bin (and corrupt rnx if any) data. For further remove
 
 # Make Folders structure
+# Create if not exist folder with raw data
+if [ ! -d "$RAW_DIR" ]; then
+    mkdir -p "$RAW_DIR" 2>> script.log \
+    	&& echo "[$(date +%T)] Directory ready: $RAW_DIR" >> make_15min_rinex.log \
+	|| {
+		echo "[$(date +%T)] ERROR: Could not create $RAW_DIR" >> make_15min_rinex.log; \
+    		echo "Critical Error 4ZABBIX: Check script.log"; \
+        	exit 1; \
+    	   }
+fi
+# Temporary folder for processing
+if [ ! -d "$TEMP_DIR" ]; then
+    mkdir -p "$TEMP_DIR" 2>> script.log \
+    	&& echo "[$(date +%T)] Directory ready: $TEMP_DIR" >> make_15min_rinex.log \
+	|| {
+		echo "[$(date +%T)] ERROR: Could not create $TEMP_DIR" >> make_15min_rinex.log; \
+    		echo "Critical Error 4ZABBIX: Check script.log"; \
+        	exit 1; \
+    	   }
+fi
+# Folder with output compressed rinex (.crx.gz)
+if [ ! -d "$FINAL_DIR" ]; then
+    mkdir -p "$FINAL_DIR" 2>> script.log \
+    	&& echo "[$(date +%T)] Directory ready: $FINAL_DIR" >> make_15min_rinex.log \
+	|| {
+		echo "[$(date +%T)] ERROR: Could not create $FINAL_DIR" >> make_15min_rinex.log; \
+    		echo "Critical Error 4ZABBIX: Check script.log"; \
+        	exit 1; \
+    	   }
+fi
+# Folder with processed bin (and corrupt rnx if any) data. For further remove
+if [ ! -d "$FINAL_DIR_BIN" ]; then
+    mkdir -p "$FINAL_DIR_BIN" 2>> script.log \
+    	&& echo "[$(date +%T)] Directory ready: $FINAL_DIR_BIN" >> make_15min_rinex.log \
+	|| {
+		echo "[$(date +%T)] ERROR: Could not create $FINAL_DIR_BIN" >> make_15min_rinex.log; \
+    		echo "Critical Error 4ZABBIX: Check script.log"; \
+        	exit 1; \
+    	   }
+fi
+
+
+
 mkdir -p "$RAW_DIR"
 mkdir -p "$TEMP_DIR"
 mkdir -p "$FINAL_DIR"
