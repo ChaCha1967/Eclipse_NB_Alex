@@ -125,8 +125,10 @@ else
 	MINUTE=$(echo "$FIRST_EPOCH" | awk '{print $6}')
 	SECOND=$(echo "$FIRST_EPOCH" | awk '{print $7}' | cut -d'.' -f1) # Removes decimals
 
-        # Check if the count is NOT less than nSEC2KEEP (Count >= nSEC2KEEP)
-	if [[ "$EPOCH_COUNT" -ge "$nSEC2KEEP" ]] && ! ( [[ "$MINUTE" -eq 59 ]] && [[ "$SECOND" -eq 30 ]] && [[ "$EPOCH_COUNT" -le 31 ]] ); then
+        # Check if the count is NOT less than nSEC2KEEP (Count >= nSEC2KEEP) and  not first or last 30 sec file
+	if [[ "$EPOCH_COUNT" -ge "$nSEC2KEEP" ]] && \
+   	! ( ( [[ 10#$MINUTE -eq 59 ]] && [[ 10#$SECOND -eq 30 ]] && [[ $EPOCH_COUNT -le 31 ]] ) || \
+       	  ( [[ 10#$MINUTE -eq 0 ]] && [[ 10#$SECOND -eq 30 ]] && [[ $EPOCH_COUNT -le 31 ]] ) ); then
 
 		echo "Processing $RNX_FILE with  $EPOCH_COUNT epochs" >> startup_rnx_recovery.log
 
