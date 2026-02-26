@@ -4,6 +4,7 @@
 *.gz
 *.ubx
 *.bin
+*.log
 # Ignore temporary processing folders
 temp_recovery/
 # Ignore Windows-specific metadata
