@@ -13,8 +13,12 @@ notify_zabbix() {
 
     # Map levels to Zabbix status or severity
     # We send the level as a value to a specific 'trapper' item
-    zabbix_sender -z "$ZABBIX_SERVER" -s "$HOSTNAME" -k "station.status.level" -o "$LEVEL"
-    zabbix_sender -z "$ZABBIX_SERVER" -s "$HOSTNAME" -k "station.status.msg" -o "$MSG"
+#    zabbix_sender -z "$ZABBIX_SERVER" -s "$HOSTNAME" -k "station.status.level" -o "$LEVEL"
+#    zabbix_sender -z "$ZABBIX_SERVER" -s "$HOSTNAME" -k "station.status.msg" -o "$MSG"
+
+# just for testing
+echo "Level = $LEVEL message = $MSG"
+
 }
 
 ## "Import" the functions
