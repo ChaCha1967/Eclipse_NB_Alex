@@ -2,6 +2,9 @@
 
 # The script takes the UBX bin recorded data and translates it into a RINEX version 3 file
 
+# "Import" the functions
+source "$HOME/repo_debian/Eclipse_NB_Alex/tools.sh"
+
 # Configuration for manual input
 # rpiUSER="alexk" # user name
 STATION="ANTC" # station name
@@ -20,8 +23,8 @@ if [ ! -d "$RAW_DIR" ]; then
     	&& echo "[$(date +%T)] Directory ready: $RAW_DIR" >> make_15min_rinex.log \
 	|| {
 		echo "[$(date +%T)] ERROR: $? Could not create $RAW_DIR" >> make_15min_rinex.log; \ 
-    		echo "Critical Error 4ZABBIX: Check make_15min_rinex.log"; \
-        	exit 1; \
+                notify_zabbix 1 "[$(date +%T)] make_15min_rinex.sh ERROR: Can not create $RAW_DIR"
+         	exit 1; \
     	   }
 fi
 # Temporary folder for processing
@@ -30,7 +33,7 @@ if [ ! -d "$TEMP_DIR" ]; then
     	&& echo "[$(date +%T)] Directory ready: $TEMP_DIR" >> make_15min_rinex.log \
 	|| {
 		echo "[$(date +%T)] ERROR: $? Could not create $TEMP_DIR" >> make_15min_rinex.log; \
-    		echo "Critical Error 4ZABBIX: Check make_15min_rinex.log"; \
+                notify_zabbix 1 "[$(date +%T)] make_15min_rinex.sh ERROR: Can not create $TEMP_DIR"
         	exit 1; \
     	   }
 fi
@@ -40,7 +43,7 @@ if [ ! -d "$FINAL_DIR" ]; then
     	&& echo "[$(date +%T)] Directory ready: $FINAL_DIR" >> make_15min_rinex.log \
 	|| {
 		echo "[$(date +%T)] ERROR: $? Could not create $FINAL_DIR" >> make_15min_rinex.log; \
-    		echo "Critical Error 4ZABBIX: Check make_15min_rinex.log"; \
+                notify_zabbix 1 "[$(date +%T)] make_15min_rinex.sh ERROR: Can not create $FINAL_DIR"
         	exit 1; \
     	   }
 fi
@@ -50,7 +53,7 @@ if [ ! -d "$FINAL_DIR_BIN" ]; then
     	&& echo "[$(date +%T)] Directory ready: $FINAL_DIR_BIN" >> make_15min_rinex.log \
 	|| {
 		echo "[$(date +%T)] ERROR: $? Could not create $FINAL_DIR_BIN" >> make_15min_rinex.log; \
-    		echo "Critical Error 4ZABBIX: Check make_15min_rinex.log"; \
+                notify_zabbix 1 "[$(date +%T)] make_15min_rinex.sh ERROR: Can not create $FINAL_DIR_BIN"
         	exit 1; \
     	   }
 fi
@@ -101,12 +104,12 @@ for BINFILE in "$RAW_DIR"/*."$binEXT"; do
     # echo error if convbin fail
     if [ $? != 0 ]; then
 	echo "[$(date +%T)] WARNING: $? Could not convert $BINFILE to rnx" >> make_15min_rinex.log 
-  	echo "Warning 4ZABBIX: Check make_15min_rinex.log" 
+        notify_zabbix 2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? convbin can not convert $BINFILE to rnx"
 	echo "There was an error with convbin. Move corrupt $NEW_FILE_NAMErnx to archive folder" >> make_15min_rinex.log
      	mv -f "$BINFILE" "$FINAL_DIR_BIN" # move bin if corrupt to archive folder
 		if [ $? != 0 ]; then
 				echo "[$(date +%T)] Can not move corrupt $BINFILE to archive folder" >> make_15min_rinex.log
-  				echo "Warning 4ZABBIX: Check make_15min_rinex.log"; \
+                		notify_zabbix 2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? Can not not move corrupt $BINFILE to archive folder"
 		fi
     fi
 
@@ -144,12 +147,12 @@ gfzrnx -finp "$RAW_DIR/*.rnx" \
 # echo error if gfzrnx fail
 if [ $? != 0 ]; then
 	echo "[$(date +%T)] WARNING: $? gfzrnx could not merge rnx files" >> make_15min_rinex.log 
-  	echo "Warning 4ZABBIX: Check make_15min_rinex.log"
+        notify_zabbix 2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? gfzrnx can not make grid of rnx files"
 	echo "There was an error with gfzrnx. Move corrupt rnx files to archive folder" >> make_15min_rinex.log
      	mv -f "$RAW_DIR/*.rnx" "$FINAL_DIR_BIN" # move rnx ailes if corrupt to archive folder
 		if [ $? != 0 ]; then
 				echo "[$(date +%T)] Can not move corrupt rnx files to archive folder" >> make_15min_rinex.log
-  				echo "Warning 4ZABBIX: Check make_15min_rinex.log" 
+        			notify_zabbix 2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? Can not move rnx files to archive folder"
 		fi
 
 # preparing output files
@@ -195,12 +198,12 @@ else
 		if [ $? != 0 ]; then
 			echo "There was an error: $? with RNX2CRC"
 			echo "[$(date +%T)] WARNING: RNX2CRC could not convert $NEW_FILE_NAMErnx to RNX" >> make_15min_rinex.log 
-  			echo "Warning 4ZABBIX: Check make_15min_rinex.log"; 
+		        notify_zabbix 2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? RNX2CRX can not convert $NEW_FILE_NAMErnx to crx"
 			echo "There was an error with RNX2CRX. Move corrupt $NEW_FILE_NAMErnx to archive folder" >> make_15min_rinex.log
         		mv -f "$NEW_FILE_PATHrnx" "$FINAL_DIR_BIN" # move rnx if corrupt to arcchive folder
 			if [ $? != 0 ]; then
 				echo "[$(date +%T)] Can not move corrupt $NEW_FILE_NAMErnx to archive folder" >> make_15min_rinex.log
-  				echo "Warning 4ZABBIX: Check make_15min_rinex.log"; \
+			        notify_zabbix 2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? Can not convert moce $NEW_FILE_NAMErnx to archive folder"
 			fi
 		else
 
@@ -209,13 +212,15 @@ else
         		if [ $? != 0 ]; then
 	    			echo "There was an error with gzip. Move corrupt $NEW_FILE_NAMEcrx to archive folder" >> make_15min_rinex.log
 				echo "[$(date +%T)] WARNING: gzip could not process $NEW_FILE_NAMEcrx" >> make_15min_rinex.log 
-  				echo "Warning 4ZABBIX: Check make_15min_rinex.log"; 
+			        notify_zabbix 2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? Can not move corrupt $NEW_FILE_NAMEcrx to archive folder"
 				echo "There was an error with gzip. Move $NEW_FILE_NAMEcrx to archive folder" >> make_15min_rinex.log
             			mv -f "$NEW_FILE_PATHcrx" "$FINAL_DIR_BIN" # move crx if corrupt to archive
 				if [ $? != 0 ]; then
 					echo "[$(date +%T)] Can not move corrupt $NEW_FILE_NAMEcrx to archive folder" >> make_15min_rinex.log
-  					echo "Warning 4ZABBIX: Check make_15min_rinex.log"; \
+					notify_zabbix 2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? Can not move $NEW_FILE_NAMEcrx to archive folder"
 				fi
+        		else
+				notify_zabbix 0 "[$(date +%T)] make_15min_rinex.sh CANCELATION: script finished smootly"
         		fi
 		fi
 
@@ -233,7 +238,7 @@ echo "Remove processed rnx files" >> make_15min_rinex.log
 rm -f "$RAW_DIR"/*.rnx
 if [ $? != 0 ]; then
 	echo "[$(date +%T)] Warning: $? Can not remove processed rnx files" >> make_15min_rinex.log
-  	echo "Warning 4ZABBIX: Check make_15min_rinex.log"
+        notify_zabbix 2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? Can not remove rocessed rnx files"
 fi
 
 ## Cleanup temp files
@@ -241,7 +246,7 @@ echo "Remove temporary $TEMP_DIR folder" >> make_15min_rinex.log
 rm -rf "$TEMP_DIR"
 if [ $? != 0 ]; then
 	echo "[$(date +%T)] Warning: $? Can not remove temporary $TEMP_DIR folder" >> make_15min_rinex.log
-  	echo "Warning 4ZABBIX: Check make_15min_rinex.log"
+        notify_zabbix 2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? Can not remove $TEMP_DIR folder"
 fi
 
 # Move bin files if not opened by str2str
@@ -251,7 +256,7 @@ for BINFILE in "$RAW_DIR"/*."$binEXT"; do
 		mv -f "$BINFILE" "$FINAL_DIR_BIN" # move processed bin file to archive folder
 		if [ $? != 0 ]; then
 			echo "[$(date +%T)] Warning: $? Can not move processed $BINFILE to archive folder" >> make_15min_rinex.log
-  			echo "Warning 4ZABBIX: Check make_15min_rinex.log"
+	        	notify_zabbix 2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? Can not move processed  $BINFILE to archive folder"
 		fi
 	fi
 done

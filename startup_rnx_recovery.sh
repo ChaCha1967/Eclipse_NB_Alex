@@ -2,6 +2,9 @@
 
 # Recovery data by converting bin -> rnx -> crx -> crx.gz after outages or other data acquisition failure
 
+# "Import" the functions
+source "$HOME/repo_debian/Eclipse_NB_Alex/tools.sh"
+
 # Configuration for manual input
 # rpiUSER="alexk" # user name
 STATION="ANTC" # station name
@@ -20,7 +23,7 @@ if [ ! -d "$RAW_DIR" ]; then
     	&& echo "[$(date +%T)] Directory ready: $RAW_DIR" >> startup_rnx_recovery.log \
 	|| {
 		echo "[$(date +%T)] ERROR: $? Could not create $RAW_DIR" >> startup_rnx_recovery.log; \ 
-    		echo "Critical Error 4ZABBIX: Check startup_rnx_recovery.log"; \
+                notify_zabbix 1 "[$(date +%T)] startup_rnx.sh ERROR: Can not create $RAW_DIR"
         	exit 1; \
     	   }
 fi
@@ -30,8 +33,8 @@ if [ ! -d "$TEMP_DIR" ]; then
     	&& echo "[$(date +%T)] Directory ready: $TEMP_DIR" >> startup_rnx_recovery.log \
 	|| {
 		echo "[$(date +%T)] ERROR: $? Could not create $TEMP_DIR" >> startup_rnx_recovery.log; \
-    		echo "Critical Error 4ZABBIX: Check startup_rnx_recovery.log"; \
-        	exit 1; \
+                notify_zabbix 1 "[$(date +%T)] startup_rnx.sh ERROR: Can not create $TEMP_DIR"
+         	exit 1; \
     	   }
 fi
 # Folder with output compressed rinex (.crx.gz)
@@ -40,8 +43,8 @@ if [ ! -d "$FINAL_DIR" ]; then
     	&& echo "[$(date +%T)] Directory ready: $FINAL_DIR" >> startup_rnx_recovery.log \
 	|| {
 		echo "[$(date +%T)] ERROR: $? Could not create $FINAL_DIR" >> startup_rnx_recovery.log; \
-    		echo "Critical Error 4ZABBIX: Check startup_rnx_recovery.log"; \
-        	exit 1; \
+                notify_zabbix 1 "[$(date +%T)] startup_rnx.sh ERROR: Can not create $FINAL_DIR"
+         	exit 1; \
     	   }
 fi
 # Folder with processed bin (and corrupt rnx if any) data. For further remove
@@ -50,8 +53,8 @@ if [ ! -d "$FINAL_DIR_BIN" ]; then
     	&& echo "[$(date +%T)] Directory ready: $FINAL_DIR_BIN" >> startup_rnx_recovery.log \
 	|| {
 		echo "[$(date +%T)] ERROR: $? Could not create $FINAL_DIR_BIN" >> startup_rnx_recovery.log; \
-    		echo "Critical Error 4ZABBIX: Check startup_rnx_recovery.log"; \
-        	exit 1; \
+                notify_zabbix 1 "[$(date +%T)] startup_rnx.sh ERROR: Can not create $FINAL_DIR_BIN"
+         	exit 1; \
     	   }
 fi
 
@@ -74,13 +77,13 @@ for BINFILE in "$RAW_DIR"/*."$binEXT"; do
     # echo error if convbin fail
     if [ $? != 0 ]; then
 	echo "[$(date +%T)] WARNING: $? Could not convert $BINFILE to rnx" >> startup_rnx_recovery.log 
-  	echo "Warning 4ZABBIX: Check startup_rnx_recovery.log" 
-	echo "There was an error with convbin. Move corrupt $NEW_FILE_NAMErnx to archive folder" >> startup_rnx_recovery.log
+        notify_zabbix 2 "[$(date +%T)] startup_rnx.sh WARNING: $? convbin can not convert $BINFILE to rnx"
+ 	echo "There was an error with convbin. Move corrupt $NEW_FILE_NAMErnx to archive folder" >> startup_rnx_recovery.log
      	mv -f "$BINFILE" "$FINAL_DIR_BIN" # move bin if corrupt to archive folder
 		if [ $? != 0 ]; then
 				echo "[$(date +%T)] Can not move corrupt $BINFILE to archive folder" >> startup_rnx_recovery.log
-  				echo "Warning 4ZABBIX: Check startup_rnx_recovery.log"; \
-		fi
+                		notify_zabbix 2 "[$(date +%T)] startup_rnx.sh WARNING: $? Can not not move corrupt $BINFILE to archive folder"
+ 		fi
     fi
 
 done
@@ -98,12 +101,12 @@ gfzrnx -finp "$RAW_DIR/*.rnx" \
 # echo error if gfzrnx fail
 if [ $? != 0 ]; then
 	echo "[$(date +%T)] WARNING: $? gfzrnx could not make grid of rnx files" >> startup_rnx_recovery.log 
-  	echo "Warning 4ZABBIX: Check startup_rnx_recovery.log"
-	echo "There was an error with gfzrnx. Move corrupt rnx files to archive folder" >> startup_rnx_recovery.log
+        notify_zabbix 2 "[$(date +%T)] startup_rnx.sh WARNING: $? gfzrnx can not make grid of rnx files"
+ 	echo "There was an error with gfzrnx. Move corrupt rnx files to archive folder" >> startup_rnx_recovery.log
      	mv -f "$RAW_DIR/*.rnx" "$FINAL_DIR_BIN" # move rnx ailes if corrupt to archive folder
 		if [ $? != 0 ]; then
 				echo "[$(date +%T)] Can not move corrupt rnx files to archive folder" >> startup_rnx_recovery.log
-  				echo "Warning 4ZABBIX: Check startup_rnx_recovery.log" 
+        			notify_zabbix 2 "[$(date +%T)] startup_rnx.sh WARNING: $? Can not move rnx files to archive folder"
 		fi
 
 # preparing output files
@@ -125,10 +128,9 @@ else
 	MINUTE=$(echo "$FIRST_EPOCH" | awk '{print $6}')
 	SECOND=$(echo "$FIRST_EPOCH" | awk '{print $7}' | cut -d'.' -f1) # Removes decimals
 
-        # Check if the count is NOT less than nSEC2KEEP (Count >= nSEC2KEEP) and  not first or last 30 sec file
-	if [[ "$EPOCH_COUNT" -ge "$nSEC2KEEP" ]] && \
-   	! ( ( [[ 10#$MINUTE -eq 59 ]] && [[ 10#$SECOND -eq 30 ]] && [[ $EPOCH_COUNT -le 31 ]] ) || \
-       	  ( [[ 10#$MINUTE -eq 0 ]] && [[ 10#$SECOND -eq 30 ]] && [[ $EPOCH_COUNT -le 31 ]] ) ); then
+        if [[ "$EPOCH_COUNT" -ge "$nSEC2KEEP" ]] && \
+        ! ( ( [[ 10#$MINUTE -eq 59 ]] &&  [[ $EPOCH_COUNT -le 31 ]] ) || \
+          ( [[ 10#$MINUTE -eq 0 ]] && [[ $EPOCH_COUNT -le 31 ]] ) ); then
 
 		echo "Processing $RNX_FILE with  $EPOCH_COUNT epochs" >> startup_rnx_recovery.log
 
@@ -160,13 +162,13 @@ else
     		RNX2CRX -d ${NEW_FILE_PATHrnx}
 		if [ $? != 0 ]; then
 			echo "There was an error: $? with RNX2CRC"
-			echo "[$(date +%T)] WARNING: RNX2CRC could not convert $NEW_FILE_NAMErnx to RNX" >> startup_rnx_recovery.log 
-  			echo "Warning 4ZABBIX: Check startup_rnx_recovery.log"; 
+			echo "[$(date +%T)] WARNING: RNX2CRC could not convert $NEW_FILE_NAMErnx to CRX" >> startup_rnx_recovery.log 
+		        notify_zabbix 2 "[$(date +%T)] startup_rnx.sh WARNING: $? RNX2CRX can not convert $NEW_FILE_NAMErnx to crx"
 			echo "There was an error with RNX2CRX. Move corrupt $NEW_FILE_NAMErnx to archive folder" >> startup_rnx_recovery.log
         		mv -f "$NEW_FILE_PATHrnx" "$FINAL_DIR_BIN" # move rnx if corrupt to arcchive folder
 			if [ $? != 0 ]; then
 				echo "[$(date +%T)] Can not move corrupt $NEW_FILE_NAMErnx to archive folder" >> startup_rnx_recovery.log
-  				echo "Warning 4ZABBIX: Check startup_rnx_recovery.log"; \
+			        notify_zabbix 2 "[$(date +%T)] startup_rnx.sh WARNING: $? Can not convert moce $NEW_FILE_NAMErnx to archive folder"
 			fi
 		else
 
@@ -175,13 +177,15 @@ else
         		if [ $? != 0 ]; then
 	    			echo "There was an error with gzip. Move corrupt $NEW_FILE_NAMEcrx to archive folder" >> startup_rnx_recovery.log
 				echo "[$(date +%T)] WARNING: gzip could not process $NEW_FILE_NAMEcrx" >> startup_rnx_recovery.log 
-  				echo "Warning 4ZABBIX: Check startup_rnx_recovery.log"; 
+			        notify_zabbix 2 "[$(date +%T)] startup_rnx.sh WARNING: $? Can not move corrupt $NEW_FILE_NAMEcrx to archive folder"
 				echo "There was an error with gzip. Move $NEW_FILE_NAMEcrx to archive folder" >> startup_rnx_recovery.log
             			mv -f "$NEW_FILE_PATHcrx" "$FINAL_DIR_BIN" # move crx if corrupt to archive
 				if [ $? != 0 ]; then
 					echo "[$(date +%T)] Can not move corrupt $NEW_FILE_NAMEcrx to archive folder" >> startup_rnx_recovery.log
-  					echo "Warning 4ZABBIX: Check startup_rnx_recovery.log"; \
+					notify_zabbix 2 "[$(date +%T)] startup_rnx.sh WARNING: $? Can not move $NEW_FILE_NAMEcrx to archive folder"
 				fi
+			else
+        		notify_zabbix 0 "[$(date +%T)] startup_rnx.sh CANCELATION: script finished smootly"
         		fi
 		fi
 
@@ -198,7 +202,7 @@ echo "Remove temporary $TEMP_DIR folder" >> startup_rnx_recovery.log
 rm -rf "$TEMP_DIR"
 if [ $? != 0 ]; then
 	echo "[$(date +%T)] Warning: $? Can not remove temporary $TEMP_DIR folder" >> startup_rnx_recovery.log
-  	echo "Warning 4ZABBIX: Check startup_rnx_recovery.log"
+        notify_zabbix 2 "[$(date +%T)] startup_rnx.sh WARNING: $? Can not remove $TEMP_DIR folder"
 fi
 
 # Move bin files if not opened by str2str
@@ -208,7 +212,8 @@ for BINFILE in "$RAW_DIR"/*."$binEXT"; do
 	if [ $? != 0 ]; then
 		echo "[$(date +%T)] Warning: $? Can not move processed $BINFILE to archive folder" >> startup_rnx_recovery.log
 		echo "Warning 4ZABBIX: Check startup_rnx_recovery.log"
+        	notify_zabbix 2 "[$(date +%T)] startup_rnx.sh WARNING: $? Can not move processed  $BINFILE to archive folder"
 	fi
 done
 
-echo "satartup processing of files in $RAW_DIR folder are finished" >> startup_rnx_recovery.log
+echo "startup processing of files in $RAW_DIR folder are finished" >> startup_rnx_recovery.log

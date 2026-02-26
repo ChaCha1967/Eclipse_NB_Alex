@@ -1,0 +1,725 @@
+[00:02:37] Directory ready: /home/alexk/record/temp_recovery
+[00:02:37] Directory ready: /home/alexk/data
+[00:02:37] Directory ready: /home/alexk/archive
+[00:02:37] Runing convbin to convert /home/alexk/record/20220210_000000.ubx to rnx
+[00:02:37] Runing convbin to convert /home/alexk/record/20220210_010000.ubx to rnx
+
+DATE/TIME           | C | EPOCH / FILE            | SITE | T | MESSAGE
+--------------------+---+-------------------------+------+---+-----------------------------------------------------------...
+2026-02-26 00:02:38 | N | 0000-00-00 00:00:00.000 | XXXX | O | SPLICE OF (2 files) 20220210_000000.rnx 20220210_0 ...
+2026-02-26 00:02:38 | W | 0000-00-00 00:00:00.000 | XXXX | O | file duration -> unsupported file name >20220210_000000.rnx<
+2026-02-26 00:02:38 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing receiver type ><
+2026-02-26 00:02:38 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing antenna type ><
+2026-02-26 00:02:38 | W | 0000-00-00 00:00:00.000 | XXXX | O | file duration -> unsupported file name >20220210_010000.rnx<
+2026-02-26 00:02:38 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing receiver type ><
+2026-02-26 00:02:38 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing antenna type ><
+2026-02-26 00:02:38 | W | 0000-00-00 00:00:00.000 | XXXX | O | file duration -> unsupported file name >20220210_000000.rnx<
+2026-02-26 00:02:38 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing receiver type ><
+2026-02-26 00:02:38 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing antenna type ><
+2026-02-26 00:02:38 | W | 2022-02-09 23:59:29.999 | ANTC | O | format error (dot-check) for prn G21 (length 128 / 8 values)
+2026-02-26 00:02:38 | W | 2022-02-09 23:59:29.999 | ANTC | O | format error (dot-check) for prn R03 (length 128 / 8 values)
+2026-02-26 00:02:38 | W | 2022-02-09 23:59:29.999 | ANTC | O | format error (dot-check) for prn R19 (length 128 / 8 values)
+2026-02-26 00:02:38 | W | 2022-02-09 23:59:29.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:38 | W | 2022-02-09 23:59:29.999 | ANTC | O | mismatch of number of satellites(34) and records got(30) 2022-02-09 23:59:29.9990000 !
+2026-02-26 00:02:38 | W | 2022-02-09 23:59:51.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:38 | W | 2022-02-09 23:59:51.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-09 23:59:51.9990000 !
+2026-02-26 00:02:38 | W | 2022-02-10 00:03:07.999 | ANTC | O | format error (dot-check) for prn R01 (length 128 / 8 values)
+2026-02-26 00:02:38 | W | 2022-02-10 00:03:07.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:03:07.9990000 !
+2026-02-26 00:02:38 | W | 2022-02-10 00:03:31.999 | ANTC | O | format error (dot-check) for prn R01 (length 128 / 8 values)
+2026-02-26 00:02:38 | W | 2022-02-10 00:03:31.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:03:31.9990000 !
+2026-02-26 00:02:38 | W | 2022-02-10 00:04:38.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:38 | W | 2022-02-10 00:04:38.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:04:38.9990000 !
+2026-02-26 00:02:38 | W | 2022-02-10 00:05:41.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:38 | W | 2022-02-10 00:05:41.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:05:41.9990000 !
+2026-02-26 00:02:38 | W | 2022-02-10 00:07:14.999 | ANTC | O | format error (dot-check) for prn R03 (length 128 / 8 values)
+2026-02-26 00:02:38 | W | 2022-02-10 00:07:14.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:07:14.9990000 !
+2026-02-26 00:02:38 | W | 2022-02-10 00:07:42.999 | ANTC | O | format error (dot-check) for prn R01 (length 128 / 8 values)
+2026-02-26 00:02:38 | W | 2022-02-10 00:07:42.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:07:42.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:10:01.999 | ANTC | O | format error (dot-check) for prn R01 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:10:01.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:10:01.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:10:23.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:10:23.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:10:23.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:11:12.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:11:12.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:11:12.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:12:02.999 | ANTC | O | format error (dot-check) for prn R01 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:12:02.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:12:02.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:12:27.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:12:27.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:12:27.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:12:37.999 | ANTC | O | format error (dot-check) for prn R01 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:12:37.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:12:37.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:12:42.999 | ANTC | O | format error (dot-check) for prn R10 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:12:42.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:12:42.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:13:18.999 | ANTC | O | format error (dot-check) for prn R15 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:13:18.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:13:18.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:15:08.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:15:08.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:15:08.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:15:24.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:15:24.999 | ANTC | O | mismatch of number of satellites(33) and records got(32) 2022-02-10 00:15:24.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:16:49.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:16:49.999 | ANTC | O | mismatch of number of satellites(33) and records got(32) 2022-02-10 00:16:49.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:17:54.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:17:54.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:17:54.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:20:20.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:20:20.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:20:20.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:20:38.999 | ANTC | O | format error (dot-check) for prn R03 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:20:38.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:20:38.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:21:33.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:21:33.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:21:33.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:23:59.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:23:59.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:23:59.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:25:13.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:25:13.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:25:13.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:25:19.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:25:19.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:25:19.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:26:16.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:26:16.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:26:16.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:27:00.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:27:00.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:27:00.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:28:36.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:28:36.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:28:36.9990000 !
+2026-02-26 00:02:39 | W | 2022-02-10 00:29:03.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:39 | W | 2022-02-10 00:29:03.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:29:03.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:32:05.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:32:05.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:32:05.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:32:59.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:32:59.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:32:59.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:33:15.999 | ANTC | O | format error (dot-check) for prn R10 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:33:15.999 | ANTC | O | mismatch of number of satellites(33) and records got(32) 2022-02-10 00:33:15.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:34:58.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:34:58.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:34:58.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:34:59.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:34:59.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:34:59.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:35:45.999 | ANTC | O | format error (dot-check) for prn C14 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:35:45.999 | ANTC | O | mismatch of number of satellites(33) and records got(32) 2022-02-10 00:35:45.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:36:00.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:36:00.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:36:00.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:36:49.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:36:49.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:36:49.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:37:12.999 | ANTC | O | format error (dot-check) for prn C14 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:37:12.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:37:12.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:37:37.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:37:37.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:37:37.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:38:03.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:38:03.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:38:03.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:38:12.999 | ANTC | O | format error (dot-check) for prn G11 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:38:12.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:38:12.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:40:16.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:40:16.999 | ANTC | O | mismatch of number of satellites(36) and records got(35) 2022-02-10 00:40:16.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:41:50.999 | ANTC | O | format error (dot-check) for prn G12 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:41:50.999 | ANTC | O | mismatch of number of satellites(36) and records got(35) 2022-02-10 00:41:50.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:42:07.999 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:42:07.999 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:42:07.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:42:36.999 | ANTC | O | format error (dot-check) for prn G02 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:42:36.999 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:42:36.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:42:50.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:42:50.999 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:42:50.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:43:36.999 | ANTC | O | format error (dot-check) for prn C14 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:43:36.999 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 00:43:36.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:44:12.999 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:44:12.999 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:44:12.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:44:41.999 | ANTC | O | format error (dot-check) for prn G12 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:44:41.999 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 00:44:41.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:47:02.999 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:47:02.999 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:47:02.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:48:05.999 | ANTC | O | format error (dot-check) for prn G02 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:48:05.999 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:48:05.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:48:41.999 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:48:41.999 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:48:41.9990000 !
+2026-02-26 00:02:40 | W | 2022-02-10 00:52:43.000 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 00:02:40 | W | 2022-02-10 00:52:43.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:52:43.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 00:53:37.000 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 00:53:37.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:53:37.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 00:56:16.000 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 00:56:16.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 00:56:16.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 00:56:27.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 00:56:27.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 00:56:27.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 00:57:14.000 | ANTC | O | format error (dot-check) for prn C22 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 00:57:14.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 00:57:14.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 00:58:29.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 00:58:29.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 00:58:29.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 00:58:55.000 | ANTC | O | format error (dot-check) for prn R04 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 00:58:55.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 00:58:55.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 00:59:55.000 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 00:59:55.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:59:55.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 01:00:25.000 | ANTC | O | format error (dot-check) for prn C09 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 01:00:25.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:00:25.0000000 !
+2026-02-26 00:02:38 | W | 0000-00-00 00:00:00.000 | XXXX | O | file duration -> unsupported file name >20220210_010000.rnx<
+2026-02-26 00:02:38 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing receiver type ><
+2026-02-26 00:02:38 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing antenna type ><
+2026-02-26 00:02:41 | W | 2022-02-10 01:00:32.000 | ANTC | O | format error (dot-check) for prn C09 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 01:00:32.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:00:32.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 01:02:00.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 01:02:00.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:02:00.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 01:02:22.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 01:02:22.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:02:22.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 01:02:37.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 01:02:37.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:02:37.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 01:03:21.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 01:03:21.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:03:21.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 01:04:30.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 01:04:30.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:04:30.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 01:05:30.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 01:05:30.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:05:30.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 01:06:12.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 01:06:12.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:06:12.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 01:06:52.000 | ANTC | O | format error (dot-check) for prn C25 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 01:06:52.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:06:52.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 01:07:06.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 01:07:06.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:07:06.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 01:07:28.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 01:07:28.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:07:28.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 01:07:45.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 01:07:45.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:07:45.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 01:08:19.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 01:08:19.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:08:19.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 01:08:38.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 01:08:38.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:08:38.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 01:10:56.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 01:10:56.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:10:56.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 01:11:15.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 01:11:15.000 | ANTC | O | mismatch of number of satellites(36) and records got(35) 2022-02-10 01:11:15.0000000 !
+2026-02-26 00:02:41 | W | 2022-02-10 01:11:46.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 00:02:41 | W | 2022-02-10 01:11:46.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:11:46.0000000 !
+2026-02-26 00:02:42 | W | 2022-02-10 01:22:51.000 | ANTC | O | format error (dot-check) for prn G01 (length 128 / 8 values)
+2026-02-26 00:02:42 | W | 2022-02-10 01:22:51.000 | ANTC | O | mismatch of number of satellites(36) and records got(35) 2022-02-10 01:22:51.0000000 !
+2026-02-26 00:02:42 | W | 2022-02-10 01:24:54.000 | ANTC | O | format error (dot-check) for prn C09 (length 128 / 8 values)
+2026-02-26 00:02:42 | W | 2022-02-10 01:24:54.000 | ANTC | O | mismatch of number of satellites(36) and records got(35) 2022-02-10 01:24:54.0000000 !
+2026-02-26 00:02:42 | W | 2022-02-10 01:26:48.000 | ANTC | O | format error (dot-check) for prn C09 (length 128 / 8 values)
+2026-02-26 00:02:42 | W | 2022-02-10 01:26:48.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:26:48.0000000 !
+2026-02-26 00:02:42 | W | 2022-02-10 01:31:30.000 | ANTC | O | format error (dot-check) for prn G01 (length 128 / 8 values)
+2026-02-26 00:02:42 | W | 2022-02-10 01:31:30.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:31:30.0000000 !
+2026-02-26 00:02:43 | W | 2022-02-10 01:46:21.000 | ANTC | O | format error (dot-check) for prn G20 (length 128 / 8 values)
+2026-02-26 00:02:43 | W | 2022-02-10 01:46:21.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:46:21.0000000 !
+2026-02-26 00:02:43 | W | 2022-02-10 01:49:17.000 | ANTC | O | format error (dot-check) for prn C12 (length 128 / 8 values)
+2026-02-26 00:02:43 | W | 2022-02-10 01:49:17.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:49:17.0000000 !
+2026-02-26 00:02:43 | W | 2022-02-10 01:54:12.001 | ANTC | O | format error (dot-check) for prn R05 (length 128 / 8 values)
+2026-02-26 00:02:43 | W | 2022-02-10 01:54:12.001 | ANTC | O | mismatch of number of satellites(40) and records got(39) 2022-02-10 01:54:12.0010000 !
+2026-02-26 00:02:44 | W | 2022-02-10 01:57:30.001 | ANTC | O | format error (dot-check) for prn C16 (length 128 / 8 values)
+2026-02-26 00:02:44 | W | 2022-02-10 01:57:30.001 | ANTC | O | mismatch of number of satellites(40) and records got(39) 2022-02-10 01:57:30.0010000 !
+2026-02-26 00:02:44 | W | 2022-02-10 01:59:01.001 | ANTC | O | format error (dot-check) for prn C16 (length 128 / 8 values)
+2026-02-26 00:02:44 | W | 2022-02-10 01:59:01.001 | ANTC | O | mismatch of number of satellites(40) and records got(39) 2022-02-10 01:59:01.0010000 !
+
+Skipping /home/alexk/record/temp_recovery/202200XXX_R_20220402345_15M_01S_MO.rnx: Only 31 epochs (less than 1)
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410000_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410015_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410030_15M_01S_MO.rnx with  897 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410045_15M_01S_MO.rnx with  899 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410100_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410115_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410130_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410145_15M_01S_MO.rnx with  900 epochs
+Skipping /home/alexk/record/temp_recovery/202200XXX_R_20220410200_15M_01S_MO.rnx: Only 30 epochs (less than 1)
+Remove temporary /home/alexk/record/temp_recovery folder
+Move processed bin file(s) to archive folder
+satartup processing of files in /home/alexk/record folder are finished
+[00:31:57] Directory ready: /home/alexk/record/temp_recovery
+[00:31:57] Directory ready: /home/alexk/data
+[00:31:57] Directory ready: /home/alexk/archive
+[00:31:57] Runing convbin to convert /home/alexk/record/20220210_020000.ubx to rnx
+[00:31:57] Runing convbin to convert /home/alexk/record/20220210_030000.ubx to rnx
+
+DATE/TIME           | C | EPOCH / FILE            | SITE | T | MESSAGE
+--------------------+---+-------------------------+------+---+-----------------------------------------------------------...
+2026-02-26 00:31:58 | N | 0000-00-00 00:00:00.000 | XXXX | O | SPLICE OF (2 files) 20220210_020000.rnx 20220210_0 ...
+2026-02-26 00:31:58 | W | 0000-00-00 00:00:00.000 | XXXX | O | file duration -> unsupported file name >20220210_020000.rnx<
+2026-02-26 00:31:58 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing receiver type ><
+2026-02-26 00:31:58 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing antenna type ><
+2026-02-26 00:31:58 | W | 0000-00-00 00:00:00.000 | XXXX | O | file duration -> unsupported file name >20220210_030000.rnx<
+2026-02-26 00:31:58 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing antenna type ><
+2026-02-26 00:31:58 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing receiver type ><
+2026-02-26 00:31:58 | W | 0000-00-00 00:00:00.000 | XXXX | O | file duration -> unsupported file name >20220210_020000.rnx<
+2026-02-26 00:31:58 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing receiver type ><
+2026-02-26 00:31:58 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing antenna type ><
+2026-02-26 00:31:58 | W | 2022-02-10 02:00:41.001 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 00:31:58 | W | 2022-02-10 02:00:41.001 | ANTC | O | mismatch of number of satellites(40) and records got(39) 2022-02-10 02:00:41.0010000 !
+2026-02-26 00:31:58 | W | 2022-02-10 02:04:00.001 | ANTC | O | format error (dot-check) for prn G14 (length 128 / 8 values)
+2026-02-26 00:31:58 | W | 2022-02-10 02:04:00.001 | ANTC | O | mismatch of number of satellites(39) and records got(38) 2022-02-10 02:04:00.0010000 !
+2026-02-26 00:31:58 | W | 2022-02-10 02:04:08.001 | ANTC | O | format error (dot-check) for prn G14 (length 128 / 8 values)
+2026-02-26 00:31:58 | W | 2022-02-10 02:04:08.001 | ANTC | O | mismatch of number of satellites(39) and records got(38) 2022-02-10 02:04:08.0010000 !
+2026-02-26 00:31:59 | W | 2022-02-10 02:06:46.001 | ANTC | O | format error (dot-check) for prn G14 (length 128 / 8 values)
+2026-02-26 00:31:59 | W | 2022-02-10 02:06:46.001 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 02:06:46.0010000 !
+2026-02-26 00:31:59 | W | 2022-02-10 02:24:38.001 | ANTC | O | format error (dot-check) for prn C27 (length 128 / 8 values)
+2026-02-26 00:31:59 | W | 2022-02-10 02:24:38.001 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 02:24:38.0010000 !
+2026-02-26 00:31:59 | W | 2022-02-10 02:27:19.001 | ANTC | O | format error (dot-check) for prn C23 (length 128 / 8 values)
+2026-02-26 00:31:59 | W | 2022-02-10 02:27:19.001 | ANTC | O | mismatch of number of satellites(39) and records got(38) 2022-02-10 02:27:19.0010000 !
+2026-02-26 00:32:00 | W | 2022-02-10 02:45:15.001 | ANTC | O | format error (dot-check) for prn R21 (length 128 / 8 values)
+2026-02-26 00:32:00 | W | 2022-02-10 02:45:15.001 | ANTC | O | mismatch of number of satellites(41) and records got(40) 2022-02-10 02:45:15.0010000 !
+2026-02-26 00:32:00 | W | 2022-02-10 02:45:40.001 | ANTC | O | format error (dot-check) for prn R21 (length 128 / 8 values)
+2026-02-26 00:32:00 | W | 2022-02-10 02:45:40.001 | ANTC | O | mismatch of number of satellites(41) and records got(40) 2022-02-10 02:45:40.0010000 !
+2026-02-26 00:32:00 | W | 2022-02-10 02:45:46.001 | ANTC | O | format error (dot-check) for prn R21 (length 128 / 8 values)
+2026-02-26 00:32:00 | W | 2022-02-10 02:45:46.001 | ANTC | O | mismatch of number of satellites(41) and records got(40) 2022-02-10 02:45:46.0010000 !
+2026-02-26 00:32:00 | W | 2022-02-10 02:46:07.001 | ANTC | O | format error (dot-check) for prn R21 (length 128 / 8 values)
+2026-02-26 00:32:00 | W | 2022-02-10 02:46:07.001 | ANTC | O | mismatch of number of satellites(41) and records got(40) 2022-02-10 02:46:07.0010000 !
+2026-02-26 00:32:01 | W | 2022-02-10 02:47:08.001 | ANTC | O | format error (dot-check) for prn R21 (length 128 / 8 values)
+2026-02-26 00:32:01 | W | 2022-02-10 02:47:08.001 | ANTC | O | mismatch of number of satellites(41) and records got(40) 2022-02-10 02:47:08.0010000 !
+2026-02-26 00:32:01 | W | 2022-02-10 02:48:41.001 | ANTC | O | format error (dot-check) for prn R09 (length 128 / 8 values)
+2026-02-26 00:32:01 | W | 2022-02-10 02:48:41.001 | ANTC | O | mismatch of number of satellites(41) and records got(40) 2022-02-10 02:48:41.0010000 !
+2026-02-26 00:31:58 | W | 0000-00-00 00:00:00.000 | XXXX | O | file duration -> unsupported file name >20220210_030000.rnx<
+2026-02-26 00:31:58 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing antenna type ><
+2026-02-26 00:31:58 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing receiver type ><
+2026-02-26 00:32:01 | W | 2022-02-10 03:01:37.002 | ANTC | O | format error (dot-check) for prn C34 (length 128 / 8 values)
+2026-02-26 00:32:01 | W | 2022-02-10 03:01:37.002 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 03:01:37.0020000 !
+2026-02-26 00:32:01 | W | 2022-02-10 03:03:01.002 | ANTC | O | format error (dot-check) for prn C34 (length 128 / 8 values)
+2026-02-26 00:32:01 | W | 2022-02-10 03:03:01.002 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 03:03:01.0020000 !
+2026-02-26 00:32:02 | W | 2022-02-10 03:10:53.002 | ANTC | O | format error (dot-check) for prn C09 (length 128 / 8 values)
+2026-02-26 00:32:02 | W | 2022-02-10 03:10:53.002 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 03:10:53.0020000 !
+2026-02-26 00:32:02 | W | 2022-02-10 03:11:28.002 | ANTC | O | format error (dot-check) for prn C37 (length 128 / 8 values)
+2026-02-26 00:32:02 | W | 2022-02-10 03:11:28.002 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 03:11:28.0020000 !
+2026-02-26 00:32:02 | W | 2022-02-10 03:11:59.002 | ANTC | O | format error (dot-check) for prn C09 (length 128 / 8 values)
+2026-02-26 00:32:02 | W | 2022-02-10 03:11:59.002 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 03:11:59.0020000 !
+2026-02-26 00:32:02 | W | 2022-02-10 03:19:21.002 | ANTC | O | format error (dot-check) for prn C37 (length 128 / 8 values)
+2026-02-26 00:32:02 | W | 2022-02-10 03:19:21.002 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 03:19:21.0020000 !
+2026-02-26 00:32:03 | W | 2022-02-10 03:32:19.002 | ANTC | O | format error (dot-check) for prn R10 (length 128 / 8 values)
+2026-02-26 00:32:03 | W | 2022-02-10 03:32:19.002 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 03:32:19.0020000 !
+2026-02-26 00:32:03 | W | 2022-02-10 03:32:52.002 | ANTC | O | format error (dot-check) for prn R10 (length 128 / 8 values)
+2026-02-26 00:32:03 | W | 2022-02-10 03:32:52.002 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 03:32:52.0020000 !
+2026-02-26 00:32:03 | W | 2022-02-10 03:33:59.002 | ANTC | O | format error (dot-check) for prn R10 (length 128 / 8 values)
+2026-02-26 00:32:03 | W | 2022-02-10 03:33:59.002 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 03:33:59.0020000 !
+2026-02-26 00:32:03 | W | 2022-02-10 03:34:51.002 | ANTC | O | format error (dot-check) for prn R03 (length 128 / 8 values)
+2026-02-26 00:32:03 | W | 2022-02-10 03:34:51.002 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 03:34:51.0020000 !
+2026-02-26 00:32:03 | W | 2022-02-10 03:44:50.002 | ANTC | O | format error (dot-check) for prn G17 (length 128 / 8 values)
+2026-02-26 00:32:03 | W | 2022-02-10 03:44:50.002 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 03:44:50.0020000 !
+2026-02-26 00:32:03 | W | 2022-02-10 03:45:31.002 | ANTC | O | format error (dot-check) for prn G17 (length 128 / 8 values)
+2026-02-26 00:32:03 | W | 2022-02-10 03:45:31.002 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 03:45:31.0020000 !
+
+Skipping /home/alexk/record/temp_recovery/202200XXX_R_20220410145_15M_01S_MO.rnx: Only 30 epochs (less than 1)
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410200_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410215_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410230_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410245_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410300_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410315_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410330_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410345_15M_01S_MO.rnx with  900 epochs
+Skipping /home/alexk/record/temp_recovery/202200XXX_R_20220410400_15M_01S_MO.rnx: Only 30 epochs (less than 1)
+Remove temporary /home/alexk/record/temp_recovery folder
+Move processed bin file(s) to archive folder
+satartup processing of files in /home/alexk/record folder are finished
+[01:00:30] Directory ready: /home/alexk/record/temp_recovery
+[01:00:30] Directory ready: /home/alexk/data
+[01:00:30] Directory ready: /home/alexk/archive
+[01:00:30] Runing convbin to convert /home/alexk/record/20220210_000000.ubx to rnx
+[01:00:30] Runing convbin to convert /home/alexk/record/20220210_010000.ubx to rnx
+
+DATE/TIME           | C | EPOCH / FILE            | SITE | T | MESSAGE
+--------------------+---+-------------------------+------+---+-----------------------------------------------------------...
+2026-02-26 01:00:31 | N | 0000-00-00 00:00:00.000 | XXXX | O | SPLICE OF (2 files) 20220210_000000.rnx 20220210_0 ...
+2026-02-26 01:00:31 | W | 0000-00-00 00:00:00.000 | XXXX | O | file duration -> unsupported file name >20220210_000000.rnx<
+2026-02-26 01:00:31 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing antenna type ><
+2026-02-26 01:00:31 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing receiver type ><
+2026-02-26 01:00:31 | W | 0000-00-00 00:00:00.000 | XXXX | O | file duration -> unsupported file name >20220210_010000.rnx<
+2026-02-26 01:00:31 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing antenna type ><
+2026-02-26 01:00:31 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing receiver type ><
+2026-02-26 01:00:31 | W | 0000-00-00 00:00:00.000 | XXXX | O | file duration -> unsupported file name >20220210_000000.rnx<
+2026-02-26 01:00:31 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing antenna type ><
+2026-02-26 01:00:31 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing receiver type ><
+2026-02-26 01:00:31 | W | 2022-02-09 23:59:29.999 | ANTC | O | format error (dot-check) for prn G21 (length 128 / 8 values)
+2026-02-26 01:00:31 | W | 2022-02-09 23:59:29.999 | ANTC | O | format error (dot-check) for prn R03 (length 128 / 8 values)
+2026-02-26 01:00:31 | W | 2022-02-09 23:59:29.999 | ANTC | O | format error (dot-check) for prn R19 (length 128 / 8 values)
+2026-02-26 01:00:31 | W | 2022-02-09 23:59:29.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:31 | W | 2022-02-09 23:59:29.999 | ANTC | O | mismatch of number of satellites(34) and records got(30) 2022-02-09 23:59:29.9990000 !
+2026-02-26 01:00:31 | W | 2022-02-09 23:59:51.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:31 | W | 2022-02-09 23:59:51.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-09 23:59:51.9990000 !
+2026-02-26 01:00:31 | W | 2022-02-10 00:03:07.999 | ANTC | O | format error (dot-check) for prn R01 (length 128 / 8 values)
+2026-02-26 01:00:31 | W | 2022-02-10 00:03:07.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:03:07.9990000 !
+2026-02-26 01:00:31 | W | 2022-02-10 00:03:31.999 | ANTC | O | format error (dot-check) for prn R01 (length 128 / 8 values)
+2026-02-26 01:00:31 | W | 2022-02-10 00:03:31.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:03:31.9990000 !
+2026-02-26 01:00:31 | W | 2022-02-10 00:04:38.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:31 | W | 2022-02-10 00:04:38.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:04:38.9990000 !
+2026-02-26 01:00:31 | W | 2022-02-10 00:05:41.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:31 | W | 2022-02-10 00:05:41.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:05:41.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:07:14.999 | ANTC | O | format error (dot-check) for prn R03 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:07:14.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:07:14.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:07:42.999 | ANTC | O | format error (dot-check) for prn R01 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:07:42.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:07:42.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:10:01.999 | ANTC | O | format error (dot-check) for prn R01 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:10:01.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:10:01.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:10:23.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:10:23.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:10:23.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:11:12.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:11:12.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:11:12.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:12:02.999 | ANTC | O | format error (dot-check) for prn R01 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:12:02.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:12:02.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:12:27.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:12:27.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:12:27.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:12:37.999 | ANTC | O | format error (dot-check) for prn R01 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:12:37.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:12:37.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:12:42.999 | ANTC | O | format error (dot-check) for prn R10 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:12:42.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:12:42.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:13:18.999 | ANTC | O | format error (dot-check) for prn R15 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:13:18.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:13:18.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:15:08.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:15:08.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:15:08.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:15:24.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:15:24.999 | ANTC | O | mismatch of number of satellites(33) and records got(32) 2022-02-10 00:15:24.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:16:49.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:16:49.999 | ANTC | O | mismatch of number of satellites(33) and records got(32) 2022-02-10 00:16:49.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:17:54.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:17:54.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:17:54.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:20:20.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:20:20.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:20:20.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:20:38.999 | ANTC | O | format error (dot-check) for prn R03 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:20:38.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:20:38.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:21:33.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:21:33.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:21:33.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:23:59.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:23:59.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:23:59.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:25:13.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:25:13.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:25:13.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:25:19.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:25:19.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:25:19.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:26:16.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:26:16.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:26:16.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:27:00.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:27:00.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:27:00.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:28:36.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:28:36.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:28:36.9990000 !
+2026-02-26 01:00:32 | W | 2022-02-10 00:29:03.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:32 | W | 2022-02-10 00:29:03.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:29:03.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:32:05.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:32:05.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:32:05.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:32:59.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:32:59.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:32:59.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:33:15.999 | ANTC | O | format error (dot-check) for prn R10 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:33:15.999 | ANTC | O | mismatch of number of satellites(33) and records got(32) 2022-02-10 00:33:15.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:34:58.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:34:58.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:34:58.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:34:59.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:34:59.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:34:59.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:35:45.999 | ANTC | O | format error (dot-check) for prn C14 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:35:45.999 | ANTC | O | mismatch of number of satellites(33) and records got(32) 2022-02-10 00:35:45.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:36:00.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:36:00.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:36:00.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:36:49.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:36:49.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:36:49.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:37:12.999 | ANTC | O | format error (dot-check) for prn C14 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:37:12.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:37:12.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:37:37.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:37:37.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:37:37.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:38:03.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:38:03.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:38:03.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:38:12.999 | ANTC | O | format error (dot-check) for prn G11 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:38:12.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:38:12.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:40:16.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:40:16.999 | ANTC | O | mismatch of number of satellites(36) and records got(35) 2022-02-10 00:40:16.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:41:50.999 | ANTC | O | format error (dot-check) for prn G12 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:41:50.999 | ANTC | O | mismatch of number of satellites(36) and records got(35) 2022-02-10 00:41:50.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:42:07.999 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:42:07.999 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:42:07.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:42:36.999 | ANTC | O | format error (dot-check) for prn G02 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:42:36.999 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:42:36.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:42:50.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:42:50.999 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:42:50.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:43:36.999 | ANTC | O | format error (dot-check) for prn C14 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:43:36.999 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 00:43:36.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:44:12.999 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:44:12.999 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:44:12.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:44:41.999 | ANTC | O | format error (dot-check) for prn G12 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:44:41.999 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 00:44:41.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:47:02.999 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:47:02.999 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:47:02.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:48:05.999 | ANTC | O | format error (dot-check) for prn G02 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:48:05.999 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:48:05.9990000 !
+2026-02-26 01:00:33 | W | 2022-02-10 00:48:41.999 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:00:33 | W | 2022-02-10 00:48:41.999 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:48:41.9990000 !
+2026-02-26 01:00:34 | W | 2022-02-10 00:52:43.000 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 00:52:43.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:52:43.0000000 !
+2026-02-26 01:00:34 | W | 2022-02-10 00:53:37.000 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 00:53:37.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:53:37.0000000 !
+2026-02-26 01:00:34 | W | 2022-02-10 00:56:16.000 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 00:56:16.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 00:56:16.0000000 !
+2026-02-26 01:00:34 | W | 2022-02-10 00:56:27.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 00:56:27.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 00:56:27.0000000 !
+2026-02-26 01:00:34 | W | 2022-02-10 00:57:14.000 | ANTC | O | format error (dot-check) for prn C22 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 00:57:14.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 00:57:14.0000000 !
+2026-02-26 01:00:34 | W | 2022-02-10 00:58:29.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 00:58:29.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 00:58:29.0000000 !
+2026-02-26 01:00:34 | W | 2022-02-10 00:58:55.000 | ANTC | O | format error (dot-check) for prn R04 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 00:58:55.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 00:58:55.0000000 !
+2026-02-26 01:00:34 | W | 2022-02-10 00:59:55.000 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 00:59:55.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:59:55.0000000 !
+2026-02-26 01:00:34 | W | 2022-02-10 01:00:25.000 | ANTC | O | format error (dot-check) for prn C09 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 01:00:25.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:00:25.0000000 !
+2026-02-26 01:00:31 | W | 0000-00-00 00:00:00.000 | XXXX | O | file duration -> unsupported file name >20220210_010000.rnx<
+2026-02-26 01:00:31 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing antenna type ><
+2026-02-26 01:00:31 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing receiver type ><
+2026-02-26 01:00:34 | W | 2022-02-10 01:00:32.000 | ANTC | O | format error (dot-check) for prn C09 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 01:00:32.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:00:32.0000000 !
+2026-02-26 01:00:34 | W | 2022-02-10 01:02:00.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 01:02:00.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:02:00.0000000 !
+2026-02-26 01:00:34 | W | 2022-02-10 01:02:22.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 01:02:22.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:02:22.0000000 !
+2026-02-26 01:00:34 | W | 2022-02-10 01:02:37.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 01:02:37.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:02:37.0000000 !
+2026-02-26 01:00:34 | W | 2022-02-10 01:03:21.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 01:03:21.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:03:21.0000000 !
+2026-02-26 01:00:34 | W | 2022-02-10 01:04:30.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 01:04:30.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:04:30.0000000 !
+2026-02-26 01:00:34 | W | 2022-02-10 01:05:30.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 01:05:30.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:05:30.0000000 !
+2026-02-26 01:00:34 | W | 2022-02-10 01:06:12.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 01:06:12.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:06:12.0000000 !
+2026-02-26 01:00:34 | W | 2022-02-10 01:06:52.000 | ANTC | O | format error (dot-check) for prn C25 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 01:06:52.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:06:52.0000000 !
+2026-02-26 01:00:34 | W | 2022-02-10 01:07:06.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 01:07:06.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:07:06.0000000 !
+2026-02-26 01:00:34 | W | 2022-02-10 01:07:28.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 01:07:28.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:07:28.0000000 !
+2026-02-26 01:00:34 | W | 2022-02-10 01:07:45.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 01:07:45.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:07:45.0000000 !
+2026-02-26 01:00:34 | W | 2022-02-10 01:08:19.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 01:08:19.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:08:19.0000000 !
+2026-02-26 01:00:34 | W | 2022-02-10 01:08:38.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:00:34 | W | 2022-02-10 01:08:38.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:08:38.0000000 !
+2026-02-26 01:00:35 | W | 2022-02-10 01:10:56.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:00:35 | W | 2022-02-10 01:10:56.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:10:56.0000000 !
+2026-02-26 01:00:35 | W | 2022-02-10 01:11:15.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:00:35 | W | 2022-02-10 01:11:15.000 | ANTC | O | mismatch of number of satellites(36) and records got(35) 2022-02-10 01:11:15.0000000 !
+2026-02-26 01:00:35 | W | 2022-02-10 01:11:46.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:00:35 | W | 2022-02-10 01:11:46.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:11:46.0000000 !
+2026-02-26 01:00:35 | W | 2022-02-10 01:22:51.000 | ANTC | O | format error (dot-check) for prn G01 (length 128 / 8 values)
+2026-02-26 01:00:35 | W | 2022-02-10 01:22:51.000 | ANTC | O | mismatch of number of satellites(36) and records got(35) 2022-02-10 01:22:51.0000000 !
+2026-02-26 01:00:35 | W | 2022-02-10 01:24:54.000 | ANTC | O | format error (dot-check) for prn C09 (length 128 / 8 values)
+2026-02-26 01:00:35 | W | 2022-02-10 01:24:54.000 | ANTC | O | mismatch of number of satellites(36) and records got(35) 2022-02-10 01:24:54.0000000 !
+2026-02-26 01:00:35 | W | 2022-02-10 01:26:48.000 | ANTC | O | format error (dot-check) for prn C09 (length 128 / 8 values)
+2026-02-26 01:00:35 | W | 2022-02-10 01:26:48.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:26:48.0000000 !
+2026-02-26 01:00:36 | W | 2022-02-10 01:31:30.000 | ANTC | O | format error (dot-check) for prn G01 (length 128 / 8 values)
+2026-02-26 01:00:36 | W | 2022-02-10 01:31:30.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:31:30.0000000 !
+2026-02-26 01:00:36 | W | 2022-02-10 01:46:21.000 | ANTC | O | format error (dot-check) for prn G20 (length 128 / 8 values)
+2026-02-26 01:00:36 | W | 2022-02-10 01:46:21.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:46:21.0000000 !
+2026-02-26 01:00:36 | W | 2022-02-10 01:49:17.000 | ANTC | O | format error (dot-check) for prn C12 (length 128 / 8 values)
+2026-02-26 01:00:36 | W | 2022-02-10 01:49:17.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:49:17.0000000 !
+2026-02-26 01:00:37 | W | 2022-02-10 01:54:12.001 | ANTC | O | format error (dot-check) for prn R05 (length 128 / 8 values)
+2026-02-26 01:00:37 | W | 2022-02-10 01:54:12.001 | ANTC | O | mismatch of number of satellites(40) and records got(39) 2022-02-10 01:54:12.0010000 !
+2026-02-26 01:00:37 | W | 2022-02-10 01:57:30.001 | ANTC | O | format error (dot-check) for prn C16 (length 128 / 8 values)
+2026-02-26 01:00:37 | W | 2022-02-10 01:57:30.001 | ANTC | O | mismatch of number of satellites(40) and records got(39) 2022-02-10 01:57:30.0010000 !
+2026-02-26 01:00:37 | W | 2022-02-10 01:59:01.001 | ANTC | O | format error (dot-check) for prn C16 (length 128 / 8 values)
+2026-02-26 01:00:37 | W | 2022-02-10 01:59:01.001 | ANTC | O | mismatch of number of satellites(40) and records got(39) 2022-02-10 01:59:01.0010000 !
+
+Skipping /home/alexk/record/temp_recovery/202200XXX_R_20220402345_15M_01S_MO.rnx: Only 31 epochs (less than 1)
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410000_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410015_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410030_15M_01S_MO.rnx with  897 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410045_15M_01S_MO.rnx with  899 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410100_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410115_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410130_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410145_15M_01S_MO.rnx with  900 epochs
+Skipping /home/alexk/record/temp_recovery/202200XXX_R_20220410200_15M_01S_MO.rnx: Only 30 epochs (less than 1)
+Remove temporary /home/alexk/record/temp_recovery folder
+Move processed bin file(s) to archive folder
+satartup processing of files in /home/alexk/record folder are finished
+[01:04:42] Directory ready: /home/alexk/record/temp_recovery
+[01:04:42] Directory ready: /home/alexk/data
+[01:04:42] Directory ready: /home/alexk/archive
+[01:04:42] Runing convbin to convert /home/alexk/record/20220210_000000.ubx to rnx
+[01:04:43] Runing convbin to convert /home/alexk/record/20220210_010000.ubx to rnx
+
+DATE/TIME           | C | EPOCH / FILE            | SITE | T | MESSAGE
+--------------------+---+-------------------------+------+---+-----------------------------------------------------------...
+2026-02-26 01:04:44 | N | 0000-00-00 00:00:00.000 | XXXX | O | SPLICE OF (2 files) 20220210_000000.rnx 20220210_0 ...
+2026-02-26 01:04:44 | W | 0000-00-00 00:00:00.000 | XXXX | O | file duration -> unsupported file name >20220210_000000.rnx<
+2026-02-26 01:04:44 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing receiver type ><
+2026-02-26 01:04:44 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing antenna type ><
+2026-02-26 01:04:44 | W | 0000-00-00 00:00:00.000 | XXXX | O | file duration -> unsupported file name >20220210_010000.rnx<
+2026-02-26 01:04:44 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing receiver type ><
+2026-02-26 01:04:44 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing antenna type ><
+2026-02-26 01:04:44 | W | 0000-00-00 00:00:00.000 | XXXX | O | file duration -> unsupported file name >20220210_000000.rnx<
+2026-02-26 01:04:44 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing receiver type ><
+2026-02-26 01:04:44 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing antenna type ><
+2026-02-26 01:04:44 | W | 2022-02-09 23:59:29.999 | ANTC | O | format error (dot-check) for prn G21 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-09 23:59:29.999 | ANTC | O | format error (dot-check) for prn R03 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-09 23:59:29.999 | ANTC | O | format error (dot-check) for prn R19 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-09 23:59:29.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-09 23:59:29.999 | ANTC | O | mismatch of number of satellites(34) and records got(30) 2022-02-09 23:59:29.9990000 !
+2026-02-26 01:04:44 | W | 2022-02-09 23:59:51.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-09 23:59:51.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-09 23:59:51.9990000 !
+2026-02-26 01:04:44 | W | 2022-02-10 00:03:07.999 | ANTC | O | format error (dot-check) for prn R01 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-10 00:03:07.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:03:07.9990000 !
+2026-02-26 01:04:44 | W | 2022-02-10 00:03:31.999 | ANTC | O | format error (dot-check) for prn R01 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-10 00:03:31.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:03:31.9990000 !
+2026-02-26 01:04:44 | W | 2022-02-10 00:04:38.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-10 00:04:38.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:04:38.9990000 !
+2026-02-26 01:04:44 | W | 2022-02-10 00:05:41.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-10 00:05:41.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:05:41.9990000 !
+2026-02-26 01:04:44 | W | 2022-02-10 00:07:14.999 | ANTC | O | format error (dot-check) for prn R03 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-10 00:07:14.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:07:14.9990000 !
+2026-02-26 01:04:44 | W | 2022-02-10 00:07:42.999 | ANTC | O | format error (dot-check) for prn R01 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-10 00:07:42.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:07:42.9990000 !
+2026-02-26 01:04:44 | W | 2022-02-10 00:10:01.999 | ANTC | O | format error (dot-check) for prn R01 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-10 00:10:01.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:10:01.9990000 !
+2026-02-26 01:04:44 | W | 2022-02-10 00:10:23.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-10 00:10:23.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:10:23.9990000 !
+2026-02-26 01:04:44 | W | 2022-02-10 00:11:12.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-10 00:11:12.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:11:12.9990000 !
+2026-02-26 01:04:44 | W | 2022-02-10 00:12:02.999 | ANTC | O | format error (dot-check) for prn R01 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-10 00:12:02.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:12:02.9990000 !
+2026-02-26 01:04:44 | W | 2022-02-10 00:12:27.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-10 00:12:27.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:12:27.9990000 !
+2026-02-26 01:04:44 | W | 2022-02-10 00:12:37.999 | ANTC | O | format error (dot-check) for prn R01 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-10 00:12:37.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:12:37.9990000 !
+2026-02-26 01:04:44 | W | 2022-02-10 00:12:42.999 | ANTC | O | format error (dot-check) for prn R10 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-10 00:12:42.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:12:42.9990000 !
+2026-02-26 01:04:44 | W | 2022-02-10 00:13:18.999 | ANTC | O | format error (dot-check) for prn R15 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-10 00:13:18.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:13:18.9990000 !
+2026-02-26 01:04:44 | W | 2022-02-10 00:15:08.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-10 00:15:08.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:15:08.9990000 !
+2026-02-26 01:04:44 | W | 2022-02-10 00:15:24.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-10 00:15:24.999 | ANTC | O | mismatch of number of satellites(33) and records got(32) 2022-02-10 00:15:24.9990000 !
+2026-02-26 01:04:44 | W | 2022-02-10 00:16:49.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-10 00:16:49.999 | ANTC | O | mismatch of number of satellites(33) and records got(32) 2022-02-10 00:16:49.9990000 !
+2026-02-26 01:04:44 | W | 2022-02-10 00:17:54.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-10 00:17:54.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:17:54.9990000 !
+2026-02-26 01:04:44 | W | 2022-02-10 00:20:20.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-10 00:20:20.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:20:20.9990000 !
+2026-02-26 01:04:44 | W | 2022-02-10 00:20:38.999 | ANTC | O | format error (dot-check) for prn R03 (length 128 / 8 values)
+2026-02-26 01:04:44 | W | 2022-02-10 00:20:38.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:20:38.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:21:33.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:21:33.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:21:33.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:23:59.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:23:59.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:23:59.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:25:13.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:25:13.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:25:13.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:25:19.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:25:19.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:25:19.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:26:16.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:26:16.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:26:16.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:27:00.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:27:00.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:27:00.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:28:36.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:28:36.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:28:36.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:29:03.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:29:03.999 | ANTC | O | mismatch of number of satellites(32) and records got(31) 2022-02-10 00:29:03.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:32:05.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:32:05.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:32:05.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:32:59.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:32:59.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:32:59.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:33:15.999 | ANTC | O | format error (dot-check) for prn R10 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:33:15.999 | ANTC | O | mismatch of number of satellites(33) and records got(32) 2022-02-10 00:33:15.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:34:58.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:34:58.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:34:58.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:34:59.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:34:59.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:34:59.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:35:45.999 | ANTC | O | format error (dot-check) for prn C14 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:35:45.999 | ANTC | O | mismatch of number of satellites(33) and records got(32) 2022-02-10 00:35:45.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:36:00.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:36:00.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:36:00.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:36:49.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:36:49.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:36:49.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:37:12.999 | ANTC | O | format error (dot-check) for prn C14 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:37:12.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:37:12.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:37:37.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:37:37.999 | ANTC | O | mismatch of number of satellites(34) and records got(33) 2022-02-10 00:37:37.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:38:03.999 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:38:03.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:38:03.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:38:12.999 | ANTC | O | format error (dot-check) for prn G11 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:38:12.999 | ANTC | O | mismatch of number of satellites(35) and records got(34) 2022-02-10 00:38:12.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:40:16.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:40:16.999 | ANTC | O | mismatch of number of satellites(36) and records got(35) 2022-02-10 00:40:16.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:41:50.999 | ANTC | O | format error (dot-check) for prn G12 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:41:50.999 | ANTC | O | mismatch of number of satellites(36) and records got(35) 2022-02-10 00:41:50.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:42:07.999 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:42:07.999 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:42:07.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:42:36.999 | ANTC | O | format error (dot-check) for prn G02 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:42:36.999 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:42:36.9990000 !
+2026-02-26 01:04:45 | W | 2022-02-10 00:42:50.999 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:04:45 | W | 2022-02-10 00:42:50.999 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:42:50.9990000 !
+2026-02-26 01:04:46 | W | 2022-02-10 00:43:36.999 | ANTC | O | format error (dot-check) for prn C14 (length 128 / 8 values)
+2026-02-26 01:04:46 | W | 2022-02-10 00:43:36.999 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 00:43:36.9990000 !
+2026-02-26 01:04:46 | W | 2022-02-10 00:44:12.999 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:04:46 | W | 2022-02-10 00:44:12.999 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:44:12.9990000 !
+2026-02-26 01:04:46 | W | 2022-02-10 00:44:41.999 | ANTC | O | format error (dot-check) for prn G12 (length 128 / 8 values)
+2026-02-26 01:04:46 | W | 2022-02-10 00:44:41.999 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 00:44:41.9990000 !
+2026-02-26 01:04:46 | W | 2022-02-10 00:47:02.999 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:04:46 | W | 2022-02-10 00:47:02.999 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:47:02.9990000 !
+2026-02-26 01:04:46 | W | 2022-02-10 00:48:05.999 | ANTC | O | format error (dot-check) for prn G02 (length 128 / 8 values)
+2026-02-26 01:04:46 | W | 2022-02-10 00:48:05.999 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:48:05.9990000 !
+2026-02-26 01:04:46 | W | 2022-02-10 00:48:41.999 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:04:46 | W | 2022-02-10 00:48:41.999 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:48:41.9990000 !
+2026-02-26 01:04:46 | W | 2022-02-10 00:52:43.000 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:04:46 | W | 2022-02-10 00:52:43.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:52:43.0000000 !
+2026-02-26 01:04:46 | W | 2022-02-10 00:53:37.000 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:04:46 | W | 2022-02-10 00:53:37.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:53:37.0000000 !
+2026-02-26 01:04:46 | W | 2022-02-10 00:56:16.000 | ANTC | O | format error (dot-check) for prn R17 (length 128 / 8 values)
+2026-02-26 01:04:46 | W | 2022-02-10 00:56:16.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 00:56:16.0000000 !
+2026-02-26 01:04:46 | W | 2022-02-10 00:56:27.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:04:46 | W | 2022-02-10 00:56:27.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 00:56:27.0000000 !
+2026-02-26 01:04:46 | W | 2022-02-10 00:57:14.000 | ANTC | O | format error (dot-check) for prn C22 (length 128 / 8 values)
+2026-02-26 01:04:46 | W | 2022-02-10 00:57:14.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 00:57:14.0000000 !
+2026-02-26 01:04:46 | W | 2022-02-10 00:58:29.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:04:46 | W | 2022-02-10 00:58:29.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 00:58:29.0000000 !
+2026-02-26 01:04:46 | W | 2022-02-10 00:58:55.000 | ANTC | O | format error (dot-check) for prn R04 (length 128 / 8 values)
+2026-02-26 01:04:46 | W | 2022-02-10 00:58:55.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 00:58:55.0000000 !
+2026-02-26 01:04:46 | W | 2022-02-10 00:59:55.000 | ANTC | O | format error (dot-check) for prn R02 (length 128 / 8 values)
+2026-02-26 01:04:46 | W | 2022-02-10 00:59:55.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 00:59:55.0000000 !
+2026-02-26 01:04:46 | W | 2022-02-10 01:00:25.000 | ANTC | O | format error (dot-check) for prn C09 (length 128 / 8 values)
+2026-02-26 01:04:46 | W | 2022-02-10 01:00:25.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:00:25.0000000 !
+2026-02-26 01:04:44 | W | 0000-00-00 00:00:00.000 | XXXX | O | file duration -> unsupported file name >20220210_010000.rnx<
+2026-02-26 01:04:44 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing receiver type ><
+2026-02-26 01:04:44 | W | 0000-00-00 00:00:00.000 | ANTC | O | HEADER -> missing antenna type ><
+2026-02-26 01:04:46 | W | 2022-02-10 01:00:32.000 | ANTC | O | format error (dot-check) for prn C09 (length 128 / 8 values)
+2026-02-26 01:04:46 | W | 2022-02-10 01:00:32.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:00:32.0000000 !
+2026-02-26 01:04:46 | W | 2022-02-10 01:02:00.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:04:46 | W | 2022-02-10 01:02:00.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:02:00.0000000 !
+2026-02-26 01:04:46 | W | 2022-02-10 01:02:22.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:04:46 | W | 2022-02-10 01:02:22.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:02:22.0000000 !
+2026-02-26 01:04:46 | W | 2022-02-10 01:02:37.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:04:46 | W | 2022-02-10 01:02:37.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:02:37.0000000 !
+2026-02-26 01:04:46 | W | 2022-02-10 01:03:21.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:04:46 | W | 2022-02-10 01:03:21.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:03:21.0000000 !
+2026-02-26 01:04:47 | W | 2022-02-10 01:04:30.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:04:47 | W | 2022-02-10 01:04:30.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:04:30.0000000 !
+2026-02-26 01:04:47 | W | 2022-02-10 01:05:30.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:04:47 | W | 2022-02-10 01:05:30.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:05:30.0000000 !
+2026-02-26 01:04:47 | W | 2022-02-10 01:06:12.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:04:47 | W | 2022-02-10 01:06:12.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:06:12.0000000 !
+2026-02-26 01:04:47 | W | 2022-02-10 01:06:52.000 | ANTC | O | format error (dot-check) for prn C25 (length 128 / 8 values)
+2026-02-26 01:04:47 | W | 2022-02-10 01:06:52.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:06:52.0000000 !
+2026-02-26 01:04:47 | W | 2022-02-10 01:07:06.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:04:47 | W | 2022-02-10 01:07:06.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:07:06.0000000 !
+2026-02-26 01:04:47 | W | 2022-02-10 01:07:28.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:04:47 | W | 2022-02-10 01:07:28.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:07:28.0000000 !
+2026-02-26 01:04:47 | W | 2022-02-10 01:07:45.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:04:47 | W | 2022-02-10 01:07:45.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:07:45.0000000 !
+2026-02-26 01:04:47 | W | 2022-02-10 01:08:19.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:04:47 | W | 2022-02-10 01:08:19.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:08:19.0000000 !
+2026-02-26 01:04:47 | W | 2022-02-10 01:08:38.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:04:47 | W | 2022-02-10 01:08:38.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:08:38.0000000 !
+2026-02-26 01:04:47 | W | 2022-02-10 01:10:56.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:04:47 | W | 2022-02-10 01:10:56.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:10:56.0000000 !
+2026-02-26 01:04:47 | W | 2022-02-10 01:11:15.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:04:47 | W | 2022-02-10 01:11:15.000 | ANTC | O | mismatch of number of satellites(36) and records got(35) 2022-02-10 01:11:15.0000000 !
+2026-02-26 01:04:47 | W | 2022-02-10 01:11:46.000 | ANTC | O | format error (dot-check) for prn R20 (length 128 / 8 values)
+2026-02-26 01:04:47 | W | 2022-02-10 01:11:46.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:11:46.0000000 !
+2026-02-26 01:04:47 | W | 2022-02-10 01:22:51.000 | ANTC | O | format error (dot-check) for prn G01 (length 128 / 8 values)
+2026-02-26 01:04:47 | W | 2022-02-10 01:22:51.000 | ANTC | O | mismatch of number of satellites(36) and records got(35) 2022-02-10 01:22:51.0000000 !
+2026-02-26 01:04:48 | W | 2022-02-10 01:24:54.000 | ANTC | O | format error (dot-check) for prn C09 (length 128 / 8 values)
+2026-02-26 01:04:48 | W | 2022-02-10 01:24:54.000 | ANTC | O | mismatch of number of satellites(36) and records got(35) 2022-02-10 01:24:54.0000000 !
+2026-02-26 01:04:48 | W | 2022-02-10 01:26:48.000 | ANTC | O | format error (dot-check) for prn C09 (length 128 / 8 values)
+2026-02-26 01:04:48 | W | 2022-02-10 01:26:48.000 | ANTC | O | mismatch of number of satellites(37) and records got(36) 2022-02-10 01:26:48.0000000 !
+2026-02-26 01:04:48 | W | 2022-02-10 01:31:30.000 | ANTC | O | format error (dot-check) for prn G01 (length 128 / 8 values)
+2026-02-26 01:04:48 | W | 2022-02-10 01:31:30.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:31:30.0000000 !
+2026-02-26 01:04:49 | W | 2022-02-10 01:46:21.000 | ANTC | O | format error (dot-check) for prn G20 (length 128 / 8 values)
+2026-02-26 01:04:49 | W | 2022-02-10 01:46:21.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:46:21.0000000 !
+2026-02-26 01:04:49 | W | 2022-02-10 01:49:17.000 | ANTC | O | format error (dot-check) for prn C12 (length 128 / 8 values)
+2026-02-26 01:04:49 | W | 2022-02-10 01:49:17.000 | ANTC | O | mismatch of number of satellites(38) and records got(37) 2022-02-10 01:49:17.0000000 !
+2026-02-26 01:04:49 | W | 2022-02-10 01:54:12.001 | ANTC | O | format error (dot-check) for prn R05 (length 128 / 8 values)
+2026-02-26 01:04:49 | W | 2022-02-10 01:54:12.001 | ANTC | O | mismatch of number of satellites(40) and records got(39) 2022-02-10 01:54:12.0010000 !
+2026-02-26 01:04:49 | W | 2022-02-10 01:57:30.001 | ANTC | O | format error (dot-check) for prn C16 (length 128 / 8 values)
+2026-02-26 01:04:49 | W | 2022-02-10 01:57:30.001 | ANTC | O | mismatch of number of satellites(40) and records got(39) 2022-02-10 01:57:30.0010000 !
+2026-02-26 01:04:49 | W | 2022-02-10 01:59:01.001 | ANTC | O | format error (dot-check) for prn C16 (length 128 / 8 values)
+2026-02-26 01:04:49 | W | 2022-02-10 01:59:01.001 | ANTC | O | mismatch of number of satellites(40) and records got(39) 2022-02-10 01:59:01.0010000 !
+
+Skipping /home/alexk/record/temp_recovery/202200XXX_R_20220402345_15M_01S_MO.rnx: Only 31 epochs (less than 1)
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410000_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410015_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410030_15M_01S_MO.rnx with  897 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410045_15M_01S_MO.rnx with  899 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410100_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410115_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410130_15M_01S_MO.rnx with  900 epochs
+Processing /home/alexk/record/temp_recovery/202200XXX_R_20220410145_15M_01S_MO.rnx with  900 epochs
+Skipping /home/alexk/record/temp_recovery/202200XXX_R_20220410200_15M_01S_MO.rnx: Only 30 epochs (less than 1)
+Remove temporary /home/alexk/record/temp_recovery folder
+Move processed bin file(s) to archive folder
+satartup processing of files in /home/alexk/record folder are finished
