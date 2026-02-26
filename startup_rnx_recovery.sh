@@ -3,7 +3,7 @@
 # Recovery data by converting bin -> rnx -> crx -> crx.gz after outages or other data acquisition failure
 
 # "Import" the functions
-source "$HOME/repo_debian/Eclipse_NB_Alex/tools.sh"
+source /usr/local/bin/tools.sh
 
 # Configuration for manual input
 # rpiUSER="alexk" # user name
