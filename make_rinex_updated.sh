@@ -2,6 +2,35 @@
 
 # The script takes the UBX bin recorded data and translates it into a RINEX version 3 file
 
+# ----- FUNCTIONS SECTION ----------------------------------------------------------------
+
+# ----- FUNCTION 1------------------------------------------------------------------------
+#
+# Is file ready ?
+# return:
+# 0 (true) - file is ready
+# 1 (false) - file not exist
+# 2 (false) - file is open by some process
+is_file_ready() {
+    local target_file="$1"
+
+    # File not exist
+    if [[ ! -f "$target_file" ]]; then
+        return 1
+    fi
+
+    # File locked by some process
+    if lsof -t "$target_file" >/dev/null 2>&1; then
+        return 2
+    fi
+
+    # File exist and not locked
+    return 0
+}
+
+
+# ----- FUNCTION 2 -----------------------------------------------------------------------
+#
 # function "notify_zabbix()
 # Usage: notify_zabbix <level> <message>
 # Level: 0 = OK/Cancel, 1 = Error (High), 2 = Warning (Average)
@@ -24,16 +53,22 @@ echo "Level = $LEVEL message = $MSG"
 ## "Import" the functions
 #source /usr/local/bin/tools.sh
 
+# ----- END OF FUNCTIONS SECTION-----------------------------------------------------------
+
+
+
 # Configuration for manual input
 # rpiUSER="alexk" # user name
-STATION="ANTC" # station name
-binEXT="ubx" # bin file extention
+# STATION="ANTC" # station name
+# binEXT="ubx" # bin file extention
 nSEC2KEEP=1 # if 15 min rinex file conatins less seconds than this value not keep such file
 
+
+#
 RAW_DIR="$HOME/record" # Temporary folder for processing
 TEMP_DIR="$HOME/record/temp_recovery" # Temporary folder for processing
-FINAL_DIR="$HOME/data"  # Folder with output compressed rinex (.crx.gz) 
-FINAL_DIR_BIN="$HOME/archive" # Folder with processed bin (and corrupt rnx if any) data. For further remove
+DATA_DIR="$HOME/data"  # Folder with output compressed rinex (.crx.gz) 
+ARCHIVE_DIR="$HOME/archive" # Folder with processed bin (and corrupt rnx if any) data. For further remove
 
 # Make Folders structure
 # Create if not exist folder with raw data
@@ -57,22 +92,22 @@ if [[ ! -d "$TEMP_DIR" ]]; then
     	   }
 fi
 # Folder with output compressed rinex (.crx.gz)
-if [[ ! -d "$FINAL_DIR" ]]; then
-    mkdir -p "$FINAL_DIR" \
-    	&& echo "[$(date +%T)] Directory ready: $FINAL_DIR" >> make_rinex_updated.log \
+if [[ ! -d "$DATA_DIR" ]]; then
+    mkdir -p "$DATA_DIR" \
+    	&& echo "[$(date +%T)] Directory ready: $DATA_DIR" >> make_rinex_updated.log \
 	|| {
-		echo "[$(date +%T)] ERROR: $? Could not create $FINAL_DIR" >> make_rinex_updated.log; \
-                notify_zabbix 1 "[$(date +%T)] make_15min_rinex.sh ERROR: Can not create $FINAL_DIR"
+		echo "[$(date +%T)] ERROR: $? Could not create $DATA_DIR" >> make_rinex_updated.log; \
+                notify_zabbix 1 "[$(date +%T)] make_15min_rinex.sh ERROR: Can not create $DATA_DIR"
         	exit 1; \
     	   }
 fi
 # Folder with processed bin (and corrupt rnx if any) data. For further remove
-if [[ ! -d "$FINAL_DIR_BIN" ]]; then
-    mkdir -p "$FINAL_DIR_BIN" \
-    	&& echo "[$(date +%T)] Directory ready: $FINAL_DIR_BIN" >> make_rinex_updated.log \
+if [[ ! -d "$ARCHIVE_DIR" ]]; then
+    mkdir -p "$ARCHIVE_DIR" \
+    	&& echo "[$(date +%T)] Directory ready: $ARCHIVE_DIR" >> make_rinex_updated.log \
 	|| {
-		echo "[$(date +%T)] ERROR: $? Could not create $FINAL_DIR_BIN" >> make_rinex_updated.log; \
-                notify_zabbix 1 "[$(date +%T)] make_15min_rinex.sh ERROR: Can not create $FINAL_DIR_BIN"
+		echo "[$(date +%T)] ERROR: $? Could not create $ARCHIVE_DIR" >> make_rinex_updated.log; \
+                notify_zabbix 1 "[$(date +%T)] make_15min_rinex.sh ERROR: Can not create $ARCHIVE_DIR"
         	exit 1; \
     	   }
 fi
@@ -122,7 +157,7 @@ for BINFILE in "$RAW_DIR"/*."$binEXT"; do
 	echo "[$(date +%T)] WARNING: $? Could not convert $BINFILE to rnx" >> make_rinex_updated.log 
         notify_zabbix 2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? convbin can not convert $BINFILE to rnx"
 	echo "There was an error with convbin. Move corrupt $NEW_FILE_NAMErnx to archive folder" >> make_rinex_updated.log
-     	mv -f "$BINFILE" "$FINAL_DIR_BIN" # move bin if corrupt to archive folder
+     	mv -f "$BINFILE" "$ARCHIVE_DIR" # move bin if corrupt to archive folder
 		if [ $? != 0 ]; then
 				echo "[$(date +%T)] Can not move corrupt $BINFILE to archive folder" >> make_rinex_updated.log
                 		notify_zabbix 2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? Can not not move corrupt $BINFILE to archive folder"
@@ -181,7 +216,7 @@ if [[ $? != 0 ]]; then
 	echo "[$(date +%T)] WARNING: $? gfzrnx could not merge rnx files" >> make_rinex_updated.log 
         notify_zabbix 2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? gfzrnx can not make grid of rnx files"
 	echo "There was an error with gfzrnx. Move corrupt rnx files to archive folder" >> make_rinex_updated.log
-     	mv -f "$RAW_DIR/*.rnx" "$FINAL_DIR_BIN" # move rnx ailes if corrupt to archive folder
+     	mv -f "$RAW_DIR/*.rnx" "$ARCHIVE_DIR" # move rnx ailes if corrupt to archive folder
 		if [ $? != 0 ]; then
 				echo "[$(date +%T)] Can not move corrupt rnx files to archive folder" >> make_rinex_updated.log
         			notify_zabbix 2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? Can not move rnx files to archive folder"
@@ -236,8 +271,8 @@ else
 		NEW_FILE_NAMErnx="${BASE_FILE_NAME}.${EXT_NAME}"
     		NEW_FILE_NAMEcrx="${BASE_FILE_NAME}.crx"
     		NEW_FILE_NAMEcrxgz="${BASE_FILE_NAME}.crx.gz"
-    		NEW_FILE_PATHrnx="$FINAL_DIR/$NEW_FILE_NAMErnx"
-    		NEW_FILE_PATHcrx="$FINAL_DIR/$NEW_FILE_NAMEcrx"
+    		NEW_FILE_PATHrnx="$DATA_DIR/$NEW_FILE_NAMErnx"
+    		NEW_FILE_PATHcrx="$DATA_DIR/$NEW_FILE_NAMEcrx"
 
     		# PERFORM RENAME
     		mv "$RNX_FILE" "$NEW_FILE_PATHrnx"
@@ -249,7 +284,7 @@ else
 			echo "[$(date +%T)] WARNING: RNX2CRC could not convert $NEW_FILE_NAMErnx to RNX" >> make_rinex_updated.log 
 		        notify_zabbix 2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? RNX2CRX can not convert $NEW_FILE_NAMErnx to crx"
 			echo "There was an error with RNX2CRX. Move corrupt $NEW_FILE_NAMErnx to archive folder" >> make_rinex_updated.log
-        		mv -f "$NEW_FILE_PATHrnx" "$FINAL_DIR_BIN" # move rnx if corrupt to arcchive folder
+        		mv -f "$NEW_FILE_PATHrnx" "$ARCHIVE_DIR" # move rnx if corrupt to arcchive folder
 			if [ $? != 0 ]; then
 				echo "[$(date +%T)] Can not move corrupt $NEW_FILE_NAMErnx to archive folder" >> make_rinex_updated.log
 			        notify_zabbix 2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? Can not convert moce $NEW_FILE_NAMErnx to archive folder"
@@ -263,7 +298,7 @@ else
 				echo "[$(date +%T)] WARNING: gzip could not process $NEW_FILE_NAMEcrx" >> make_rinex_updated.log 
 			        notify_zabbix 2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? Can not move corrupt $NEW_FILE_NAMEcrx to archive folder"
 				echo "There was an error with gzip. Move $NEW_FILE_NAMEcrx to archive folder" >> make_rinex_updated.log
-            			mv -f "$NEW_FILE_PATHcrx" "$FINAL_DIR_BIN" # move crx if corrupt to archive
+            			mv -f "$NEW_FILE_PATHcrx" "$ARCHIVE_DIR" # move crx if corrupt to archive
 				if [ $? != 0 ]; then
 					echo "[$(date +%T)] Can not move corrupt $NEW_FILE_NAMEcrx to archive folder" >> make_rinex_updated.log
 					notify_zabbix 2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? Can not move $NEW_FILE_NAMEcrx to archive folder"
@@ -303,14 +338,13 @@ fi
 # Move bin files if not opened by str2str
 echo "Move processed bin file(s) to archive folder" >> make_rinex_updated.log
 for BINFILE in "$RAW_DIR"/*."$binEXT"; do
-	if [[ -f "$BINFILE" ]] && ! fuser -s "$BINFILE"; then
-		mv -f "$BINFILE" "$FINAL_DIR_BIN" # move processed bin file to archive folder
-		if [ $? != 0 ]; then
+	if is_file_ready "$BINFILE"; then
+		mv -f "$BINFILE" "$ARCHIVE_DIR" # move processed bin file to archive folder
+		if [[ $? != 0 ]]; then
 			echo "[$(date +%T)] Warning: $? Can not move processed $BINFILE to archive folder" >> make_rinex_updated.log
 	        	notify_zabbix 2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? Can not move processed  $BINFILE to archive folder"
 		fi
 	fi
 done
 
-echo "15-min file(s) ${NEW_FILE_NAMEcrxgz} (with more than: ${nSEC2KEEP} 1S EPOCHs) are cleaned and ready" >> make_rinex_updated.log
-
+echo "15-min file(s) ${NEW_FILE_NAMEcrxgz} (with more than: ${nSEC2KEEP} 1S EPOCHs) are cleaned and ready" >> make_rinex_upd
