@@ -97,7 +97,7 @@ while [[ $# -gt 0 ]]; do
                 shift 2
                 ;;
             --help)
-                echo "Unknown option: $1"
+                echo "Some help info"
                 exit 1 
                 ;;
             *)
