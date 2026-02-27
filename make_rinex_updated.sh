@@ -71,11 +71,57 @@ log_errors() {
 
 # ----- END OF FUNCTIONS SECTION-----------------------------------------------------------
 
-# Configuration for manual input
-# rpiUSER="alexk" # user name
-# STATION="ANTC" # station name
-# binEXT="ubx" # bin file extention
-nSEC2KEEP=1 # if 15 min rinex file conatins less seconds than this value not keep such file
+# Inpit parameters parsing
+err_level="0"
+err_message="OK"
+err_output="OK"
+
+QUARTER=0 #QUARTER of script call (0 - at startup, 1 - 16 min, 2 - 31 min, 3 - 46 min, 4 -1 min)
+STATION="UNKN" # station name
+binEXT="ubx" # bin file extention
+nEPOCH2KEEP=1 # if 15 min rinex file conatins less EPOCHS than this value not keep such file
+
+# Loop through all arguments
+while [[ $# -gt 0 ]]; do
+      case "$1" in
+            --q)
+                QUARTER="$2"
+                shift 2
+                ;;
+            --stat)
+                STATION="$2"
+                shift 2
+                ;;
+            --ext)
+                binEXT="$2"
+                shift 2
+                ;;
+            --epoch)
+                nEPOCH2KEEP="$2"
+                shift 2
+                ;;
+            --help)
+                echo "Unknown option: $1"
+                exit 1 
+                ;;
+            *)
+                # Handle unknown options
+                echo "Unknown option: $1"
+                exit 2
+                ;;
+     esac
+done
+
+# Logic using the arguments
+echo "Qaurter: ${QUARTER} (0 - startup, 1-4 - some quarter)"
+echo "Station: ${STATION}"
+echo "BIN file extension: ${binEXT}"
+echo "Number of epoch to keep in rinex file: ${nEPOCH2KEEP}"
+
+# SOME PROCESSING: TBD ...
+
+# SET TZ to UTC
+export TZ=UTC
 
 #  Definition of folders
 RAW_DIR="${HOME}/record" # Temporary folder for processing
@@ -93,8 +139,8 @@ if [[ ! -d "${DATA_DIR}" ]]; then
     mkdir -p "${DATA_DIR}" \
 	|| {
 #		###echo "[$(date +%T)] ERROR: $? Could not create ${DATA_DIR}" >> make_rinex_updated.log; \
-                log_errors --level 0 --message "Ok" --out "Ok"           
-        	exit 1; \
+                log_errors --level 1 --message "Ok" --out "Ok"           
+        	exit 3; \
     	   }
 fi
 
@@ -103,8 +149,8 @@ if [[ ! -d "${ARCHIVE_DIR}" ]]; then
     mkdir -p "${ARCHIVE_DIR}" \
 	|| {
 #		###echo "[$(date +%T)] ERROR: $? Could not create ${ARCHIVE_DIR}" >> make_rinex_updated.log; \
-                log_errors --level 0 --message "Ok" --out "Ok"           
-        	exit 2; \
+                log_errors --level 1 --message "Ok" --out "Ok"           
+        	exit 4; \
     	   }
 fi
 
@@ -234,12 +280,12 @@ else
     	MINUTE=$(echo "${FIRST_EPOCH}" | awk '{print $6}')
     	SECOND=$(echo "${FIRST_EPOCH}" | awk '{print $7}' | cut -d'.' -f1) # Removes decimals
 
-    	# Check if the EPOCH_COUNT>=nSEC2KEEP for QUARTER 1,2,3,4 or
+    	# Check if the EPOCH_COUNT>=nEPOCH2KEEP for QUARTER 1,2,3,4 or
     	# Not first 30-31 sec or last 30-31 sec on the edge of the hour for QUARTER 0
-    	if (( (QUARTER > 0 && EPOCH_COUNT >= nSEC2KEEP) || (QUARTER == 0 && !( (EPOCH_COUNT <=31 && MINUTE == 59) || (EPOCH_COUNT <=31 && MINUTE == 0) ) ) )); then
+    	if (( (QUARTER > 0 && EPOCH_COUNT > nEPOCH2KEEP) || (QUARTER == 0 && !( (EPOCH_COUNT <=31 && MINUTE == 59) || (EPOCH_COUNT <=31 && MINUTE == 0) ) ) )); then
 
-        ## Check if the count is NOT less than nSEC2KEEP (Count >= nSEC2KEEP)
-        #if [[ "${EPOCH_COUNT}" -ge "${nSEC2KEEP}" ]]; then
+        ## Check if the count is NOT less than nEPOCH2KEEP (Count >= nEPOCH2KEEP)
+        #if [[ "${EPOCH_COUNT}" -gt "${nEPOCH2KEEP}" ]]; then
 
 		echo "Processing ${RNX_FILE} with  ${EPOCH_COUNT} epochs"
 
@@ -299,7 +345,7 @@ else
 		fi
 
         else
-		echo "Skipping ${RNX_FILE}: Only ${EPOCH_COUNT} epochs (less than $nSEC2KEEP)"
+		echo "Skipping ${RNX_FILE}: Only ${EPOCH_COUNT} epochs (less than $nEPOCH2KEEP)"
   	fi
 
     done
@@ -336,4 +382,4 @@ for BINFILE in "${RAW_DIR}"/*."${binEXT}"; do
 	fi
 done
 
-echo "15-min file(s) ${NEW_FILE_NAMEcrxgz} (with more than: ${nSEC2KEEP} 1S EPOCHs) are cleaned and ready"
+echo "15-min file(s) ${NEW_FILE_NAMEcrxgz} (with more than: ${nEPOCH2KEEP} 1S EPOCHs) are cleaned and ready"
