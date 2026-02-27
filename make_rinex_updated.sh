@@ -164,12 +164,12 @@ QUARTER=$1
 if [[ "${QUARTER}" -lt 4 ]]; then
 
    # For actual time: YEAR MONTH DAY DOY HOUR
-   read -r YEAR MONTH DAY DOY HOUR <<< "$(date -u -d "+%Y %m %d %j %H")"
+   read -r YEAR MONTH DAY DOY HOUR <<< "$(date -d "+%Y %m %d %j %H")"
 
 else
 
     # For actual time -1 hour: YEAR MONTH DAY DOY HOUR
-    read -r YEAR MONTH DAY DOY HOUR <<< "$(date -u -d "-1 hour" "+%Y %m %d %j %H")"
+    read -r YEAR MONTH DAY DOY HOUR <<< "$(date -d "-1 hour" "+%Y %m %d %j %H")"
 
 fi
 
