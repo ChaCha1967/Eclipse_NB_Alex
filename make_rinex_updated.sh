@@ -72,10 +72,6 @@ log_errors() {
 # ----- END OF FUNCTIONS SECTION-----------------------------------------------------------
 
 # Inpit parameters parsing
-err_level="0"
-err_message="OK"
-err_output="OK"
-
 QUARTER=0 #QUARTER of script call (0 - at startup, 1 - 16 min, 2 - 31 min, 3 - 46 min, 4 -1 min)
 STATION="UNKN" # station name
 binEXT="ubx" # bin file extention
@@ -118,7 +114,10 @@ echo "Station: ${STATION}"
 echo "BIN file extension: ${binEXT}"
 echo "Number of epoch to keep in rinex file: ${nEPOCH2KEEP}"
 
-# SOME PROCESSING: TBD ...
+# Default Parameters
+SAMPLING=1
+EPOCH30SEC=$((${SAMPLING}*30+1))
+echo "In 30 seconds exists: ${EPOCH30SEC} epoch" 
 
 # SET TZ to UTC
 export TZ=UTC
@@ -157,14 +156,11 @@ fi
 # Date/time of run
 echo "$(date +%T) Start bin files processing"
 
-# First, what quarter of the hour is it.
-QUARTER=$1
-
 # Get parts of the date and time
 if [[ "${QUARTER}" -lt 4 ]]; then
 
    # For actual time: YEAR MONTH DAY DOY HOUR
-   read -r YEAR MONTH DAY DOY HOUR <<< "$(date -d "+%Y %m %d %j %H")"
+   read -r YEAR MONTH DAY DOY HOUR <<< "$(date "+%Y %m %d %j %H")"
 
 else
 
@@ -182,8 +178,15 @@ for BINFILE in "${RAW_DIR}"/*."${binEXT}"; do
     # Create a unique temp name for the RINEX fragment
     TEMP_OUT="${RAW_DIR}/$(basename "${BINFILE}" ."${binEXT}").rnx"
 
-    echo "[$(date +%T)] Runing convbin to convert ${BINFILE} to rnx" >> make_rinex_updated.log 
-    convbin -ti 1.0000 -od -os -v 3.04 -o "${TEMP_OUT}" "{$BINFILE}"
+echo "START!!!!"
+
+
+    echo "[$(date +%T)] Runing convbin to convert ${BINFILE} to rnx"
+    convbin -ti 1.0000 -od -os -v 3.04 -o "${TEMP_OUT}" "${BINFILE}"
+
+
+echo "STOP!!!!"
+
 
     # echo error if convbin fail
     if [[ $? != 0 ]]; then
@@ -263,7 +266,8 @@ if [[ $? != 0 ]]; then
 # preparing output files
 else
 
-    for RNX_FILE in "${TEMP_DIR}"/*_R_*.rnx; do
+#    for RNX_FILE in "${TEMP_DIR}"/*_R_*.rnx; do
+    for RNX_FILE in "${TEMP_DIR}"/*.rnx; do
     	[[ -f "${RNX_FILE}" ]] || continue
 
     	# Count the number of epochs (lines starting with '>')
@@ -282,7 +286,7 @@ else
 
     	# Check if the EPOCH_COUNT>=nEPOCH2KEEP for QUARTER 1,2,3,4 or
     	# Not first 30-31 sec or last 30-31 sec on the edge of the hour for QUARTER 0
-    	if (( (QUARTER > 0 && EPOCH_COUNT > nEPOCH2KEEP) || (QUARTER == 0 && !( (EPOCH_COUNT <=31 && MINUTE == 59) || (EPOCH_COUNT <=31 && MINUTE == 0) ) ) )); then
+    	if (( (QUARTER > 0 && EPOCH_COUNT > nEPOCH2KEEP) || (QUARTER == 0 && !( (EPOCH_COUNT <= EPOCH30SEC && MINUTE == 59) || (EPOCH_COUNT <= EPOCH30SEC && MINUTE == 0) ) ) )); then
 
         ## Check if the count is NOT less than nEPOCH2KEEP (Count >= nEPOCH2KEEP)
         #if [[ "${EPOCH_COUNT}" -gt "${nEPOCH2KEEP}" ]]; then
