@@ -31,31 +31,45 @@ is_file_ready() {
 
 # ----- FUNCTION 2 -----------------------------------------------------------------------
 #
-# function "notify_zabbix()
-# Usage: notify_zabbix <level> <message>
-# Level: 0 = OK/Cancel, 1 = Error (High), 2 = Warning (Average)
-notify_zabbix() {
-    local LEVEL=$1
-    local MSG=$2
-    local ZABBIX_SERVER="127.0.0.1" # Change to your actual Zabbix IP
-    local HOSTNAME="ant-rpi"    # Should match host in Zabbix
+# log_errors function with multiple arguments
+log_errors() {
+    # Initialize local variables with default values
+    local err_level="0"
+    local err_message="OK"
+    local err_output="OK"
 
-    # Map levels to Zabbix status or severity
-    # We send the level as a value to a specific 'trapper' item
-#    zabbix_sender -z "$ZABBIX_SERVER" -s "$HOSTNAME" -k "station.status.level" -o "$LEVEL"
-#    zabbix_sender -z "$ZABBIX_SERVER" -s "$HOSTNAME" -k "station.status.msg" -o "$MSG"
+    # Loop through all arguments
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --err_level)
+                err_level="$2"
+                shift 2
+                ;;
+            --err_message)
+                err_mesage="$2"
+                shift 2
+                ;;
+            --err_output)
+                err_output="$2"
+                shift 2
+                ;;
+            *)
+                # Handle unknown options
+                echo "Unknown option: $1"
+                return 1
+                ;;
+        esac
+    done
 
-# just for testing
-echo "Level = $LEVEL message = $MSG"
+    # Logic using the arguments
+    echo "Error level: ${err_level} (0 - OK, 1 - critical error, 2 - warning)"
+    echo "Error message: ${err_message}"
+    echo "Error output: ${err_output}"
 
+    # SOME PROCESSING: TBD ...
 }
 
-## "Import" the functions
-#source /usr/local/bin/tools.sh
-
 # ----- END OF FUNCTIONS SECTION-----------------------------------------------------------
-
-
 
 # Configuration for manual input
 # rpiUSER="alexk" # user name
@@ -63,40 +77,22 @@ echo "Level = $LEVEL message = $MSG"
 # binEXT="ubx" # bin file extention
 nSEC2KEEP=1 # if 15 min rinex file conatins less seconds than this value not keep such file
 
+#  Definition of folders
+RAW_DIR="${HOME}/record" # Temporary folder for processing
+DATA_DIR="${HOME}/data"  # Folder with output compressed rinex (.crx.gz) 
+ARCHIVE_DIR="${HOME}/archive" # Folder with processed bin (and corrupt rnx if any) data. For further remove
 
-#
-RAW_DIR="$HOME/record" # Temporary folder for processing
-TEMP_DIR="$HOME/record/temp_recovery" # Temporary folder for processing
-DATA_DIR="$HOME/data"  # Folder with output compressed rinex (.crx.gz) 
-ARCHIVE_DIR="$HOME/archive" # Folder with processed bin (and corrupt rnx if any) data. For further remove
+# Creation of folders
+TEMP_DIR="$(mktemp -d -t TEMP_DIR_XXXXXX)"
+# Auto removing if  exit or interruption 
+trap 'rm -rf "${TEMP_DIR}"' EXIT
 
-# Make Folders structure
-# Create if not exist folder with raw data
-if [[ ! -d "$RAW_DIR" ]]; then
-    mkdir -p "$RAW_DIR" \
-    	&& echo "[$(date +%T)] Directory ready: $RAW_DIR" >> make_rinex_updated.log \
-	|| {
-		echo "[$(date +%T)] ERROR: $? Could not create $RAW_DIR" >> make_rinex_updated.log; \ 
-                notify_zabbix 1 "[$(date +%T)] make_15min_rinex.sh ERROR: Can not create $RAW_DIR"
-         	exit 1; \
-    	   }
-fi
-# Temporary folder for processing
-if [[ ! -d "$TEMP_DIR" ]]; then
-    mkdir -p "$TEMP_DIR" \
-    	&& echo "[$(date +%T)] Directory ready: $TEMP_DIR" >> make_rinex_updated.log \
-	|| {
-		echo "[$(date +%T)] ERROR: $? Could not create $TEMP_DIR" >> make_rinex_updated.log; \
-                notify_zabbix 1 "[$(date +%T)] make_15min_rinex.sh ERROR: Can not create $TEMP_DIR"
-        	exit 1; \
-    	   }
-fi
+
 # Folder with output compressed rinex (.crx.gz)
 if [[ ! -d "$DATA_DIR" ]]; then
     mkdir -p "$DATA_DIR" \
-    	&& echo "[$(date +%T)] Directory ready: $DATA_DIR" >> make_rinex_updated.log \
 	|| {
-		echo "[$(date +%T)] ERROR: $? Could not create $DATA_DIR" >> make_rinex_updated.log; \
+#		echo "[$(date +%T)] ERROR: $? Could not create $DATA_DIR" >> make_rinex_updated.log; \
                 notify_zabbix 1 "[$(date +%T)] make_15min_rinex.sh ERROR: Can not create $DATA_DIR"
         	exit 1; \
     	   }
@@ -104,11 +100,10 @@ fi
 # Folder with processed bin (and corrupt rnx if any) data. For further remove
 if [[ ! -d "$ARCHIVE_DIR" ]]; then
     mkdir -p "$ARCHIVE_DIR" \
-    	&& echo "[$(date +%T)] Directory ready: $ARCHIVE_DIR" >> make_rinex_updated.log \
 	|| {
-		echo "[$(date +%T)] ERROR: $? Could not create $ARCHIVE_DIR" >> make_rinex_updated.log; \
+#		echo "[$(date +%T)] ERROR: $? Could not create $ARCHIVE_DIR" >> make_rinex_updated.log; \
                 notify_zabbix 1 "[$(date +%T)] make_15min_rinex.sh ERROR: Can not create $ARCHIVE_DIR"
-        	exit 1; \
+        	exit 2; \
     	   }
 fi
 
