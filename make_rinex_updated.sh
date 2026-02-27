@@ -75,7 +75,7 @@ log_errors() {
 QUARTER=0 #QUARTER of script call (0 - at startup, 1 - 16 min, 2 - 31 min, 3 - 46 min, 4 -1 min)
 STATION="UNKN" # station name
 binEXT="ubx" # bin file extention
-nEPOCH2KEEP=1 # if 15 min rinex file conatins less EPOCHS than this value not keep such file
+nEPOCH2KEEP=0 # if 15 min rinex file conatins less EPOCHS than this value not keep such file
 
 # Loop through all arguments
 while [[ $# -gt 0 ]]; do
@@ -178,15 +178,8 @@ for BINFILE in "${RAW_DIR}"/*."${binEXT}"; do
     # Create a unique temp name for the RINEX fragment
     TEMP_OUT="${RAW_DIR}/$(basename "${BINFILE}" ."${binEXT}").rnx"
 
-echo "START!!!!"
-
-
     echo "[$(date +%T)] Runing convbin to convert ${BINFILE} to rnx"
     convbin -ti 1.0000 -od -os -v 3.04 -o "${TEMP_OUT}" "${BINFILE}"
-
-
-echo "STOP!!!!"
-
 
     # echo error if convbin fail
     if [[ $? != 0 ]]; then
