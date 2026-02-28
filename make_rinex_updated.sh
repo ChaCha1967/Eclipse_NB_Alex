@@ -55,23 +55,22 @@ log() {
                 ;;
             *)
                 # Handle unknown options
-                debug "Unknown option: $1"
                 return 1
                 ;;
         esac
     done
 
     # Logic using the arguments
-    debug "log() finction executed"
+    ########## debug "log() finction executed"
     # SOME PROCESSING: TBD ...
 }
 
 
 # ----- FUNCTION 3 -----------------------------------------------------------------------
-#
-debug() {
-  echo $*
-} 
+##
+#debug() {
+#  echo $*
+#}
 
 
 # ----- FUNCTION 4 -----------------------------------------------------------------------
@@ -91,7 +90,7 @@ nEPOCH2KEEP=0 # if 15 min rinex file conatins less EPOCHS than this value not ke
 SAMPLING=1 # sampling rate of GNSS receiver
 ### STOP BLOCK - HAVE TO BE SET MANUAL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 EPOCH30SEC=$((${SAMPLING}*30+1)) # Number of epoch in 30 sec interval (for removing diring startup processing)
-debug "In 30 seconds exists: ${EPOCH30SEC} epoch" 
+log --level 0 --message "In 30 seconds exists: ${EPOCH30SEC} epoch" --out ""
 
 
 # --- Loop through arguments (your current code) ---
@@ -102,7 +101,7 @@ while [[ $# -gt 0 ]]; do
         --extension) binEXT="$2";    shift 2 ;;
         --epoch)     nEPOCH2KEEP="$2"; shift 2 ;;
         --help)      printHelp;      exit 1  ;;
-        *) debug "Unknown option: $1"; printHelp; exit 2 ;;
+        *) log --level 3 --message  "Unknown option: $1" --out ""; printHelp; exit 2 ;;
     esac
 done
 
@@ -113,19 +112,18 @@ MISSING=""
 [[ -z "${binEXT}"  ]] && MISSING+="--extension "
 
 if [[ -n "${MISSING}" ]]; then
-    debug "ERROR: Missing mandatory parameters: ${MISSING}"
     log --level 3 --message "ERROR: Missing mandatory parameters: ${MISSING}" --out ""
     printHelp
     exit 3
 fi
 
-debug "Validation passed for Station: $STATION"
+log --log 0 --message "Parameters validation passed for Station: $STATION" --out ""
 
 # Logic using the arguments
-debug "Qaurter: ${QUARTER} (0 - startup, 1-4 - some quarter)"
-debug "Station: ${STATION}"
-debug "BIN file extension: ${binEXT}"
-debug "Number of epoch to keep in rinex file: ${nEPOCH2KEEP}"
+log --level 0 --message "Qaurter: ${QUARTER} (0 - startup, 1-4 - some quarter)" --out ""
+log --level 0 --message "Station: ${STATION}" --out ""
+log --level 0 --message "BIN file extension: ${binEXT}" --out ""
+log --level 0 --message "Number of epoch to keep in rinex file: ${nEPOCH2KEEP}" --out ""
 
 # SET TZ to UTC
 export TZ=UTC
@@ -188,9 +186,9 @@ if [[ "${QUARTER}" -eq 0 ]]; then # Convbin run at startup
 	log --level 0 --message "Runing convbin to convert ${BINFILE} to rnx" --out ""
 
         # Run convbin for processing at startup
-        convbin -ti 1.0000 -od -os -v 3.04 -hm "${STATION}"-o "${TEMP_OUT}" "${BINFILE}"
+        ~/bin/convbin -ti 1.0000 -od -os -v 3.04 -hm "${STATION}"-o "${TEMP_OUT}" "${BINFILE}"
 
-    # debug error if convbin fail
+    # Error if convbin fail
     if [[ $? != 0 ]]; then
         log --level 2 --message "WARNING: $? Could not convert ${BINFIL}E to rnx"" --out ""
 	log --level 2 "There was an error: $? with convbin. Move corrupt ${NEW_FILE_NAMErnx} to archive folder"
@@ -205,8 +203,6 @@ if [[ "${QUARTER}" -eq 0 ]]; then # Convbin run at startup
 else # Convbin run in loop
 
 fi
-
- ### -ts $YEAR/$MONTH/$DAY $HOUR:00:00 -te $YEAR/$MONTH/$DAY $HOUR:15:00 
 
     # preapare start time for convbin in loop mode
     case ${QUARTER} in
@@ -241,10 +237,10 @@ fi
 	log --level 0 --message "Runing convbin to convert ${BINFILE} to rnx" --out ""
 
         # Run convbin for processing at startup
-        convbin -ts "${START_TIME}" -te "${STOP_TIME}"
+        ~/bin/convbin -ts "${START_TIME}" -te "${STOP_TIME}"
                  -ti 1.0000 -od -os -v 3.04 -hm "${STATION}"-o "${TEMP_OUT}" "${BINFILE}"
 
-    # debug error if convbin fail
+    # Error if convbin fail
     if [[ $? != 0 ]]; then
         log --level 2 --message "WARNING: $? Could not convert ${BINFIL}E to rnx"" --out ""
 	log --level 2 "There was an error: $? with convbin. Move corrupt ${NEW_FILE_NAMErnx} to archive folder"
@@ -264,7 +260,7 @@ if [[ "${QUARTER}" -eq 0 ]]; then
     # Merge and split into the 15-min grid. and move resulting rnx to $TEMP_DIR
     # Note: Using $RAW_DIR/*.rnx to include ALL files in the batch.
     log --level 0 --mesage "Merging and splitting into 15-min grid..." --out""
-    gfzrnx -finp "${RAW_DIR}/*.rnx" \
+    ~/bin/gfzrnx -finp "${RAW_DIR}/*.rnx" \
         -fout "${TEMP_DIR}/::RX3::" \
         -split 900  \
         -f \
@@ -296,7 +292,7 @@ else
     # Merge and split into the 15-min rnx file with START_TIME + 900 sec
     # and move resulting rnx to $TEMP_DIR
     log --level 0 --mesage "Merging and splitting into 15-min file start time: ${START_TIME}" --out ""
-    gfzrnx -finp "${RAW_DIR}/*.rnx" \
+    ~/bin/gfzrnx -finp "${RAW_DIR}/*.rnx" \
            -fout "${TEMP_DIR}/::RX3::" \
            -epo_beg "${START_TIME}" \
            -d 900 \
@@ -307,7 +303,7 @@ else
 fi
 
 
-# debug error if gfzrnx fail
+# Error if gfzrnx fail
 if [[ $? != 0 ]]; then
         log --level 2 --message "WARNING: $? gfzrnx could not merge rnx files" --out ""
 	log --level 2 --message "There was an error with gfzrnx. Move corrupt rnx files to archive folder" --out ""
@@ -329,12 +325,12 @@ else
 		# Find the first line starting with '>' after the header ends
 	    	FIRST_EPOCH=$(sed -n '/END OF HEADER/,$ { /^>/p; }' "${RNX_FILE}" | head -n 1)
 	    	# Extract components
-	    	YEAR=$(debug "${FIRST_EPOCH}" | awk '{print $2}')
-	    	MONTH=$(debug "${FIRST_EPOCH}" | awk '{print $3}')
-    		DAY=$(debug "${FIRST_EPOCH}" | awk '{print $4}')
-	    	HOUR=$(debug "${FIRST_EPOCH}" | awk '{print $5}')
-	    	MINUTE=$(debug "${FIRST_EPOCH}" | awk '{print $6}')
-    		SECOND=$(debug "${FIRST_EPOCH}" | awk '{print $7}' | cut -d'.' -f1) # Removes decimals
+	    	YEAR=$(echo "${FIRST_EPOCH}" | awk '{print $2}')
+	    	MONTH=$(echo "${FIRST_EPOCH}" | awk '{print $3}')
+    		DAY=$(echo "${FIRST_EPOCH}" | awk '{print $4}')
+	    	HOUR=$(echo "${FIRST_EPOCH}" | awk '{print $5}')
+	    	MINUTE=$(echo "${FIRST_EPOCH}" | awk '{print $6}')
+    		SECOND=$(echo "${FIRST_EPOCH}" | awk '{print $7}' | cut -d'.' -f1) # Removes decimals
         else
 		MINUTE = 0
         fi
@@ -355,7 +351,7 @@ else
     		# We take everything from the 10th character onwards and
     		# prepend your $STATION and "00CAN"
     		# The 'cut -c 10-' command removes the first 9 characters (the wrong ID)
-    		SUFFIX=$(debug "${BASE_NAME}" | cut -c 10-)
+    		SUFFIX=$(echo "${BASE_NAME}" | cut -c 10-)
     		NEW_FILE_NAME="${STATION}00CAN${SUFFIX}"
       		# Extract the part before the last dot
 		BASE_FILE_NAME="${NEW_FILE_NAME%.*}"
@@ -400,7 +396,7 @@ else
 		fi
 
         else
-		log --level 2 --message  "Skipping ${RNX_FILE}: Only ${EPOCH_COUNT} epochs (less than $nEPOCH2KEEP)" --out ""
+		log --level 2 --message "Skipping ${RNX_FILE}: Only ${EPOCH_COUNT} epochs (less than $nEPOCH2KEEP)" --out ""
   	fi
 
     done
