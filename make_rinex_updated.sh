@@ -31,12 +31,12 @@ is_file_ready() {
 
 # ----- FUNCTION 2 -----------------------------------------------------------------------
 #
-# log_errors function with multiple arguments
-log_errors() {
+# log function with multiple arguments
+log() {
     # Initialize local variables with default values
-    local err_level="0"
-    local err_message="OK"
-    local err_output="OK"
+    local err_level=""  # 0 - Ok, 1 - warning, 2 - error, 3 - critical error (require exit from script)
+    local err_message="" # Information message
+    local err_output="" #  Text output proused by target utility if any
 
     # Loop through all arguments
     while [[ $# -gt 0 ]]; do
@@ -55,69 +55,75 @@ log_errors() {
                 ;;
             *)
                 # Handle unknown options
-                echo "Unknown option: $1"
+                debug "Unknown option: $1"
                 return 1
                 ;;
         esac
     done
 
     # Logic using the arguments
-    echo "Error level: ${err_level} (0 - OK, 1 - critical error, 2 - warning)"
-    echo "Error message: ${err_message}"
-    echo "Error output: ${err_output}"
-
+    debug "log() finction executed"
     # SOME PROCESSING: TBD ...
+}
+
+
+# ----- FUNCTION 3 -----------------------------------------------------------------------
+#
+debug() {
+  echo $*
+} 
+
+
+# ----- FUNCTION 4 -----------------------------------------------------------------------
+#
+printHelp() {
+  echo $0: this is the help
 }
 
 # ----- END OF FUNCTIONS SECTION-----------------------------------------------------------
 
-# Inpit parameters parsing
-QUARTER=0 #QUARTER of script call (0 - at startup, 1 - 16 min, 2 - 31 min, 3 - 46 min, 4 -1 min)
-STATION="UNKN" # station name
-binEXT="ubx" # bin file extention
+# Default parameters
+QUARTER="" #QUARTER of script call (0 - at startup, 1 - 16 min, 2 - 31 min, 3 - 46 min, 4 -1 min)
+STATION="" # station name
+binEXT="" # bin file extention
 nEPOCH2KEEP=0 # if 15 min rinex file conatins less EPOCHS than this value not keep such file
+SAMPLING=1 # sampling rate of GNSS receiver
+EPOCH30SEC=$((${SAMPLING}*30+1)) # Number of epoch in 30 sec interval (for removing diring startup processing)
+debug "In 30 seconds exists: ${EPOCH30SEC} epoch" 
 
-# Loop through all arguments
+
+# --- Loop through arguments (your current code) ---
 while [[ $# -gt 0 ]]; do
-      case "$1" in
-            --q)
-                QUARTER="$2"
-                shift 2
-                ;;
-            --stat)
-                STATION="$2"
-                shift 2
-                ;;
-            --ext)
-                binEXT="$2"
-                shift 2
-                ;;
-            --epoch)
-                nEPOCH2KEEP="$2"
-                shift 2
-                ;;
-            --help)
-                echo "Some help info"
-                exit 1 
-                ;;
-            *)
-                # Handle unknown options
-                echo "Unknown option: $1"
-                exit 2
-                ;;
-     esac
+    case "$1" in
+        --quarter)   QUARTER="$2";   shift 2 ;;
+        --station)   STATION="$2";   shift 2 ;;
+        --extension) binEXT="$2";    shift 2 ;;
+        --epoch)     nEPOCH2KEEP="$2"; shift 2 ;;
+        --help)      printHelp;      exit 1  ;;
+        *) debug "Unknown option: $1"; printHelp; exit 2 ;;
+    esac
 done
 
-# Logic using the arguments
-echo "Qaurter: ${QUARTER} (0 - startup, 1-4 - some quarter)"
-echo "Station: ${STATION}"
-echo "BIN file extension: ${binEXT}"
-echo "Number of epoch to keep in rinex file: ${nEPOCH2KEEP}"
+# ---  Validation Check (The part you need) ---
+MISSING=""
+[[ -z "${QUARTER}" ]] && MISSING+="--quarter "
+[[ -z "${STATION}" ]] && MISSING+="--station "
+[[ -z "${binEXT}"  ]] && MISSING+="--extension "
 
-# Default Parameters
-SAMPLING=1
-EPOCH30SEC=$((${SAMPLING}*30+1))
-echo "In 30 seconds exists: ${EPOCH30SEC} epoch" 
+if [[ -n "${MISSING}" ]]; then
+    debug "ERROR: Missing mandatory parameters: ${MISSING}"
+    log --level 3 --message "ERROR: Missing mandatory parameters: ${MISSING}" --out ""
+    printHelp
+    exit 3
+fi
+
+debug "Validation passed for Station: $STATION"
+
+# Logic using the arguments
+debug "Qaurter: ${QUARTER} (0 - startup, 1-4 - some quarter)"
+debug "Station: ${STATION}"
+debug "BIN file extension: ${binEXT}"
+debug "Number of epoch to keep in rinex file: ${nEPOCH2KEEP}"
 
 # SET TZ to UTC
 export TZ=UTC
@@ -129,16 +135,15 @@ ARCHIVE_DIR="${HOME}/archive" # Folder with processed bin (and corrupt rnx if an
 
 # Creation of folders
 # Temporary folder
-TEMP_DIR="$(mktemp -d -t TEMP_DIR_XXXXXX)"
+TEMP_DIR="$(mktemp -d -t make_rinex_XXXXXX)"
 # Auto removing if  exit or interruption 
-trap 'rm -rf "${TEMP_DIR}"' EXIT
+#trap 'rm -rf "${TEMP_DIR}"' EXIT
 
 # Folder with output compressed rinex (.crx.gz)
 if [[ ! -d "${DATA_DIR}" ]]; then
     mkdir -p "${DATA_DIR}" \
 	|| {
-#		###echo "[$(date +%T)] ERROR: $? Could not create ${DATA_DIR}" >> make_rinex_updated.log; \
-                log_errors --level 1 --message "Ok" --out "Ok"           
+                log --level 3 --message "ERROR: $? Could not create ${DATA_DIR}" --out ""
         	exit 3; \
     	   }
 fi
@@ -147,49 +152,97 @@ fi
 if [[ ! -d "${ARCHIVE_DIR}" ]]; then
     mkdir -p "${ARCHIVE_DIR}" \
 	|| {
-#		###echo "[$(date +%T)] ERROR: $? Could not create ${ARCHIVE_DIR}" >> make_rinex_updated.log; \
-                log_errors --level 1 --message "Ok" --out "Ok"           
+                log --level 3 --message "ERROR: $? Could not create ${ARCHIVE_DIR}" --out ""
         	exit 4; \
     	   }
 fi
 
 # Date/time of run
-echo "$(date +%T) Start bin files processing"
+log --level 0 --message "Start bin files processing" --out ""
 
 # Get parts of the date and time
 if [[ "${QUARTER}" -lt 4 ]]; then
 
-   # For actual time: YEAR MONTH DAY DOY HOUR
-   read -r YEAR MONTH DAY DOY HOUR <<< "$(date "+%Y %m %d %j %H")"
+    # For actual time: YEAR MONTH DAY DOY HOUR
+    read -r YEAR MONTH DAY DOY HOUR <<< "$(date "+%Y %m %d %j %H")"
 
 else
 
     # For actual time -1 hour: YEAR MONTH DAY DOY HOUR
     read -r YEAR MONTH DAY DOY HOUR <<< "$(date -d "-1 hour" "+%Y %m %d %j %H")"
+    read -r YEARNEXT MONTHNEXT DAYNEXT DOYNEXT HOURNEXT <<< "$(date "+%Y %m %d %j %H")"
 
 fi
 
-# Process each BIN file found in the record directory
-for BINFILE in "${RAW_DIR}"/*."${binEXT}"; do
-    [[ -f "${BINFILE}" ]] || continue
+if [[ "${QUARTER}" -eq 0 ]]; then # Convbin run at startup
 
-    echo "Converting $(basename "${BINFILE}")..."
+    # Process each BIN file found in the record directory
+    for BINFILE in "${RAW_DIR}"/*."${binEXT}"; do
+        [[ -f "${BINFILE}" ]] || continue
 
-    # Create a unique temp name for the RINEX fragment
-    TEMP_OUT="${RAW_DIR}/$(basename "${BINFILE}" ."${binEXT}").rnx"
+        # Create a unique temp name for the RINEX fragment
+        TEMP_OUT="${RAW_DIR}/$(basename "${BINFILE}" ."${binEXT}").rnx"
 
-    echo "[$(date +%T)] Runing convbin to convert ${BINFILE} to rnx"
-    convbin -ti 1.0000 -od -os -v 3.04 -o "${TEMP_OUT}" "${BINFILE}"
+	log --level 0 --message "Runing convbin to convert ${BINFILE} to rnx" --out ""
 
-    # echo error if convbin fail
+        # Run convbin for processing at startup
+        convbin -ti 1.0000 -od -os -v 3.04 -hm "${STATION}"-o "${TEMP_OUT}" "${BINFILE}"
+
+    # debug error if convbin fail
     if [[ $? != 0 ]]; then
-	###echo "[$(date +%T)] WARNING: $? Could not convert ${BINFIL}E to rnx" >> make_rinex_updated.log 
-        log_errors --level 0 --message "Ok" --out "Ok"           
-	###echo "There was an error with convbin. Move corrupt ${NEW_FILE_NAMErnx} to archive folder" >> make_rinex_updated.log
+        log --level 2 --message "WARNING: $? Could not convert ${BINFIL}E to rnx"" --out ""
+	log --level 2 "There was an error: $? with convbin. Move corrupt ${NEW_FILE_NAMErnx} to archive folder"
      	mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move bin if corrupt to archive folder
 		if [ $? != 0 ]; then
-				###echo "[$(date +%T)] Can not move corrupt ${BINFILE} to archive folder" >> make_rinex_updated.log
-                		log_errors --level 0 --message "Ok" --out "Ok"           
+              		log --level 2 --message "Can not move corrupt ${BINFILE} to archive folder"" --out ""
+		fi
+    else
+	log --level 0 --message "Convbin successfully converted ${BINFILE} to rnx" --out ""
+    fi
+
+else # Convbin run in loop
+
+fi
+
+ ### -ts $YEAR/$MONTH/$DAY $HOUR:00:00 -te $YEAR/$MONTH/$DAY $HOUR:15:00 
+
+    # preapare start time for gfzrnx
+    case ${QUARTER} in
+	1) # QUATER 1
+	START_TIME="${YEAR}/${MONTH}/${DAY}_${HOUR}:00:00"
+	STOP_TIME="${YEAR}/${MONTH}/${DAY}_${HOUR}:00:15"
+        ;;
+
+	2) # QUATER 2
+	START_TIME="${YEAR}/${MONTH}/${DAY}_${HOUR}:15:00"
+	STOP_TIME="${YEAR}/${MONTH}/${DAY}_${HOUR}:30:00"
+	;;
+
+	3) # QUATER 3
+	START_TIME="${YEAR}/${MONTH}/${DAY}_${HOUR}:30:00"
+	STOP_TIME="${YEAR}/${MONTH}/${DAY}_${HOUR}:45:00"
+	;;
+
+	4) # QUATER 4
+	START_TIME="${YEAR}/${MONTH}/${DAY}_${HOUR}:45:00"
+	STOP_TIME="${YEARNEXT}/${MONTHNEXT}/${DAYNEXT}_${HOURNEXT}:00:00"
+	;;
+    esac
+
+
+
+
+
+
+    # debug error if convbin fail
+    if [[ $? != 0 ]]; then
+	###debug "[$(date +%T)] WARNING: $? Could not convert ${BINFIL}E to rnx" >> make_rinex_updated.log 
+        log --level 0 --message "Ok" --out "Ok"           
+	###debug "There was an error with convbin. Move corrupt ${NEW_FILE_NAMErnx} to archive folder" >> make_rinex_updated.log
+     	mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move bin if corrupt to archive folder
+		if [ $? != 0 ]; then
+				###debug "[$(date +%T)] Can not move corrupt ${BINFILE} to archive folder" >> make_rinex_updated.log
+                		log --level 0 --message "Ok" --out "Ok"           
 		fi
     fi
 
@@ -199,7 +252,7 @@ if [[ "${QUARTER}" -eq 0 ]]; then
 
 # Merge and split into the 15-min grid. and move resulting rnx to $TEMP_DIR
 # Note: Using $RAW_DIR/*.rnx to include ALL files in the batch.
-echo "Merging and splitting into 15-min grid..."
+debug "Merging and splitting into 15-min grid..."
 gfzrnx -finp "${RAW_DIR}/*.rnx" \
        -fout "${TEMP_DIR}/::RX3::" \
        -split 900  \
@@ -227,13 +280,12 @@ else
 	4) # QUATER 4
 	START_TIME="${YEAR}${MONTH}${DAY}_${HOUR}4500"
 	;;
-
     esac
 
-    echo "Start time: ${START_TIME}"
+    debug "Start time: ${START_TIME}"
     # Merge and split into the 15-min rnx file with START_TIME + 900 sec
     # and move resulting rnx to $TEMP_DIR
-    echo "Merging and splitting into 15-min file start time: ${START_TIME}"
+    debug "Merging and splitting into 15-min file start time: ${START_TIME}"
     gfzrnx -finp "${RAW_DIR}/*.rnx" \
            -fout "${TEMP_DIR}/::RX3::" \
            -epo_beg "${START_TIME}" \
@@ -245,15 +297,15 @@ else
 fi
 
 
-# echo error if gfzrnx fail
+# debug error if gfzrnx fail
 if [[ $? != 0 ]]; then
-	#echo "[$(date +%T)] WARNING: $? gfzrnx could not merge rnx files" >> make_rinex_updated.log 
-        log_errors --level 0 --message "Ok" --out "Ok"           
-	#echo "There was an error with gfzrnx. Move corrupt rnx files to archive folder" >> make_rinex_updated.log
+	#debug "[$(date +%T)] WARNING: $? gfzrnx could not merge rnx files" >> make_rinex_updated.log 
+        log --level 0 --message "Ok" --out "Ok"           
+	#debug "There was an error with gfzrnx. Move corrupt rnx files to archive folder" >> make_rinex_updated.log
      	mv -f "${RAW_DIR}/*.rnx" "${ARCHIVE_DIR}" # move rnx ailes if corrupt to archive folder
 		if [ $? != 0 ]; then
-				#echo "[$(date +%T)] Can not move corrupt rnx files to archive folder" >> make_rinex_updated.log
-        			log_errors --level 0 --message "Ok" --out "Ok"           
+				#debug "[$(date +%T)] Can not move corrupt rnx files to archive folder" >> make_rinex_updated.log
+        			log --level 0 --message "Ok" --out "Ok"           
 		fi
 
 # preparing output files
@@ -270,12 +322,12 @@ else
     	# Find the first line starting with '>' after the header ends
     	FIRST_EPOCH=$(sed -n '/END OF HEADER/,$ { /^>/p; }' "${RNX_FILE}" | head -n 1)
     	# Extract components
-    	YEAR=$(echo "${FIRST_EPOCH}" | awk '{print $2}')
-    	MONTH=$(echo "${FIRST_EPOCH}" | awk '{print $3}')
-    	DAY=$(echo "${FIRST_EPOCH}" | awk '{print $4}')
-    	HOUR=$(echo "${FIRST_EPOCH}" | awk '{print $5}')
-    	MINUTE=$(echo "${FIRST_EPOCH}" | awk '{print $6}')
-    	SECOND=$(echo "${FIRST_EPOCH}" | awk '{print $7}' | cut -d'.' -f1) # Removes decimals
+    	YEAR=$(debug "${FIRST_EPOCH}" | awk '{print $2}')
+    	MONTH=$(debug "${FIRST_EPOCH}" | awk '{print $3}')
+    	DAY=$(debug "${FIRST_EPOCH}" | awk '{print $4}')
+    	HOUR=$(debug "${FIRST_EPOCH}" | awk '{print $5}')
+    	MINUTE=$(debug "${FIRST_EPOCH}" | awk '{print $6}')
+    	SECOND=$(debug "${FIRST_EPOCH}" | awk '{print $7}' | cut -d'.' -f1) # Removes decimals
 
     	# Check if the EPOCH_COUNT>=nEPOCH2KEEP for QUARTER 1,2,3,4 or
     	# Not first 30-31 sec or last 30-31 sec on the edge of the hour for QUARTER 0
@@ -284,7 +336,7 @@ else
         ## Check if the count is NOT less than nEPOCH2KEEP (Count >= nEPOCH2KEEP)
         #if [[ "${EPOCH_COUNT}" -gt "${nEPOCH2KEEP}" ]]; then
 
-		echo "Processing ${RNX_FILE} with  ${EPOCH_COUNT} epochs"
+		debug "Processing ${RNX_FILE} with  ${EPOCH_COUNT} epochs"
 
     		# Get the base filename (e.g., 202200XXX_R_20220410045_15M_01S_MO.rnx)
     		BASE_NAME=$(basename "${RNX_FILE}")
@@ -293,7 +345,7 @@ else
     		# We take everything from the 10th character onwards and
     		# prepend your $STATION and "00CAN"
     		# The 'cut -c 10-' command removes the first 9 characters (the wrong ID)
-    		SUFFIX=$(echo "${BASE_NAME}" | cut -c 10-)
+    		SUFFIX=$(debug "${BASE_NAME}" | cut -c 10-)
     		NEW_FILE_NAME="${STATION}00CAN${SUFFIX}"
       		# Extract the part before the last dot
 		BASE_FILE_NAME="${NEW_FILE_NAME%.*}"
@@ -313,36 +365,36 @@ else
     		# Convert to crx
     		RNX2CRX -d ${NEW_FILE_PATHrnx}
 		if [[ $? != 0 ]]; then
-			#echo "There was an error: $? with RNX2CRC"
-			#echo "[$(date +%T)] WARNING: RNX2CRC could not convert ${NEW_FILE_NAMErnx} to rnx" >> make_rinex_updated.log 
-		        log_errors --level 0 --message "Ok" --out "Ok"           
-			#echo "There was an error with RNX2CRX. Move corrupt ${NEW_FILE_NAMErnx} to archive folder" >> make_rinex_updated.log
+			#debug "There was an error: $? with RNX2CRC"
+			#debug "[$(date +%T)] WARNING: RNX2CRC could not convert ${NEW_FILE_NAMErnx} to rnx" >> make_rinex_updated.log 
+		        log --level 0 --message "Ok" --out "Ok"           
+			#debug "There was an error with RNX2CRX. Move corrupt ${NEW_FILE_NAMErnx} to archive folder" >> make_rinex_updated.log
         		mv -f "${NEW_FILE_PATHrnx}" "${ARCHIVE_DIR}" # move rnx if corrupt to arcchive folder
 			if [[ $? != 0 ]]; then
-				#echo "[$(date +%T)] Can not move corrupt ${NEW_FILE_NAMErnx} to archive folder" >> make_rinex_updated.log
-			        log_errors --level 0 --message "Ok" --out "Ok"           
+				#debug "[$(date +%T)] Can not move corrupt ${NEW_FILE_NAMErnx} to archive folder" >> make_rinex_updated.log
+			        log --level 0 --message "Ok" --out "Ok"           
 			fi
 		else
 
     			# gzip crx to crx.gz
     			gzip -f ${NEW_FILE_PATHcrx}
         		if [[ $? != 0 ]]; then
-	    			#echo "There was an error with gzip. Move corrupt ${NEW_FILE_NAMEcrx} to archive folder" >> make_rinex_updated.log
-				#echo "[$(date +%T)] WARNING: gzip could not process ${NEW_FILE_NAMEcrx}" >> make_rinex_updated.log 
-			        log_errors --level 0 --message "Ok" --out "Ok"           2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? Can not move corrupt $NEW_FILE_NAMEcrx to archive folder"
-				#echo "There was an error with gzip. Move ${NEW_FILE_NAMEcrx} to archive folder" >> make_rinex_updated.log
+	    			#debug "There was an error with gzip. Move corrupt ${NEW_FILE_NAMEcrx} to archive folder" >> make_rinex_updated.log
+				#debug "[$(date +%T)] WARNING: gzip could not process ${NEW_FILE_NAMEcrx}" >> make_rinex_updated.log 
+			        log --level 0 --message "Ok" --out "Ok"           2 "[$(date +%T)] make_15min_rinex.sh WARNING: $? Can not move corrupt $NEW_FILE_NAMEcrx to archive folder"
+				#debug "There was an error with gzip. Move ${NEW_FILE_NAMEcrx} to archive folder" >> make_rinex_updated.log
             			mv -f "${NEW_FILE_PATHcrx}" "${ARCHIVE_DIR}" # move crx if corrupt to archive
 				if [ $? != 0 ]; then
-					#echo "[$(date +%T)] Can not move corrupt ${NEW_FILE_NAMEcrx} to archive folder" >> make_rinex_updated.log
-					log_errors --level 0 --message "Ok" --out "Ok"           
+					#debug "[$(date +%T)] Can not move corrupt ${NEW_FILE_NAMEcrx} to archive folder" >> make_rinex_updated.log
+					log --level 0 --message "Ok" --out "Ok"           
 				fi
         		else
-				log_errors --level 0 --message "Ok" --out "Ok"           
+				log --level 0 --message "Ok" --out "Ok"           
         		fi
 		fi
 
         else
-		echo "Skipping ${RNX_FILE}: Only ${EPOCH_COUNT} epochs (less than $nEPOCH2KEEP)"
+		debug "Skipping ${RNX_FILE}: Only ${EPOCH_COUNT} epochs (less than $nEPOCH2KEEP)"
   	fi
 
     done
@@ -351,32 +403,32 @@ fi
 
 # Remove processed rnx files if loop processing
 if [[ "${QUARTER}" -gt 0 ]]; then
-    #echo "Remove processed rnx files if loop processin"
+    #debug "Remove processed rnx files if loop processin"
     rm -f "${RAW_DIR}"/*.rnx
     if [[ $? != 0 ]]; then
-	    #echo "[$(date +%T)] Warning: $? Can not remove processed rnx files" >> make_rinex_updated.log
-    	    log_errors --level 0 --message "Ok" --out "Ok"           
+	    #debug "[$(date +%T)] Warning: $? Can not remove processed rnx files" >> make_rinex_updated.log
+    	    log --level 0 --message "Ok" --out "Ok"           
     fi
 fi
 
 ## Cleanup temp files
-echo "Remove temporary ${TEMP_DIR} folder"
+debug "Remove temporary ${TEMP_DIR} folder"
 rm -rf "${TEMP_DIR}"
 if [[ $? != 0 ]]; then
-	#echo "[$(date +%T)] Warning: $? Can not remove temporary ${TEMP_DIR} folder" >> make_rinex_updated.log
-        log_errors --level 0 --message "Ok" --out "Ok"           
+	#debug "[$(date +%T)] Warning: $? Can not remove temporary ${TEMP_DIR} folder" >> make_rinex_updated.log
+        log --level 0 --message "Ok" --out "Ok"           
 fi
 
 # Move bin files if not opened by str2str
-echo "Move processed bin file(s) to archive folder"
+debug "Move processed bin file(s) to archive folder"
 for BINFILE in "${RAW_DIR}"/*."${binEXT}"; do
 	if is_file_ready "${BINFILE}"; then
 		mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move processed bin file to archive folder
 		if [[ $? != 0 ]]; then
-			#echo "[$(date +%T)] Warning: $? Can not move processed $BINFILE to archive folder" >> make_rinex_updated.log
-	        	log_errors --level 0 --message "Ok" --out "Ok"           
+			#debug "[$(date +%T)] Warning: $? Can not move processed $BINFILE to archive folder" >> make_rinex_updated.log
+	        	log --level 0 --message "Ok" --out "Ok"           
 		fi
 	fi
 done
 
-echo "15-min file(s) ${NEW_FILE_NAMEcrxgz} (with more than: ${nEPOCH2KEEP} 1S EPOCHs) are cleaned and ready"
+debug "15-min file(s) ${NEW_FILE_NAMEcrxgz} (with more than: ${nEPOCH2KEEP} 1S EPOCHs) are cleaned and ready"
