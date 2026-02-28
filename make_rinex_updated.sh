@@ -369,7 +369,7 @@ else
     		mv "${RNX_FILE}" "${NEW_FILE_PATHrnx}"
 
     		# Convert to crx
-    		RNX2CRX -d ${NEW_FILE_PATHrnx}
+    		~/bin/RNX2CRX -d ${NEW_FILE_PATHrnx}
 		if [[ $? != 0 ]]; then
 			log --level 2 --message "[$(date +%T)] WARNING: $? with RNX2CRC could not convert ${NEW_FILE_NAMErnx} to rnx" --out ""
 			log --level 2 --message  "There was an error with RNX2CRX. Move corrupt ${NEW_FILE_NAMErnx} to archive folder" --out ""
