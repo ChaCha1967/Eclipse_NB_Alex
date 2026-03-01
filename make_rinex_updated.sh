@@ -61,7 +61,7 @@ log() {
     done
 
     # Logic using the arguments
-    ########## debug "log() finction executed"
+    echo "${err_message}"
     # SOME PROCESSING: TBD ...
 }
 
@@ -91,7 +91,6 @@ SAMPLING=1 # sampling rate of GNSS receiver
 ### STOP BLOCK - HAVE TO BE SET MANUAL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 EPOCH30SEC=$((${SAMPLING}*30+1)) # Number of epoch in 30 sec interval (for removing diring startup processing)
 log --level 0 --message "In 30 seconds exists: ${EPOCH30SEC} epoch" --out ""
-
 
 # --- Loop through arguments (your current code) ---
 while [[ $# -gt 0 ]]; do
@@ -176,6 +175,8 @@ fi
 
 if [[ "${QUARTER}" -eq 0 ]]; then # Convbin run at startup
 
+log --level 0 --message "START!!!!!!!!!!!!!!!!!!!!!!! A" --out ""
+
     # Process each BIN file found in the record directory at startup
     for BINFILE in "${RAW_DIR}"/*."${binEXT}"; do
         [[ -f "${BINFILE}" ]] || continue
@@ -186,44 +187,48 @@ if [[ "${QUARTER}" -eq 0 ]]; then # Convbin run at startup
 	log --level 0 --message "Runing convbin to convert ${BINFILE} to rnx" --out ""
 
         # Run convbin for processing at startup
-        ~/bin/convbin -ti 1.0000 -od -os -v 3.04 -hm "${STATION}"-o "${TEMP_OUT}" "${BINFILE}"
+        ~/bin/convbin -ti 1.0000 -od -os -v 3.04 -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}"
 
-    # Error if convbin fail
-    if [[ $? != 0 ]]; then
-        log --level 2 --message "WARNING: $? Could not convert ${BINFIL}E to rnx"" --out ""
-	log --level 2 "There was an error: $? with convbin. Move corrupt ${NEW_FILE_NAMErnx} to archive folder"
-     	mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move bin if corrupt to archive folder
-		if [ $? != 0 ]; then
-              		log --level 2 --message "Can not move corrupt ${BINFILE} to archive folder"" --out ""
+    	# Error if convbin fail
+    	if [[ $? -ne 0 ]]; then
+        	log --level 2 --message "WARNING: $? Could not convert ${BINFILE} to rnx"" --out ""
+		log --level 2 --message "There was an error: $? with convbin. Move corrupt ${BINFILE} to archive folder" --out ""
+     		mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move bin if corrupt to archive folder
+		if [[ $? -ne 0 ]]; then
+              		log --level 2 --message "Can not move corrupt ${BINFILE} to archive folder" --out ""
 		fi
-    else
-	log --level 0 --message "Convbin successfully converted ${BINFILE} to rnx" --out ""
-    fi
+    	else
+		log --level 0 --message "Convbin successfully converted ${BINFILE} to rnx" --out ""
+    	fi
+    done
+
+log --level 0 --message "START!!!!!!!!!!!!!!!!!!!!!!! B" --out ""
 
 else # Convbin run in loop
 
-fi
+log --level 0 --message "START!!!!!!!!!!!!!!!!!!!!!!! C" --out ""
+
 
     # preapare start time for convbin in loop mode
     case ${QUARTER} in
 	1) # QUATER 1
-	START_TIME="${YEAR}/${MONTH}/${DAY}_${HOUR}:00:00"
-	STOP_TIME="${YEAR}/${MONTH}/${DAY}_${HOUR}:00:15"
+	START_TIME="${YEAR}/${MONTH}/${DAY} ${HOUR}:00:00"
+	STOP_TIME="${YEAR}/${MONTH}/${DAY} ${HOUR}:00:15"
         ;;
 
 	2) # QUATER 2
-	START_TIME="${YEAR}/${MONTH}/${DAY}_${HOUR}:15:00"
-	STOP_TIME="${YEAR}/${MONTH}/${DAY}_${HOUR}:30:00"
+	START_TIME="${YEAR}/${MONTH}/${DAY} ${HOUR}:15:00"
+	STOP_TIME="${YEAR}/${MONTH}/${DAY} ${HOUR}:30:00"
 	;;
 
 	3) # QUATER 3
-	START_TIME="${YEAR}/${MONTH}/${DAY}_${HOUR}:30:00"
-	STOP_TIME="${YEAR}/${MONTH}/${DAY}_${HOUR}:45:00"
+	START_TIME="${YEAR}/${MONTH}/${DAY} ${HOUR}:30:00"
+	STOP_TIME="${YEAR}/${MONTH}/${DAY} ${HOUR}:45:00"
 	;;
 
 	4) # QUATER 4
-	START_TIME="${YEAR}/${MONTH}/${DAY}_${HOUR}:45:00"
-	STOP_TIME="${YEARNEXT}/${MONTHNEXT}/${DAYNEXT}_${HOURNEXT}:00:00"
+	START_TIME="${YEAR}/${MONTH}/${DAY} ${HOUR}:45:00"
+	STOP_TIME="${YEARNEXT}/${MONTHNEXT}/${DAYNEXT} ${HOURNEXT}:00:00"
 	;;
     esac
 
@@ -237,23 +242,26 @@ fi
 	log --level 0 --message "Runing convbin to convert ${BINFILE} to rnx" --out ""
 
         # Run convbin for processing at startup
-        ~/bin/convbin -ts "${START_TIME}" -te "${STOP_TIME}"
-                 -ti 1.0000 -od -os -v 3.04 -hm "${STATION}"-o "${TEMP_OUT}" "${BINFILE}"
+        ~/bin/convbin -ts "${START_TIME}" -te "${STOP_TIME}" -ti 1.0000 -od -os -v 3.04 -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}"
+#        ~/bin/convbin -ti 1.0000 -od -os -v 3.04 -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}"
 
-    # Error if convbin fail
-    if [[ $? != 0 ]]; then
-        log --level 2 --message "WARNING: $? Could not convert ${BINFIL}E to rnx"" --out ""
-	log --level 2 "There was an error: $? with convbin. Move corrupt ${NEW_FILE_NAMErnx} to archive folder"
-     	mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move bin if corrupt to archive folder
-		if [ $? != 0 ]; then
-              		log --level 2 --message "Can not move corrupt ${BINFILE} to archive folder"" --out ""
-		fi
-    else
-	log --level 0 --message "Convbin successfully converted ${BINFILE} to rnx" --out ""
-    fi
+    	# Error if convbin fail
+    	if [[ $? -ne 0 ]]; then
+        	log --level 2 --message "WARNING: $? Could not convert ${BINFILE} to rnx"" --out ""
+		log --level 2 --message "There was an error: $? with convbin. Move corrupt ${BINFILE} to archive folder"
+     		mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move bin if corrupt to archive folder
+		#if [[ $? -ne 0 ]]; then
+              	#	log --level 2 --message "Can not move corrupt ${BINFILE} to archive folder" --out ""
+		#fi
+    	else
+		log --level 0 --message "Convbin successfully converted ${BINFILE} to rnx" --out ""
+    	fi
+    done
 
-done
+log --level 0 --message "START!!!!!!!!!!!!!!!!!!!!!!! D" --out ""
 
+fi
+[[ $? != 0 ]]
 # Process rnx file prepared by convbin
 if [[ "${QUARTER}" -eq 0 ]]; then
 
@@ -265,7 +273,7 @@ if [[ "${QUARTER}" -eq 0 ]]; then
         -split 900  \
         -f \
         -vo 3.04 \
-        -chk \
+        -chk
 #       -crux ${HOME}/etc/crux.txt
 
 else
@@ -304,7 +312,7 @@ fi
 
 
 # Error if gfzrnx fail
-if [[ $? != 0 ]]; then
+if [[ $? -ne 0 ]]; then
         log --level 2 --message "WARNING: $? gfzrnx could not merge rnx files" --out ""
 	log --level 2 --message "There was an error with gfzrnx. Move corrupt rnx files to archive folder" --out ""
      	mv -f "${RAW_DIR}/*.rnx" "${ARCHIVE_DIR}" # move rnx ailes if corrupt to archive folder
@@ -321,7 +329,7 @@ else
     	# Count the number of epochs (lines starting with '>')
     	EPOCH_COUNT=$(grep -c "^>" "${RNX_FILE}")
 
-    	if [["${QUARTER}" -eq 0]]; then
+	if [[ "${QUARTER}" -eq 0 ]]; then
 		# Find the first line starting with '>' after the header ends
 	    	FIRST_EPOCH=$(sed -n '/END OF HEADER/,$ { /^>/p; }' "${RNX_FILE}" | head -n 1)
 	    	# Extract components
@@ -332,15 +340,12 @@ else
 	    	MINUTE=$(echo "${FIRST_EPOCH}" | awk '{print $6}')
     		SECOND=$(echo "${FIRST_EPOCH}" | awk '{print $7}' | cut -d'.' -f1) # Removes decimals
         else
-		MINUTE = 0
+		MINUTE=0
         fi
 
     	# Check if the EPOCH_COUNT>=nEPOCH2KEEP for QUARTER 1,2,3,4 or
     	# Not first 30-31 sec or last 30-31 sec on the edge of the hour for QUARTER 0
     	if (( (QUARTER > 0 && EPOCH_COUNT > nEPOCH2KEEP) || (QUARTER == 0 && !( (EPOCH_COUNT <= EPOCH30SEC && MINUTE == 59) || (EPOCH_COUNT <= EPOCH30SEC && MINUTE == 0) ) ) )); then
-
-        ## Check if the count is NOT less than nEPOCH2KEEP (Count >= nEPOCH2KEEP)
-        #if [[ "${EPOCH_COUNT}" -gt "${nEPOCH2KEEP}" ]]; then
 
 		log --level 0 --message  "Processing ${RNX_FILE} with  ${EPOCH_COUNT} epochs" --out ""
 
@@ -370,29 +375,29 @@ else
 
     		# Convert to crx
     		~/bin/RNX2CRX -d ${NEW_FILE_PATHrnx}
-		if [[ $? != 0 ]]; then
-			log --level 2 --message "[$(date +%T)] WARNING: $? with RNX2CRC could not convert ${NEW_FILE_NAMErnx} to rnx" --out ""
+		if [[ $? -ne 0 ]]; then
+			log --level 2 --message " WARNING: $? with RNX2CRC could not convert ${NEW_FILE_NAMErnx} to rnx" --out ""
 			log --level 2 --message  "There was an error with RNX2CRX. Move corrupt ${NEW_FILE_NAMErnx} to archive folder" --out ""
         		mv -f "${NEW_FILE_PATHrnx}" "${ARCHIVE_DIR}" # move rnx if corrupt to arcchive folder
-			if [[ $? != 0 ]]; then
+			if [[ $? -ne 0 ]]; then
 				log --level 2 --message  "Can not move corrupt ${NEW_FILE_NAMErnx} to archive folder" --out ""
 			else
-				log --level 0 --message  "Corrupt ${NEW_FILE_NAMErnx} to archive folder" --out ""
+				log --level 0 --message  "Corrupt ${NEW_FILE_NAMErnx} moved to archive folder" --out ""
 			fi
 		else
 
     			# gzip crx to crx.gz
     			gzip -f ${NEW_FILE_PATHcrx}
-        		if [[ $? != 0 ]]; then
+        		if [[ $? -ne 0 ]]; then
 				log --level 2 --message  "WARNING: $? gzip could not process ${NEW_FILE_NAMEcrx}" --out ""
 				log --level 2 --message "There was an error with gzip. Move ${NEW_FILE_NAMEcrx} to archive folder" --out ""
             			mv -f "${NEW_FILE_PATHcrx}" "${ARCHIVE_DIR}" # move crx if corrupt to archive
 				if [ $? != 0 ]; then
 					log --level 2 --message  "Can not move corrupt ${NEW_FILE_NAMEcrx} to archive folder" --out ""
-				fi
-        		else
-				log --level 0 --message  "Corrupt ${NEW_FILE_NAMErnx} moved to archive folder" --out ""
-        		fi
+        			else
+					log --level 0 --message  "Corrupt ${NEW_FILE_NAMErnx} moved to archive folder" --out ""
+        			fi
+			fi
 		fi
 
         else
@@ -405,17 +410,17 @@ fi
 
 # Remove processed rnx files if loop processing
 if [[ "${QUARTER}" -gt 0 ]]; then
-    log --level 0 --message  "Remove processed rnx files if loop processin" --out ""
+    echo "log --level 0 --message  "Remove processed rnx files if loop processin" --out """
     rm -f "${RAW_DIR}"/*.rnx
-    if [[ $? != 0 ]]; then
+    if [[ $? -ne 0 ]]; then
 	    log --level 2 --message  "[$(date +%T)] Warning: $? Can not remove processed rnx files" --out ""
     fi
 fi
 
 ## Cleanup temp files
-log --level 0 --message  "Remove temporary ${TEMP_DIR} folder" --out ""
+echo "log --level 0 --message  "Remove temporary ${TEMP_DIR} folder" --out """
 rm -rf "${TEMP_DIR}"
-if [[ $? != 0 ]]; then
+if [[ $? -ne 0 ]]; then
 	log --level 0 --message  "WARNING: $? Can not remove temporary ${TEMP_DIR} folder" --out ""
 fi
 
@@ -424,7 +429,7 @@ log --level 0 --message  "Move processed bin file(s) to archive folder" --out ""
 for BINFILE in "${RAW_DIR}"/*."${binEXT}"; do
 	if is_file_ready "${BINFILE}"; then
 		mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move processed bin file to archive folder
-		if [[ $? != 0 ]]; then
+		if [[ $? -ne 0 ]]; then
 			log --level 2 --message  "WARNING: $? Can not move processed $BINFILE to archive folder" --out ""
 		fi
 	fi
