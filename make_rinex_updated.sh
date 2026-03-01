@@ -263,8 +263,8 @@ if [[ "${QUARTER}" -eq 0 ]]; then
         -split 900  \
         -f \
         -vo 3.04 \
+        -crux ${HOME}/etc/crux.txt \
         -chk
-#       -crux ${HOME}/etc/crux.txt
 
 else
 
@@ -296,8 +296,8 @@ else
            -d 900 \
            -f \
            -vo 3.04\
+           -crux $HOME/etc/crux.txt \
            -chk
-#          -crux $HOME/etc/crux.txt
 fi
 
 
