@@ -116,7 +116,7 @@ if [[ -n "${MISSING}" ]]; then
     exit 3
 fi
 
-log --log 0 --message "Parameters validation passed for Station: $STATION" --out ""
+log --level 0 --message "Parameters validation passed for Station: $STATION" --out ""
 
 # Logic using the arguments
 log --level 0 --message "Qaurter: ${QUARTER} (0 - startup, 1-4 - some quarter)" --out ""
@@ -163,6 +163,7 @@ log --level 0 --message "Start bin files processing" --out ""
 if [[ "${QUARTER}" -lt 4 ]]; then
 
     # For actual time: YEAR MONTH DAY DOY HOUR
+    read -r YEARPREV MONTHPREV DAYPREV DOYPREV HOURPREV <<< "$(date -d "-1 hour" "+%Y %m %d %j %H")"
     read -r YEAR MONTH DAY DOY HOUR <<< "$(date "+%Y %m %d %j %H")"
 
 else
@@ -202,27 +203,43 @@ if [[ "${QUARTER}" -eq 0 ]]; then # Convbin run at startup
 
 else # Convbin run in loop
 
-    # preapare start time for convbin in loop mode
+    # preapare start-stop date and time for convbin in loop mode
     case ${QUARTER} in
-	1) # QUATER 1
-	START_TIME="${YEAR}/${MONTH}/${DAY} ${HOUR}:00:00"
-	STOP_TIME="${YEAR}/${MONTH}/${DAY} ${HOUR}:00:15"
+
+    case ${QUARTER} in
+        1) # QUATER 1
+        START_DATE="${YEARPREV}/${MONTHPREV}/${DAYPREV}"
+        START_TIME="${HOURPREV}:59:59"
+        STOP_DATE="${YEAR}/${MONTH}/${DAY}"
+        STOP_TIME="${HOUR}:15:01"
         ;;
 
-	2) # QUATER 2
-	START_TIME="${YEAR}/${MONTH}/${DAY} ${HOUR}:15:00"
-	STOP_TIME="${YEAR}/${MONTH}/${DAY} ${HOUR}:30:00"
-	;;
+        2) # QUATER 2
+        START_DATE="${YEAR}/${MONTH}/${DAY}"
+        START_TIME="${HOUR}:14:59"
+        STOP_DATE="${YEAR}/${MONTH}/${DAY}"
+        STOP_TIME="${HOUR}:30:01"
+        ;;
 
-	3) # QUATER 3
-	START_TIME="${YEAR}/${MONTH}/${DAY} ${HOUR}:30:00"
-	STOP_TIME="${YEAR}/${MONTH}/${DAY} ${HOUR}:45:00"
-	;;
+        3) # QUATER 3
+        START_DATE="${YEAR}/${MONTH}/${DAY}"
+        START_TIME="${HOUR}:29:59"
+        STOP_DATE="${YEAR}/${MONTH}/${DAY}"
+        STOP_TIME="${HOUR}:45:01"
+        ;;
 
-	4) # QUATER 4
-	START_TIME="${YEAR}/${MONTH}/${DAY} ${HOUR}:45:00"
-	STOP_TIME="${YEARNEXT}/${MONTHNEXT}/${DAYNEXT} ${HOURNEXT}:00:00"
-	;;
+        4) # QUATER 4
+        START_DATE="${YEAR}/${MONTH}/${DAY}"
+        START_TIME="${HOUR}:44:59"
+        STOP_DATE="${YEARNEXT}/${MONTHNEXT}/${DAYNEXT}"
+        STOP_TIME="${HOURNEXT}:00:01"
+        ;;
+
+    esac
+
+
+
+
     esac
 
     # Process each BIN file found in the record directory in loop mode 
@@ -257,7 +274,7 @@ if [[ "${QUARTER}" -eq 0 ]]; then
 
     # Merge and split into the 15-min grid. and move resulting rnx to $TEMP_DIR
     # Note: Using $RAW_DIR/*.rnx to include ALL files in the batch.
-    log --level 0 --mesage "Merging and splitting into 15-min grid..." --out""
+    log --level 0 --message "Merging and splitting into 15-min grid..." --out""
     ~/bin/gfzrnx -finp "${RAW_DIR}/*.rnx" \
         -fout "${TEMP_DIR}/::RX3::" \
         -split 900  \
@@ -289,13 +306,13 @@ else
 
     # Merge and split into the 15-min rnx file with START_TIME + 900 sec
     # and move resulting rnx to $TEMP_DIR
-    log --level 0 --mesage "Merging and splitting into 15-min file start time: ${START_TIME}" --out ""
+    log --level 0 --message "Merging and splitting into 15-min file start time: ${START_TIME}" --out ""
     ~/bin/gfzrnx -finp "${RAW_DIR}/*.rnx" \
            -fout "${TEMP_DIR}/::RX3::" \
            -epo_beg "${START_TIME}" \
            -d 900 \
            -f \
-           -vo 3.04\
+           -vo 3.04 \
            -crux $HOME/etc/crux.txt \
            -chk
 fi
@@ -307,7 +324,7 @@ if [[ $? -ne 0 ]]; then
 	log --level 2 --message "There was an error with gfzrnx. Move corrupt rnx files to archive folder" --out ""
      	mv -f "${RAW_DIR}/*.rnx" "${ARCHIVE_DIR}" # move rnx ailes if corrupt to archive folder
 		if [ $? != 0 ]; then
-			log --level 2  -message "[$(date +%T)] Can not move corrupt rnx files to archive folder" --out ""
+			log --level 2 --message "[Can not move corrupt rnx files to archive folder" --out ""
 		fi
 
 # preparing output files
@@ -364,9 +381,9 @@ else
     		mv "${RNX_FILE}" "${NEW_FILE_PATHrnx}"
 
     		# Convert to crx
-    		~/bin/RNX2CRX -d ${NEW_FILE_PATHrnx}
+    		~/bin/RNX2CRX -d "${NEW_FILE_PATHrnx}"
 		if [[ $? -ne 0 ]]; then
-			log --level 2 --message " WARNING: $? with RNX2CRC could not convert ${NEW_FILE_NAMErnx} to rnx" --out ""
+			log --level 2 --message " WARNING: $? with RNX2CRX could not convert ${NEW_FILE_NAMErnx} to rnx" --out ""
 			log --level 2 --message  "There was an error with RNX2CRX. Move corrupt ${NEW_FILE_NAMErnx} to archive folder" --out ""
         		mv -f "${NEW_FILE_PATHrnx}" "${ARCHIVE_DIR}" # move rnx if corrupt to arcchive folder
 			if [[ $? -ne 0 ]]; then
@@ -377,7 +394,7 @@ else
 		else
 
     			# gzip crx to crx.gz
-    			gzip -f ${NEW_FILE_PATHcrx}
+    			gzip -f "${NEW_FILE_PATHcrx}"
         		if [[ $? -ne 0 ]]; then
 				log --level 2 --message  "WARNING: $? gzip could not process ${NEW_FILE_NAMEcrx}" --out ""
 				log --level 2 --message "There was an error with gzip. Move ${NEW_FILE_NAMEcrx} to archive folder" --out ""
@@ -418,7 +435,7 @@ fi
 log --level 0 --message  "Move processed bin file(s) to archive folder" --out ""
 for BINFILE in "${RAW_DIR}"/*."${binEXT}"; do
 	if is_file_ready "${BINFILE}"; then
-		mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move processed bin file to archive folder
+###		mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move processed bin file to archive folder
 		if [[ $? -ne 0 ]]; then
 			log --level 2 --message  "WARNING: $? Can not move processed $BINFILE to archive folder" --out ""
 		fi
