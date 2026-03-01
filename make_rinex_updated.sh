@@ -65,19 +65,55 @@ log() {
     # SOME PROCESSING: TBD ...
 }
 
-
 # ----- FUNCTION 3 -----------------------------------------------------------------------
+#
+# Show Help on the screen
+printHelp() {
+  cat << EOF
+==============================================================================
+GNSS BINARY TO RINEX 3.04 CONVERSION SCRIPT
+==============================================================================
+This script automates the conversion of raw GNSS binary data (e.g., .ubx) 
+into RINEX version 3.04 format. It handles file merging, 15-minute 
+interval splitting, and compression (.crx.gz).
+
+USAGE EXAMPLE:
+  $0 --quarter 1 --station "ANTC" --extension "ubx"
+
+MANDATORY PARAMETERS:
+  --quarter    Processing window: 0 (Startup), 1, 2, 3, or 4
+  --station    Station ID: 4 Capital Characters (e.g., ANTC)
+  --extension  Raw file extension: e.g., ubx, bin, dat
+
+OPTIONAL PARAMETERS:
+  --epoch      Min epochs to keep a file (Default: 0 - keeps all)
+  --help       Show this help documentation
+
+QUARTER REFERENCE GUIDE:
+  The --quarter parameter defines the processing time window:
+  1: HH:00:00 to HH:15:00
+  2: HH:15:00 to HH:30:00
+  3: HH:30:00 to HH:45:00
+  4: HH:45:00 to (HH+1):00:00
+  0: Startup Mode. Processes all existing files in the record folder.
+
+PROCESSING LOGIC:
+  1. Conversion: Uses convbin for initial RINEX fragments.
+  2. Splitting:  Uses gfzrnx for precise 15-minute grid alignment.
+  3. Validation: Filters files by the --epoch threshold.
+  4. Renaming:   Applies RINEX 3 naming conventions using Station ID.
+  5. Compression: Converts .rnx to .crx (Hatanaka) and applies gzip.
+  6. Archive:    Moves processed binary files to ~/archive (if not locked).
+==============================================================================
+EOF
+}
+
+
+# ----- FUNCTION 4 -----------------------------------------------------------------------
 ##
 #debug() {
 #  echo $*
 #}
-
-
-# ----- FUNCTION 4 -----------------------------------------------------------------------
-#
-printHelp() {
-  echo $0: this is the help
-}
 
 # ----- END OF FUNCTIONS SECTION-----------------------------------------------------------
 
@@ -206,7 +242,6 @@ else # Convbin run in loop
     # preapare start-stop date and time for convbin in loop mode
     case ${QUARTER} in
 
-    case ${QUARTER} in
         1) # QUATER 1
         START_DATE="${YEARPREV}/${MONTHPREV}/${DAYPREV}"
         START_TIME="${HOURPREV}:59:59"
@@ -237,11 +272,6 @@ else # Convbin run in loop
 
     esac
 
-
-
-
-    esac
-
     # Process each BIN file found in the record directory in loop mode 
     for BINFILE in "${RAW_DIR}"/*."${binEXT}"; do
         [[ -f "${BINFILE}" ]] || continue
@@ -252,7 +282,8 @@ else # Convbin run in loop
 	log --level 0 --message "Runing convbin to convert ${BINFILE} to rnx" --out ""
 
         # Run convbin for processing at startup
-        ~/bin/convbin -ts "${START_TIME}" -te "${STOP_TIME}" -ti 1.0000 -od -os -v 3.04 -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}"
+        ~/bin/convbin -ts "${START_DATE}" "${START_TIME}" -te "${STOP_DATE}" "${STOP_TIME}" \
+                      -ti 1.0000 -od -os -v 3.04 -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}"
 
     	# Error if convbin fail
     	if [[ $? -ne 0 ]]; then
@@ -273,9 +304,9 @@ fi
 if [[ "${QUARTER}" -eq 0 ]]; then
 
     # Merge and split into the 15-min grid. and move resulting rnx to $TEMP_DIR
-    # Note: Using $RAW_DIR/*.rnx to include ALL files in the batch.
-    log --level 0 --message "Merging and splitting into 15-min grid..." --out""
-    ~/bin/gfzrnx -finp "${RAW_DIR}/*.rnx" \
+    # Note: Using "$RAW_DIR"/*.rnx to include ALL files in the batch.
+    log --level 0 --message "Merging and splitting into 15-min grid..." --out ""
+    ~/bin/gfzrnx -finp "${RAW_DIR}"/*.rnx \
         -fout "${TEMP_DIR}/::RX3::" \
         -split 900  \
         -f \
@@ -307,7 +338,7 @@ else
     # Merge and split into the 15-min rnx file with START_TIME + 900 sec
     # and move resulting rnx to $TEMP_DIR
     log --level 0 --message "Merging and splitting into 15-min file start time: ${START_TIME}" --out ""
-    ~/bin/gfzrnx -finp "${RAW_DIR}/*.rnx" \
+    ~/bin/gfzrnx -finp "${RAW_DIR}"/*.rnx \
            -fout "${TEMP_DIR}/::RX3::" \
            -epo_beg "${START_TIME}" \
            -d 900 \
@@ -322,7 +353,7 @@ fi
 if [[ $? -ne 0 ]]; then
         log --level 2 --message "WARNING: $? gfzrnx could not merge rnx files" --out ""
 	log --level 2 --message "There was an error with gfzrnx. Move corrupt rnx files to archive folder" --out ""
-     	mv -f "${RAW_DIR}/*.rnx" "${ARCHIVE_DIR}" # move rnx ailes if corrupt to archive folder
+     	mv -f "${RAW_DIR}"/*.rnx "${ARCHIVE_DIR}" # move rnx ailes if corrupt to archive folder
 		if [ $? != 0 ]; then
 			log --level 2 --message "[Can not move corrupt rnx files to archive folder" --out ""
 		fi
@@ -370,7 +401,7 @@ else
 		# Extract the extension (including the dot)
 		EXT_NAME="${NEW_FILE_NAME##*.}"
 
-		# Reconstruct with "a" for first file and without a for all other files
+		# New file names and file names with path
 		NEW_FILE_NAMErnx="${BASE_FILE_NAME}.${EXT_NAME}"
     		NEW_FILE_NAMEcrx="${BASE_FILE_NAME}.crx"
     		NEW_FILE_NAMEcrxgz="${BASE_FILE_NAME}.crx.gz"
@@ -417,7 +448,7 @@ fi
 
 # Remove processed rnx files if loop processing
 if [[ "${QUARTER}" -gt 0 ]]; then
-    echo "log --level 0 --message  "Remove processed rnx files if loop processin" --out """
+    log --level 0 --message  "Remove processed rnx files if loop processin" --out ""
     rm -f "${RAW_DIR}"/*.rnx
     if [[ $? -ne 0 ]]; then
 	    log --level 2 --message  "[$(date +%T)] Warning: $? Can not remove processed rnx files" --out ""
@@ -425,7 +456,7 @@ if [[ "${QUARTER}" -gt 0 ]]; then
 fi
 
 ## Cleanup temp files
-echo "log --level 0 --message  "Remove temporary ${TEMP_DIR} folder" --out """
+log --level 0 --message  "Remove temporary ${TEMP_DIR} folder" --out ""
 rm -rf "${TEMP_DIR}"
 if [[ $? -ne 0 ]]; then
 	log --level 0 --message  "WARNING: $? Can not remove temporary ${TEMP_DIR} folder" --out ""
@@ -442,4 +473,4 @@ for BINFILE in "${RAW_DIR}"/*."${binEXT}"; do
 	fi
 done
 
-log --level 0 --message  "15-min file(s) ${NEW_FILE_NAMEcrxgz} (with more than: ${nEPOCH2KEEP} 1S EPOCHs) are cleaned and ready" --out ""
+log --level 0 --message  "15-min file(s) with more than: ${nEPOCH2KEEP} 1S EPOCHs are cleaned and ready" --out ""
