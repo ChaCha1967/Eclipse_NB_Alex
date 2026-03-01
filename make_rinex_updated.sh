@@ -288,7 +288,7 @@ else # Convbin run in loop
     	# Error if convbin fail
     	if [[ $? -ne 0 ]]; then
         	log --level 2 --message "WARNING: $? Could not convert ${BINFILE} to rnx" --out ""
-		log --level 2 --message "There was an error: $? with convbin. Move corrupt ${BINFILE} to archive folder"
+		log --level 2 --message "There was an error: $? with convbin. Move corrupt ${BINFILE} to archive folder" --out ""
      		mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move bin if corrupt to archive folder
 		if [[ $? -ne 0 ]]; then
               		log --level 2 --message "Can not move corrupt ${BINFILE} to archive folder" --out ""
@@ -355,7 +355,7 @@ if [[ $? -ne 0 ]]; then
 	log --level 2 --message "There was an error with gfzrnx. Move corrupt rnx files to archive folder" --out ""
      	mv -f "${RAW_DIR}"/*.rnx "${ARCHIVE_DIR}" # move rnx ailes if corrupt to archive folder
 		if [ $? != 0 ]; then
-			log --level 2 --message "[Can not move corrupt rnx files to archive folder" --out ""
+			log --level 2 --message "Can not move corrupt rnx files to archive folder" --out ""
 		fi
 
 # preparing output files
