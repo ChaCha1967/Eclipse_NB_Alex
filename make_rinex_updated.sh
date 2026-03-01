@@ -175,8 +175,6 @@ fi
 
 if [[ "${QUARTER}" -eq 0 ]]; then # Convbin run at startup
 
-log --level 0 --message "START!!!!!!!!!!!!!!!!!!!!!!! A" --out ""
-
     # Process each BIN file found in the record directory at startup
     for BINFILE in "${RAW_DIR}"/*."${binEXT}"; do
         [[ -f "${BINFILE}" ]] || continue
@@ -191,7 +189,7 @@ log --level 0 --message "START!!!!!!!!!!!!!!!!!!!!!!! A" --out ""
 
     	# Error if convbin fail
     	if [[ $? -ne 0 ]]; then
-        	log --level 2 --message "WARNING: $? Could not convert ${BINFILE} to rnx"" --out ""
+        	log --level 2 --message "WARNING: $? Could not convert ${BINFILE} to rnx" --out ""
 		log --level 2 --message "There was an error: $? with convbin. Move corrupt ${BINFILE} to archive folder" --out ""
      		mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move bin if corrupt to archive folder
 		if [[ $? -ne 0 ]]; then
@@ -202,12 +200,7 @@ log --level 0 --message "START!!!!!!!!!!!!!!!!!!!!!!! A" --out ""
     	fi
     done
 
-log --level 0 --message "START!!!!!!!!!!!!!!!!!!!!!!! B" --out ""
-
 else # Convbin run in loop
-
-log --level 0 --message "START!!!!!!!!!!!!!!!!!!!!!!! C" --out ""
-
 
     # preapare start time for convbin in loop mode
     case ${QUARTER} in
@@ -243,25 +236,22 @@ log --level 0 --message "START!!!!!!!!!!!!!!!!!!!!!!! C" --out ""
 
         # Run convbin for processing at startup
         ~/bin/convbin -ts "${START_TIME}" -te "${STOP_TIME}" -ti 1.0000 -od -os -v 3.04 -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}"
-#        ~/bin/convbin -ti 1.0000 -od -os -v 3.04 -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}"
 
     	# Error if convbin fail
     	if [[ $? -ne 0 ]]; then
-        	log --level 2 --message "WARNING: $? Could not convert ${BINFILE} to rnx"" --out ""
+        	log --level 2 --message "WARNING: $? Could not convert ${BINFILE} to rnx" --out ""
 		log --level 2 --message "There was an error: $? with convbin. Move corrupt ${BINFILE} to archive folder"
      		mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move bin if corrupt to archive folder
-		#if [[ $? -ne 0 ]]; then
-              	#	log --level 2 --message "Can not move corrupt ${BINFILE} to archive folder" --out ""
-		#fi
+		if [[ $? -ne 0 ]]; then
+              		log --level 2 --message "Can not move corrupt ${BINFILE} to archive folder" --out ""
+		fi
     	else
 		log --level 0 --message "Convbin successfully converted ${BINFILE} to rnx" --out ""
     	fi
     done
 
-log --level 0 --message "START!!!!!!!!!!!!!!!!!!!!!!! D" --out ""
-
 fi
-[[ $? != 0 ]]
+
 # Process rnx file prepared by convbin
 if [[ "${QUARTER}" -eq 0 ]]; then
 
