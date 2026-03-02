@@ -466,7 +466,7 @@ fi
 log --level 0 --message  "Move processed bin file(s) to archive folder" --out ""
 for BINFILE in "${RAW_DIR}"/*."${binEXT}"; do
 	if is_file_ready "${BINFILE}"; then
-###		mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move processed bin file to archive folder
+		mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move processed bin file to archive folder
 		if [[ $? -ne 0 ]]; then
 			log --level 2 --message  "WARNING: $? Can not move processed $BINFILE to archive folder" --out ""
 		fi
