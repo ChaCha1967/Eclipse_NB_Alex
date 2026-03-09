@@ -41,15 +41,15 @@ log() {
     # Loop through all arguments
     while [[ $# -gt 0 ]]; do
         case "$1" in
-            --level)
+            -l)
                 err_level="$2"
                 shift 2
                 ;;
-            --message)
+            -m)
                 err_message="$2"
                 shift 2
                 ;;
-            --out)
+            -o)
                 err_output="$2"
                 shift 2
                 ;;
@@ -71,7 +71,7 @@ log() {
 printHelp() {
   cat << EOF
 ==============================================================================
-GNSS BINARY TO RINEX 3.04 CONVERSION SCRIPT
+GNSS BINARY TO RINEX 3.0 CONVERSION SCRIPT
 ==============================================================================
 This script automates the conversion of raw GNSS binary data (e.g., .ubx) 
 into RINEX version 3.04 format. It handles file merging, 15-minute 
@@ -81,13 +81,13 @@ USAGE EXAMPLE:
   $0 --quarter 1 --station "ANTC" --extension "ubx"
 
 MANDATORY PARAMETERS:
-  --quarter    Processing window: 0 (Startup), 1, 2, 3, or 4
-  --station    Station ID: 4 Capital Characters (e.g., ANTC)
-  --extension  Raw file extension: e.g., ubx, bin, dat
+  -q    Processing window: 0 (Startup), 1, 2, 3, or 4
+  -s    Station ID: 4 Capital Characters (e.g., ANTC)
+  -e    Raw file extension: e.g., ubx, bin, dat
 
 OPTIONAL PARAMETERS:
-  --epoch      Min epochs to keep a file (Default: 0 - keeps all)
-  --help       Show this help documentation
+  -ep   Min epochs to keep a file (Default: 0 - keeps all)
+  -h    Show this help documentation
 
 QUARTER REFERENCE GUIDE:
   The --quarter parameter defines the processing time window:
@@ -126,39 +126,39 @@ nEPOCH2KEEP=0 # if 15 min rinex file conatins less EPOCHS than this value not ke
 SAMPLING=1 # sampling rate of GNSS receiver
 ### STOP BLOCK - HAVE TO BE SET MANUAL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 EPOCH30SEC=$((${SAMPLING}*30+1)) # Number of epoch in 30 sec interval (for removing diring startup processing)
-log --level 0 --message "In 30 seconds exists: ${EPOCH30SEC} epoch" --out ""
+log -l 0 -m "In 30 seconds exists: ${EPOCH30SEC} epoch" -o ""
 
 # --- Loop through arguments (your current code) ---
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --quarter)   QUARTER="$2";   shift 2 ;;
-        --station)   STATION="$2";   shift 2 ;;
-        --extension) binEXT="$2";    shift 2 ;;
-        --epoch)     nEPOCH2KEEP="$2"; shift 2 ;;
-        --help)      printHelp;      exit 1  ;;
-        *) log --level 3 --message  "Unknown option: $1" --out ""; printHelp; exit 2 ;;
+        -q)   QUARTER="$2";   shift 2 ;;
+        -s)   STATION="$2";   shift 2 ;;
+        -e)   binEXT="$2";    shift 2 ;;
+        -ep)  nEPOCH2KEEP="$2"; shift 2 ;;
+        -h)   printHelp;      exit 1  ;;
+        *) log -l 3 -m  "Unknown option: $1" -o ""; printHelp; exit 2 ;;
     esac
 done
 
 # ---  Validation Check (The part you need) ---
 MISSING=""
-[[ -z "${QUARTER}" ]] && MISSING+="--quarter "
-[[ -z "${STATION}" ]] && MISSING+="--station "
-[[ -z "${binEXT}"  ]] && MISSING+="--extension "
+[[ -z "${QUARTER}" ]] && MISSING+="--q "
+[[ -z "${STATION}" ]] && MISSING+="--s "
+[[ -z "${binEXT}"  ]] && MISSING+="--e "
 
 if [[ -n "${MISSING}" ]]; then
-    log --level 3 --message "ERROR: Missing mandatory parameters: ${MISSING}" --out ""
+    log -l 3 -m "ERROR: Missing mandatory parameters: ${MISSING}" -o ""
     printHelp
     exit 3
 fi
 
-log --level 0 --message "Parameters validation passed for Station: $STATION" --out ""
+log -l 0 -m "Parameters validation passed for Station: $STATION" -o ""
 
 # Logic using the arguments
-log --level 0 --message "Qaurter: ${QUARTER} (0 - startup, 1-4 - some quarter)" --out ""
-log --level 0 --message "Station: ${STATION}" --out ""
-log --level 0 --message "BIN file extension: ${binEXT}" --out ""
-log --level 0 --message "Number of epoch to keep in rinex file: ${nEPOCH2KEEP}" --out ""
+log -l 0 -m "Qaurter: ${QUARTER} (0 - startup, 1-4 - some quarter)" -o ""
+log -l 0 -m "Station: ${STATION}" -o ""
+log -l 0 -m "BIN file extension: ${binEXT}" -o ""
+log -l 0 -m "Number of epoch to keep in rinex file: ${nEPOCH2KEEP}" -o ""
 
 # SET TZ to UTC
 export TZ=UTC
@@ -178,7 +178,7 @@ TEMP_DIR="$(mktemp -d -t make_rinex_XXXXXX)"
 if [[ ! -d "${DATA_DIR}" ]]; then
     mkdir -p "${DATA_DIR}" \
 	|| {
-                log --level 3 --message "ERROR: $? Could not create ${DATA_DIR}" --out ""
+                log -l 3 -m "ERROR: $? Could not create ${DATA_DIR}" -o ""
         	exit 3; \
     	   }
 fi
@@ -187,13 +187,13 @@ fi
 if [[ ! -d "${ARCHIVE_DIR}" ]]; then
     mkdir -p "${ARCHIVE_DIR}" \
 	|| {
-                log --level 3 --message "ERROR: $? Could not create ${ARCHIVE_DIR}" --out ""
+                log -l 3 -m "ERROR: $? Could not create ${ARCHIVE_DIR}" -o ""
         	exit 4; \
     	   }
 fi
 
 # Date/time of run
-log --level 0 --message "Start bin files processing" --out ""
+log -l 0 -m "Start bin files processing" -o ""
 
 # Get parts of the date and time
 if [[ "${QUARTER}" -lt 4 ]]; then
@@ -219,21 +219,21 @@ if [[ "${QUARTER}" -eq 0 ]]; then # Convbin run at startup
         # Create a unique temp name for the RINEX fragment
         TEMP_OUT="${RAW_DIR}/$(basename "${BINFILE}" ."${binEXT}").rnx"
 
-	log --level 0 --message "Runing convbin to convert ${BINFILE} to rnx" --out ""
+	log -l 0 -m "Runing convbin to convert ${BINFILE} to rnx" -o ""
 
         # Run convbin for processing at startup
         ~/bin/convbin -ti 1.0000 -od -os -v 3.04 -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}"
 
     	# Error if convbin fail
     	if [[ $? -ne 0 ]]; then
-        	log --level 2 --message "WARNING: $? Could not convert ${BINFILE} to rnx" --out ""
-		log --level 2 --message "There was an error: $? with convbin. Move corrupt ${BINFILE} to archive folder" --out ""
+        	log -l 2 -m "WARNING: $? Could not convert ${BINFILE} to rnx" -o ""
+		log -l 2 -m "There was an error: $? with convbin. Move corrupt ${BINFILE} to archive folder" -o ""
      		mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move bin if corrupt to archive folder
 		if [[ $? -ne 0 ]]; then
-              		log --level 2 --message "Can not move corrupt ${BINFILE} to archive folder" --out ""
+              		log -l 2 -m "Can not move corrupt ${BINFILE} to archive folder" -o ""
 		fi
     	else
-		log --level 0 --message "Convbin successfully converted ${BINFILE} to rnx" --out ""
+		log -l 0 -m "Convbin successfully converted ${BINFILE} to rnx" -o ""
     	fi
     done
 
@@ -279,7 +279,7 @@ else # Convbin run in loop
         # Create a unique temp name for the RINEX fragment
         TEMP_OUT="${RAW_DIR}/$(basename "${BINFILE}" ."${binEXT}").rnx"
 
-	log --level 0 --message "Runing convbin to convert ${BINFILE} to rnx" --out ""
+	log -l 0 -m "Runing convbin to convert ${BINFILE} to rnx" -o ""
 
         # Run convbin for processing at startup
         ~/bin/convbin -ts "${START_DATE}" "${START_TIME}" -te "${STOP_DATE}" "${STOP_TIME}" \
@@ -287,14 +287,14 @@ else # Convbin run in loop
 
     	# Error if convbin fail
     	if [[ $? -ne 0 ]]; then
-        	log --level 2 --message "WARNING: $? Could not convert ${BINFILE} to rnx" --out ""
-		log --level 2 --message "There was an error: $? with convbin. Move corrupt ${BINFILE} to archive folder" --out ""
+        	log -l 2 -m "WARNING: $? Could not convert ${BINFILE} to rnx" -o ""
+		log -l 2 -m "There was an error: $? with convbin. Move corrupt ${BINFILE} to archive folder" -o ""
      		mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move bin if corrupt to archive folder
 		if [[ $? -ne 0 ]]; then
-              		log --level 2 --message "Can not move corrupt ${BINFILE} to archive folder" --out ""
+              		log -l 2 -m "Can not move corrupt ${BINFILE} to archive folder" -o ""
 		fi
     	else
-		log --level 0 --message "Convbin successfully converted ${BINFILE} to rnx" --out ""
+		log -l 0 -m "Convbin successfully converted ${BINFILE} to rnx" -o ""
     	fi
     done
 
@@ -305,7 +305,7 @@ if [[ "${QUARTER}" -eq 0 ]]; then
 
     # Merge and split into the 15-min grid. and move resulting rnx to $TEMP_DIR
     # Note: Using "$RAW_DIR"/*.rnx to include ALL files in the batch.
-    log --level 0 --message "Merging and splitting into 15-min grid..." --out ""
+    log -l 0 -m "Merging and splitting into 15-min grid..." -o ""
     ~/bin/gfzrnx -finp "${RAW_DIR}"/*.rnx \
         -fout "${TEMP_DIR}/::RX3::" \
         -split 900  \
@@ -337,7 +337,7 @@ else
 
     # Merge and split into the 15-min rnx file with START_TIME + 900 sec
     # and move resulting rnx to $TEMP_DIR
-    log --level 0 --message "Merging and splitting into 15-min file start time: ${START_TIME}" --out ""
+    log -l 0 -m "Merging and splitting into 15-min file start time: ${START_TIME}" -o ""
     ~/bin/gfzrnx -finp "${RAW_DIR}"/*.rnx \
            -fout "${TEMP_DIR}/::RX3::" \
            -epo_beg "${START_TIME}" \
@@ -351,11 +351,11 @@ fi
 
 # Error if gfzrnx fail
 if [[ $? -ne 0 ]]; then
-        log --level 2 --message "WARNING: $? gfzrnx could not merge rnx files" --out ""
-	log --level 2 --message "There was an error with gfzrnx. Move corrupt rnx files to archive folder" --out ""
+        log -l 2 -m "WARNING: $? gfzrnx could not merge rnx files" -o ""
+	log -l 2 -m "There was an error with gfzrnx. Move corrupt rnx files to archive folder" -o ""
      	mv -f "${RAW_DIR}"/*.rnx "${ARCHIVE_DIR}" # move rnx ailes if corrupt to archive folder
 		if [ $? != 0 ]; then
-			log --level 2 --message "Can not move corrupt rnx files to archive folder" --out ""
+			log -l 2 -m "Can not move corrupt rnx files to archive folder" -o ""
 		fi
 
 # preparing output files
@@ -385,7 +385,7 @@ else
     	# Not first 30-31 sec or last 30-31 sec on the edge of the hour for QUARTER 0
     	if (( (QUARTER > 0 && EPOCH_COUNT > nEPOCH2KEEP) || (QUARTER == 0 && !( (EPOCH_COUNT <= EPOCH30SEC && MINUTE == 59) || (EPOCH_COUNT <= EPOCH30SEC && MINUTE == 0) ) ) )); then
 
-		log --level 0 --message  "Processing ${RNX_FILE} with  ${EPOCH_COUNT} epochs" --out ""
+		log -l 0 -m  "Processing ${RNX_FILE} with  ${EPOCH_COUNT} epochs" -o ""
 
     		# Get the base filename (e.g., 202200XXX_R_20220410045_15M_01S_MO.rnx)
     		BASE_NAME=$(basename "${RNX_FILE}")
@@ -414,32 +414,32 @@ else
     		# Convert to crx
     		~/bin/RNX2CRX -d "${NEW_FILE_PATHrnx}"
 		if [[ $? -ne 0 ]]; then
-			log --level 2 --message " WARNING: $? with RNX2CRX could not convert ${NEW_FILE_NAMErnx} to rnx" --out ""
-			log --level 2 --message  "There was an error with RNX2CRX. Move corrupt ${NEW_FILE_NAMErnx} to archive folder" --out ""
+			log -l 2 -m " WARNING: $? with RNX2CRX could not convert ${NEW_FILE_NAMErnx} to rnx" -o ""
+			log -l 2 -m  "There was an error with RNX2CRX. Move corrupt ${NEW_FILE_NAMErnx} to archive folder" -o ""
         		mv -f "${NEW_FILE_PATHrnx}" "${ARCHIVE_DIR}" # move rnx if corrupt to arcchive folder
 			if [[ $? -ne 0 ]]; then
-				log --level 2 --message  "Can not move corrupt ${NEW_FILE_NAMErnx} to archive folder" --out ""
+				log -l 2 -m  "Can not move corrupt ${NEW_FILE_NAMErnx} to archive folder" -o ""
 			else
-				log --level 0 --message  "Corrupt ${NEW_FILE_NAMErnx} moved to archive folder" --out ""
+				log -l 0 -m  "Corrupt ${NEW_FILE_NAMErnx} moved to archive folder" -o ""
 			fi
 		else
 
     			# gzip crx to crx.gz
     			gzip -f "${NEW_FILE_PATHcrx}"
         		if [[ $? -ne 0 ]]; then
-				log --level 2 --message  "WARNING: $? gzip could not process ${NEW_FILE_NAMEcrx}" --out ""
-				log --level 2 --message "There was an error with gzip. Move ${NEW_FILE_NAMEcrx} to archive folder" --out ""
+				log -l 2 -m  "WARNING: $? gzip could not process ${NEW_FILE_NAMEcrx}" -o ""
+				log -l 2 -m "There was an error with gzip. Move ${NEW_FILE_NAMEcrx} to archive folder" -o ""
             			mv -f "${NEW_FILE_PATHcrx}" "${ARCHIVE_DIR}" # move crx if corrupt to archive
 				if [ $? != 0 ]; then
-					log --level 2 --message  "Can not move corrupt ${NEW_FILE_NAMEcrx} to archive folder" --out ""
+					log -l 2 -m  "Can not move corrupt ${NEW_FILE_NAMEcrx} to archive folder" -o ""
         			else
-					log --level 0 --message  "Corrupt ${NEW_FILE_NAMErnx} moved to archive folder" --out ""
+					log -l 0 -m  "Corrupt ${NEW_FILE_NAMErnx} moved to archive folder" -o ""
         			fi
 			fi
 		fi
 
         else
-		log --level 2 --message "Skipping ${RNX_FILE}: Only ${EPOCH_COUNT} epochs (less than $nEPOCH2KEEP)" --out ""
+		log -l 2 -m "Skipping ${RNX_FILE}: Only ${EPOCH_COUNT} epochs (less than $nEPOCH2KEEP)" -o ""
   	fi
 
     done
@@ -448,29 +448,29 @@ fi
 
 # Remove processed rnx files if loop processing
 if [[ "${QUARTER}" -gt 0 ]]; then
-    log --level 0 --message  "Remove processed rnx files if loop processin" --out ""
+    log -l 0 -m  "Remove processed rnx files if loop processin" -o ""
     rm -f "${RAW_DIR}"/*.rnx
     if [[ $? -ne 0 ]]; then
-	    log --level 2 --message  "[$(date +%T)] Warning: $? Can not remove processed rnx files" --out ""
+	    log -l 2 -m  "[$(date +%T)] Warning: $? Can not remove processed rnx files" -o ""
     fi
 fi
 
 ## Cleanup temp files
-log --level 0 --message  "Remove temporary ${TEMP_DIR} folder" --out ""
+log -l 0 -m  "Remove temporary ${TEMP_DIR} folder" -o ""
 rm -rf "${TEMP_DIR}"
 if [[ $? -ne 0 ]]; then
-	log --level 0 --message  "WARNING: $? Can not remove temporary ${TEMP_DIR} folder" --out ""
+	log -l 0 -m  "WARNING: $? Can not remove temporary ${TEMP_DIR} folder" -o ""
 fi
 
 # Move bin files if not opened by str2str
-log --level 0 --message  "Move processed bin file(s) to archive folder" --out ""
+log -l 0 -m  "Move processed bin file(s) to archive folder" -o ""
 for BINFILE in "${RAW_DIR}"/*."${binEXT}"; do
 	if is_file_ready "${BINFILE}"; then
 		mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move processed bin file to archive folder
 		if [[ $? -ne 0 ]]; then
-			log --level 2 --message  "WARNING: $? Can not move processed $BINFILE to archive folder" --out ""
+			log -l 2 -m  "WARNING: $? Can not move processed $BINFILE to archive folder" -o ""
 		fi
 	fi
 done
 
-log --level 0 --message  "15-min file(s) with more than: ${nEPOCH2KEEP} 1S EPOCHs are cleaned and ready" --out ""
+log -l 0 -m  "15-min file(s) with more than: ${nEPOCH2KEEP} 1S EPOCHs are cleaned and ready" -o ""
