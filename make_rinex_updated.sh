@@ -108,13 +108,6 @@ PROCESSING LOGIC:
 EOF
 }
 
-
-# ----- FUNCTION 4 -----------------------------------------------------------------------
-##
-#debug() {
-#  echo $*
-#}
-
 # ----- END OF FUNCTIONS SECTION-----------------------------------------------------------
 
 # Default parameters
@@ -126,7 +119,9 @@ nEPOCH2KEEP=0 # if 15 min rinex file conatins less EPOCHS than this value not ke
 SAMPLING=1 # sampling rate of GNSS receiver
 ### STOP BLOCK - HAVE TO BE SET MANUAL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 EPOCH30SEC=$((${SAMPLING}*30+1)) # Number of epoch in 30 sec interval (for removing diring startup processing)
-log -l 0 -m "In 30 seconds exists: ${EPOCH30SEC} epoch" -o ""
+log -l 0 -m "In 30 seconds should exists ${EPOCH30SEC} epochs or less" -o ""
+RNX2MRGprev=0 # Initial number of rnx files berore convbin to merge with gfzrnx
+RNX2MRGconv=0 # Number of rnx files produced by convbin to merge with gfzrnx
 
 # --- Loop through arguments (your current code) ---
 while [[ $# -gt 0 ]]; do
@@ -152,13 +147,13 @@ if [[ -n "${MISSING}" ]]; then
     exit 3
 fi
 
-log -l 0 -m "Parameters validation passed for Station: $STATION" -o ""
+log -l 0 -m "Number of parameters for Station: $STATION is correct" -o ""
 
 # Logic using the arguments
 log -l 0 -m "Qaurter: ${QUARTER} (0 - startup, 1-4 - some quarter)" -o ""
 log -l 0 -m "Station: ${STATION}" -o ""
 log -l 0 -m "BIN file extension: ${binEXT}" -o ""
-log -l 0 -m "Number of epoch to keep in rinex file: ${nEPOCH2KEEP}" -o ""
+log -l 0 -m "Number of epoch to keep in rinex file: ${nEPOCH2KEEP} or more" -o ""
 
 # SET TZ to UTC
 export TZ=UTC
@@ -210,6 +205,13 @@ else
 
 fi
 
+# Check number of rnx files in RAW_DIR before convbin if any
+rnx_files=("${RAW_DIR}"/*.rnx)
+RNX2MRGprev=${#rnx_files[@]}
+if [[ ! -e "${rnx_files[0]}" ]]; then
+    RNX2MRGprev=0
+fi
+
 if [[ "${QUARTER}" -eq 0 ]]; then # Convbin run at startup
 
     # Process each BIN file found in the record directory at startup
@@ -222,7 +224,8 @@ if [[ "${QUARTER}" -eq 0 ]]; then # Convbin run at startup
 	log -l 0 -m "Runing convbin to convert ${BINFILE} to rnx" -o ""
 
         # Run convbin for processing at startup
-        ~/bin/convbin -ti 1.0000 -od -os -v 3.04 -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}"
+        # capture convbin stderr but strip all repetitive stuff ending with \r CR
+        ~/bin/convbin -ti 1.0000 -od -os -v 3.04 -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}" 2>${TEMP_DIR}/convbin.log
 
     	# Error if convbin fail
     	if [[ $? -ne 0 ]]; then
@@ -282,8 +285,9 @@ else # Convbin run in loop
 	log -l 0 -m "Runing convbin to convert ${BINFILE} to rnx" -o ""
 
         # Run convbin for processing at startup
+        # capture convbin stderr but strip all repetitive stuff ending with \r CR
         ~/bin/convbin -ts "${START_DATE}" "${START_TIME}" -te "${STOP_DATE}" "${STOP_TIME}" \
-                      -ti 1.0000 -od -os -v 3.04 -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}"
+                      -ti 1.0000 -od -os -v 3.04 -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}" 2>${TEMP_DIR}/convbin.log
 
     	# Error if convbin fail
     	if [[ $? -ne 0 ]]; then
@@ -300,18 +304,51 @@ else # Convbin run in loop
 
 fi
 
+
+# Check number of rnx files in RAW_DIR before after convbin
+rnx_files=("${RAW_DIR}"/*.rnx)
+RNX2MRGconv=${#rnx_files[@]}
+if [[ ! -e "${rnx_files[0]}" ]]; then
+    RNX2MRGconv=0
+    log -l 2 -m "WARNING: no rnx files in ${RAW_DIR} folder for gfzrnx processing" -o ""
+fi
+
+
 # Process rnx file prepared by convbin
 if [[ "${QUARTER}" -eq 0 ]]; then
+
+
+    # Preapare single rnx file from one or multiple files for further splitting by gfzrnx
+    if [[RNX2MRGconv -eq 1 ]]; then # one file to copy to merged.rnx
+
+        log -l 0 -m "If only one rnx file select it  for furthure splitting..." -o ""
+        cp "${rnx_files[0]}" "${RAW_DIR}/merged.rnx"
+
+    else # merge all existing rnx files to merged.rnx
+
+        log -l 0 -m "Merging rnx files to one file for furthure splitting..." -o ""
+        ~/bin/gfzrnx -finp "${RAW_DIR}"/*.rnx \
+          -fout "${RAW_DIR}/merged.rnx" \
+          -splicing \
+          -adj_head \
+          -kv \
+          -f \
+          -vo 3.04 \
+          -errlog ${TEMP_DIR}/gfz-error.log \
+          -chk
+    fi
 
     # Merge and split into the 15-min grid. and move resulting rnx to $TEMP_DIR
     # Note: Using "$RAW_DIR"/*.rnx to include ALL files in the batch.
     log -l 0 -m "Merging and splitting into 15-min grid..." -o ""
-    ~/bin/gfzrnx -finp "${RAW_DIR}"/*.rnx \
+    ~/bin/gfzrnx -finp "${RAW_DIR}"/merged.rnx \
         -fout "${TEMP_DIR}/::RX3::" \
-        -split 900  \
+        -split 900 \
+        -kv \
         -f \
         -vo 3.04 \
         -crux ${HOME}/etc/crux.txt \
+        -errlog ${TEMP_DIR}/gfz-error.log \
         -chk
 
 else
@@ -345,6 +382,7 @@ else
            -f \
            -vo 3.04 \
            -crux $HOME/etc/crux.txt \
+           -errlog ${TEMP_DIR}/gfz-error.log \
            -chk
 fi
 
@@ -416,7 +454,7 @@ else
 		if [[ $? -ne 0 ]]; then
 			log -l 2 -m " WARNING: $? with RNX2CRX could not convert ${NEW_FILE_NAMErnx} to rnx" -o ""
 			log -l 2 -m  "There was an error with RNX2CRX. Move corrupt ${NEW_FILE_NAMErnx} to archive folder" -o ""
-        		mv -f "${NEW_FILE_PATHrnx}" "${ARCHIVE_DIR}" # move rnx if corrupt to arcchive folder
+        		mv -f "${NEW_FILE_PATHrnx}" "${ARCHIVE_DIR}" # move rnx if corrupt to archive folder
 			if [[ $? -ne 0 ]]; then
 				log -l 2 -m  "Can not move corrupt ${NEW_FILE_NAMErnx} to archive folder" -o ""
 			else
