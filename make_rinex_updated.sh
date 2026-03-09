@@ -315,30 +315,39 @@ fi
 
 
 # Process rnx file prepared by convbin
-if [[ "${QUARTER}" -eq 0 ]]; then
+if [[ "${QUARTER}" -eq 0 ]]; then       # for QUARTER=0 - at startup
 
 
-    # Preapare single rnx file from one or multiple files for further splitting by gfzrnx
-    if [[RNX2MRGconv -eq 1 ]]; then # one file to copy to merged.rnx
+    # Prepare single rnx file from one or multiple files for further splitting by gfzrnx
+    if [[ "${RNX2MRGconv}" -eq 1 ]]; then # one file to copy to merged.rnx
 
-        log -l 0 -m "If only one rnx file select it  for furthure splitting..." -o ""
+        log -l 0 -m "Only one rnx file selected for furthure splitting by gfzrnx" -o ""
         cp "${rnx_files[0]}" "${RAW_DIR}/merged.rnx"
 
     else # merge all existing rnx files to merged.rnx
 
-        log -l 0 -m "Merging rnx files to one file for furthure splitting..." -o ""
+        log -l 0 -m "Several rnx files merged to one file for furthure splitting by gfzrnx" -o ""
         ~/bin/gfzrnx -finp "${RAW_DIR}"/*.rnx \
           -fout "${RAW_DIR}/merged.rnx" \
-          -splicing \
-          -adj_head \
           -kv \
           -f \
           -vo 3.04 \
           -errlog ${TEMP_DIR}/gfz-error.log \
           -chk
+
+        # Error if gfzrnx fail to merge file in single rnx file
+        if [[ $? -ne 0 ]]; then
+	    log -l 2 -m "WARNING: $? gfzrnx could not merge rnx files to single file" -o ""
+	    log -l 2 -m "There was an error with gfzrnx. Move corrupt rnx files to archive folder" -o ""
+	    mv -f "${RAW_DIR}"/*.rnx "${ARCHIVE_DIR}" # move rnx files if corrupt to archive folder
+	    if [ $? != 0 ]; then
+		log -l 2 -m "Can not move corrupt rnx files to archive folder" -o ""
+	    fi
+	fi
+
     fi
 
-    # Merge and split into the 15-min grid. and move resulting rnx to $TEMP_DIR
+    # Split into the 15-min grid and move resulting rnx to $TEMP_DIR
     # Note: Using "$RAW_DIR"/*.rnx to include ALL files in the batch.
     log -l 0 -m "Merging and splitting into 15-min grid..." -o ""
     ~/bin/gfzrnx -finp "${RAW_DIR}"/merged.rnx \
@@ -351,7 +360,36 @@ if [[ "${QUARTER}" -eq 0 ]]; then
         -errlog ${TEMP_DIR}/gfz-error.log \
         -chk
 
-else
+else  # For QUARTER>0 - loop processing
+
+    # Preapare single rnx file from one or multiple files for further splitting by gfzrnx while loop processing
+    if (( ( QUARTER < 4 && RNX2MRGconv == 1 ) || ( QUARTER == 4 && RNX2MRGprev == 0 && RNX2MRGconv == 2) )); then # one file to copy to merged.rnx
+
+        log -l 0 -m "Only one rnx file selected for furthure loop processing by gfzrnx" -o ""
+        cp "${rnx_files[0]}" "${RAW_DIR}/merged.rnx"
+
+    else # merge all existing rnx files to merged.rnx
+
+        log -l 0 -m "Several rnx files merged to one file for furthure loop processing by gfzrnx" -o ""
+        ~/bin/gfzrnx -finp "${RAW_DIR}"/*.rnx \
+          -fout "${RAW_DIR}/merged.rnx" \
+          -kv \
+          -f \
+          -vo 3.04 \
+          -errlog ${TEMP_DIR}/gfz-error.log \
+          -chk
+
+        # Error if gfzrnx fail to merge file in single rnx file while loop processing
+        if [[ $? -ne 0 ]]; then
+	    log -l 2 -m "WARNING: $? gfzrnx could not merge rnx files to single file while loop processing" -o ""
+	    log -l 2 -m "There was an error with gfzrnx. Move corrupt rnx files to archive folder" -o ""
+	    mv -f "${RAW_DIR}"/*.rnx "${ARCHIVE_DIR}" # move rnx files if corrupt to archive folder
+	    if [ $? != 0 ]; then
+		log -l 2 -m "Can not move corrupt rnx files to archive folder" -o ""
+	    fi
+	fi
+
+    fi
 
     # preapare start time for gfzrnx
     case ${QUARTER} in
@@ -375,7 +413,7 @@ else
     # Merge and split into the 15-min rnx file with START_TIME + 900 sec
     # and move resulting rnx to $TEMP_DIR
     log -l 0 -m "Merging and splitting into 15-min file start time: ${START_TIME}" -o ""
-    ~/bin/gfzrnx -finp "${RAW_DIR}"/*.rnx \
+    ~/bin/gfzrnx -finp "${RAW_DIR}"/merged.rnx \
            -fout "${TEMP_DIR}/::RX3::" \
            -epo_beg "${START_TIME}" \
            -d 900 \
@@ -387,17 +425,24 @@ else
 fi
 
 
-# Error if gfzrnx fail
+# Error if gfzrnx fail while making output file(s)
 if [[ $? -ne 0 ]]; then
-        log -l 2 -m "WARNING: $? gfzrnx could not merge rnx files" -o ""
+        log -l 2 -m "WARNING: $? gfzrnx could not make output rnx file(s) from merged rnx" -o ""
 	log -l 2 -m "There was an error with gfzrnx. Move corrupt rnx files to archive folder" -o ""
-     	mv -f "${RAW_DIR}"/*.rnx "${ARCHIVE_DIR}" # move rnx ailes if corrupt to archive folder
+     	mv -f "${RAW_DIR}"/*.rnx "${ARCHIVE_DIR}" # move rnx files if corrupt to archive folder
 		if [ $? != 0 ]; then
 			log -l 2 -m "Can not move corrupt rnx files to archive folder" -o ""
 		fi
 
 # preparing output files
 else
+
+    # Delete merged.rnx file from RAW_DIR folder after processing
+    log -l 0 -m  "Remove merged.rnx file after processing" -o ""
+    rm -f "${RAW_DIR}"/merged.rnx
+    if [[ $? -ne 0 ]]; then
+	log -l 2 -m  "WARNING: $? Can not remove processed rnx files" -o ""
+    fi
 
     for RNX_FILE in "${TEMP_DIR}"/*.rnx; do
     	[[ -f "${RNX_FILE}" ]] || continue
@@ -414,7 +459,7 @@ else
     		DAY=$(echo "${FIRST_EPOCH}" | awk '{print $4}')
 	    	HOUR=$(echo "${FIRST_EPOCH}" | awk '{print $5}')
 	    	MINUTE=$(echo "${FIRST_EPOCH}" | awk '{print $6}')
-    		SECOND=$(echo "${FIRST_EPOCH}" | awk '{print $7}' | cut -d'.' -f1) # Removes decimals
+    		SECOND=$(echo "${FIRST_EPOCH}" | awk '{print $7}' | cut -d '.' -f1) # Removes decimals
         else
 		MINUTE=0
         fi
@@ -486,10 +531,10 @@ fi
 
 # Remove processed rnx files if loop processing
 if [[ "${QUARTER}" -gt 0 ]]; then
-    log -l 0 -m  "Remove processed rnx files if loop processin" -o ""
+    log -l 0 -m  "Remove processed rnx files if loop processing" -o ""
     rm -f "${RAW_DIR}"/*.rnx
     if [[ $? -ne 0 ]]; then
-	    log -l 2 -m  "[$(date +%T)] Warning: $? Can not remove processed rnx files" -o ""
+	    log -l 2 -m  "WARNING: $? Can not remove processed rnx files" -o ""
     fi
 fi
 
