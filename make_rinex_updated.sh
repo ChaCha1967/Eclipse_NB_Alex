@@ -176,7 +176,7 @@ if [[ ! -d "${DATA_DIR}" ]]; then
     mkdir -p "${DATA_DIR}" \
     || {
             log -l 3 -m "ERROR: $? Could not create ${DATA_DIR}" -o ""
-            exit 3; \
+            exit 4; \
        }
 fi
 
@@ -185,7 +185,7 @@ if [[ ! -d "${ARCHIVE_DIR}" ]]; then
     mkdir -p "${ARCHIVE_DIR}" \
     || {
             log -l 3 -m "ERROR: $? Could not create ${ARCHIVE_DIR}" -o ""
-            exit 4; \
+            exit 5; \
        }
 fi
 
@@ -226,7 +226,6 @@ if [[ "${QUARTER}" -eq 0 ]]; then # Convbin run at startup
         log -l 0 -m "Runing convbin to convert ${BINFILE} to rnx" -o ""
 
         # Run convbin for processing at startup
-        # capture convbin stderr but strip all repetitive stuff ending with \r CR
         ~/bin/convbin -ti 1.0000 -od -os -v 3.04 -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}" 2>${TEMP_DIR}/convbin.log
 
         # Error if convbin fail
@@ -234,18 +233,20 @@ if [[ "${QUARTER}" -eq 0 ]]; then # Convbin run at startup
                 # Check if the error log file actually exists and is not empty (-s)
                 if [[ -s "${TEMP_DIR}/convbin.log" ]]; then
                     # Read the file if it has content
-                    ERR_OUT=$(cat "${TEMP_DIR}/convbin.log" | tr -d '\n\r')
+                    ERR_OUT=$(cat "${TEMP_DIR}/convbin.log")
                 else
                     # Fallback if the command failed but the log is missing/empty
                     ERR_OUT="Unknown convbin error (No log output generated)"
                 fi
 
-                log -l 2 -m "WARNING: $? Could not convert ${BINFILE} to rnx" -o "${ERR_OUT}"
-                log -l 2 -m "There was an error: $? with convbin. Move corrupt ${BINFILE} to archive folder" -o ""
-                mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move bin if corrupt to archive folder
+                log -l 3 -m "ERROR: $? Could not convert ${BINFILE} to rnx" -o "${ERR_OUT}"
+                log -l 3 -m "There was an error: $? with convbin. Move corrupt ${BINFILE} to TEMP_DIR folder" -o ""
+                mv -f "${BINFILE}" "${TEMP_DIR}" # move bin if corrupt to TEMP_DIR folder
                 if [[ $? -ne 0 ]]; then
-                    log -l 2 -m "Can not move corrupt ${BINFILE} to archive folder" -o ""
+                    log -l 3 -m "Can not move corrupt ${BINFILE} to TEMP_DIR folder" -o ""
+                    exit 6
                 fi
+                exit 7
             else
                 log -l 0 -m "Convbin successfully converted ${BINFILE} to rnx" -o ""
             fi
@@ -305,17 +306,19 @@ else # Convbin run in loop
             # Check if the error log file actually exists and is not empty (-s)
             if [[ -s "${TEMP_DIR}/convbin.log" ]]; then
                 # Read the file if it has content
-                ERR_OUT=$(cat "${TEMP_DIR}/convbin.log" | tr -d '\n\r')
+                ERR_OUT=$(cat "${TEMP_DIR}/convbin.log")
             else
                 # Fallback if the command failed but the log is missing/empty
                 ERR_OUT="Unknown convbin error (No log output generated)"
             fi
-            log -l 2 -m "WARNING: $? Could not convert ${BINFILE} to rnx" -o "ERR_OUT"
-            log -l 2 -m "There was an error: $? with convbin. Move corrupt ${BINFILE} to archive folder" -o ""
-            mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move bin if corrupt to archive folder
+            log -l 3 -m "ERROR: $? Could not convert ${BINFILE} to rnx" -o "ERR_OUT"
+            log -l 3 -m "There was an error: $? with convbin. Move corrupt ${BINFILE} to TEMP_DIR folder" -o ""
+            mv -f "${BINFILE}" "${TEMP_DIR}" # move bin if corrupt to TEMP_DIR folder
                 if [[ $? -ne 0 ]]; then
-                    log -l 2 -m "Can not move corrupt ${BINFILE} to archive folder" -o ""
+                    log -l 3 -m "Can not move corrupt ${BINFILE} to TEMP_DIR folder" -o ""
+                    exit 7
                 fi
+            exit 7
         else
             log -l 0 -m "Convbin successfully converted ${BINFILE} to rnx" -o ""
         fi
@@ -328,7 +331,8 @@ rnx_files=("${RAW_DIR}"/*.rnx)
 RNX2MRGconv=${#rnx_files[@]}
 if [[ ! -e "${rnx_files[0]}" ]]; then
     RNX2MRGconv=0
-    log -l 2 -m "WARNING: no rnx files in ${RAW_DIR} folder for gfzrnx processing" -o ""
+    log -l 3 -m "ERROR: No rnx files in ${RAW_DIR} folder for gfzrnx processing" -o ""
+    exit 8
 fi
 
 
@@ -349,7 +353,6 @@ if [[ "${QUARTER}" -eq 0 ]]; then       # for QUARTER=0 - at startup
           -fout "${RAW_DIR}/merged.rnx" \
           -kv \
           -f \
-          -vo 3.04 \
           -errlog ${TEMP_DIR}/gfz-error.log \
           -chk
 
@@ -358,17 +361,19 @@ if [[ "${QUARTER}" -eq 0 ]]; then       # for QUARTER=0 - at startup
             # Check if the error log file actually exists and is not empty (-s)
             if [[ -s "${TEMP_DIR}/gfz-error.log" ]]; then
                 # Read the file if it has content
-                ERR_OUT=$(cat "${TEMP_DIR}/gfz-error.log" | tr -d '\n\r')
+                ERR_OUT=$(cat "${TEMP_DIR}/gfz-error.log")
             else
                 # Fallback if the command failed but the log is missing/empty
                 ERR_OUT="Unknown gfzrnx error (No log output generated)"
             fi
-            log -l 2 -m "WARNING: $? gfzrnx could not merge rnx files to single file" -o "ERR_OUT"
-            log -l 2 -m "There was an error with gfzrnx. Move corrupt rnx files to archive folder" -o ""
-            mv -f "${RAW_DIR}"/*.rnx "${ARCHIVE_DIR}" # move rnx files if corrupt to archive folder
+            log -l 3 -m "ERROR: $? gfzrnx could not merge rnx files to single file" -o "ERR_OUT"
+            log -l 3 -m "There was an error with gfzrnx. Move corrupt rnx files to TEMP_DIR folder" -o ""
+            mv -f "${RAW_DIR}"/*.rnx "${TEMP_DIR}" # move rnx files if corrupt to TEMP_DIR folder
                 if [ $? != 0 ]; then
-                    log -l 2 -m "Can not move corrupt rnx files to archive folder" -o ""
+                    log -l 3 -m "Can not move corrupt rnx files to TEMP_DIR folder" -o ""
+                    exit 9
                 fi
+            exit 10
         else
             MRGRNX=1 # Set flag of rnx to 1  (merging happend)
         fi
@@ -383,7 +388,6 @@ if [[ "${QUARTER}" -eq 0 ]]; then       # for QUARTER=0 - at startup
         -split 900 \
         -kv \
         -f \
-        -vo 3.04 \
         -crux ${HOME}/etc/crux.txt \
         -errlog ${TEMP_DIR}/gfz-split-error.log \
         -chk
@@ -403,7 +407,6 @@ else  # For QUARTER>0 - loop processing
           -fout "${RAW_DIR}/merged.rnx" \
           -kv \
           -f \
-          -vo 3.04 \
           -errlog ${TEMP_DIR}/gfz-error.log \
           -chk
 
@@ -412,17 +415,19 @@ else  # For QUARTER>0 - loop processing
             # Check if the error log file actually exists and is not empty (-s)
             if [[ -s "${TEMP_DIR}/gfz-error.log" ]]; then
                 # Read the file if it has content
-                ERR_OUT=$(cat "${TEMP_DIR}/gfz-error.log" | tr -d '\n\r')
+                ERR_OUT=$(cat "${TEMP_DIR}/gfz-error.log")
             else
                 # Fallback if the command failed but the log is missing/empty
                 ERR_OUT="Unknown gfzrnx error (No log output generated)"
             fi
-            log -l 2 -m "WARNING: $? gfzrnx could not merge rnx files to single file while loop processing" -o "ERR_OUT"
-            log -l 2 -m "There was an error with gfzrnx. Move corrupt rnx files to archive folder" -o ""
-            mv -f "${RAW_DIR}"/*.rnx "${ARCHIVE_DIR}" # move rnx files if corrupt to archive folder
+            log -l 3 -m "WARNING: $? gfzrnx could not merge rnx files to single file while loop processing" -o "ERR_OUT"
+            log -l 3 -m "There was an error with gfzrnx. Move corrupt rnx files to archive folder" -o ""
+            mv -f "${RAW_DIR}"/*.rnx "${TEMP_DIR}" # move rnx files if corrupt to TEMP_DIR folder
             if [ $? != 0 ]; then
-                log -l 2 -m "Can not move corrupt rnx files to archive folder" -o ""
+                log -l 3 -m "Can not move corrupt rnx files to TEMP_DIR folder" -o ""
+                exit 9
             fi
+            exit 10
         else
             MRGRNX=1 # Set flag of rnx to 1  (merging happend)
         fi
@@ -469,17 +474,19 @@ if [[ $? -ne 0 ]]; then
     # Check if the error log file actually exists and is not empty (-s)
     if [[ -s "${TEMP_DIR}/gfz-split-error.log" ]]; then
         # Read the file if it has content
-        ERR_OUT=$(cat "${TEMP_DIR}/gfz-split-error.log" | tr -d '\n\r')
+        ERR_OUT=$(cat "${TEMP_DIR}/gfz-split-error.log")
     else
         # Fallback if the command failed but the log is missing/empty
         ERR_OUT="Unknown gfzrnx error (No log output generated)"
     fi
-    log -l 2 -m "WARNING: $? gfzrnx could not make output rnx file(s) from merged rnx" -o "ERR_OUT"
-    log -l 2 -m "There was an error with gfzrnx. Move corrupt rnx files to archive folder" -o ""
-    mv -f "${RAW_DIR}"/*.rnx "${ARCHIVE_DIR}" # move rnx files if corrupt to archive folder
+    log -l 3 -m "WARNING: $? gfzrnx could not make output rnx file(s) from merged rnx" -o "ERR_OUT"
+    log -l 3 -m "There was an error with gfzrnx. Move corrupt rnx files to TEMP_DIR folder" -o ""
+    mv -f "${RAW_DIR}"/*.rnx "${TEMP_DIR}" # move rnx files if corrupt to TEMP_DIR folder
         if [ $? != 0 ]; then
-            log -l 2 -m "Can not move corrupt rnx files to archive folder" -o ""
+            log -l 3 -m "Can not move corrupt rnx files to TEMP_DIR folder" -o ""
+            exit 11
         fi
+    exit 12
 
 # preparing output files
 else
@@ -488,7 +495,8 @@ else
     log -l 0 -m  "Remove merged.rnx file after processing" -o ""
     rm -f "${RAW_DIR}"/merged.rnx
     if [[ $? -ne 0 ]]; then
-        log -l 2 -m  "WARNING: $? Can not remove processed rnx files" -o ""
+        log -l 3 -m  "ERROR: $? Can not remove processed rnx files" -o ""
+        exit 13
     fi
 
     for RNX_FILE in "${TEMP_DIR}"/*.rnx; do
@@ -557,33 +565,37 @@ else
                 # Check if the error log file actually exists and is not empty (-s)
                 if [[ -s "${TEMP_DIR}/hatanaka-error.log" ]]; then
                     # Read the file if it has content
-                    ERR_OUT=$(cat "${TEMP_DIR}/hatanaka-error.log" | tr -d '\n\r')
+                    ERR_OUT=$(cat "${TEMP_DIR}/hatanaka-error.log")
                 else
                     # Fallback if the command failed but the log is missing/empty
                     ERR_OUT="Unknown CRX2RNX error (No log output generated)"
                 fi
 
-                log -l 2 -m " WARNING: $? with RNX2CRX could not convert ${NEW_FILE_NAMErnx} to rnx" -o "${ERR_OUT}"
-                log -l 2 -m  "There was an error with RNX2CRX. Move corrupt ${NEW_FILE_NAMErnx} to archive folder" -o ""
-                mv -f "${NEW_FILE_PATHrnx}" "${ARCHIVE_DIR}" # move rnx if corrupt to archive folder
+                log -l 3 -m " ERROR: $? with RNX2CRX could not convert ${NEW_FILE_NAMErnx} to rnx" -o "${ERR_OUT}"
+                log -l 3 -m  "There was an error with RNX2CRX. Move corrupt ${NEW_FILE_NAMErnx} to TEMP_DIR folder" -o ""
+                mv -f "${NEW_FILE_PATHrnx}" "${TEMP_DIR}" # move rnx if corrupt to archive folder
                     if [[ $? -ne 0 ]]; then
-                        log -l 2 -m  "Can not move corrupt ${NEW_FILE_NAMErnx} to archive folder" -o ""
+                        log -l 3 -m  "Can not move corrupt ${NEW_FILE_NAMErnx} to TEMP_DIR folder" -o ""
+                        exit 14
                     else
-                        log -l 0 -m  "Corrupt ${NEW_FILE_NAMErnx} moved to archive folder" -o ""
+                        log -l 0 -m  "Corrupt ${NEW_FILE_NAMErnx} moved to TEMP_DIR folder" -o ""
                     fi
+                    exit 15
             else
 
                 # gzip crx to crx.gz
                 gzip -f "${NEW_FILE_PATHcrx}"
                     if [[ $? -ne 0 ]]; then
-                        log -l 2 -m  "WARNING: $? gzip could not process ${NEW_FILE_NAMEcrx}" -o ""
-                        log -l 2 -m "There was an error with gzip. Move ${NEW_FILE_NAMEcrx} to archive folder" -o ""
-                        mv -f "${NEW_FILE_PATHcrx}" "${ARCHIVE_DIR}" # move crx if corrupt to archive
+                        log -l 3 -m  "ERROR: $? gzip could not process ${NEW_FILE_NAMEcrx}" -o ""
+                        log -l 3 -m "There was an error with gzip. Move ${NEW_FILE_NAMEcrx} to TEMP_DIR folder" -o ""
+                        mv -f "${NEW_FILE_PATHcrx}" "${TEMP_DIR}" # move crx if corrupt to archive
                         if [ $? != 0 ]; then
-                            log -l 2 -m  "Can not move corrupt ${NEW_FILE_NAMEcrx} to archive folder" -o ""
+                            log -l 3 -m  "Can not move corrupt ${NEW_FILE_NAMEcrx} to TEMP_DIR folder" -o ""
+                            exit 16
                         else
                             log -l 0 -m  "Corrupt ${NEW_FILE_NAMErnx} moved to archive folder" -o ""
                         fi
+                        exit 17
                     fi
             fi
 
