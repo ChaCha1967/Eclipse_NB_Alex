@@ -105,6 +105,29 @@ PROCESSING LOGIC:
   4. Renaming:   Applies RINEX 3 naming conventions using Station ID.
   5. Compression: Converts .rnx to .crx (Hatanaka) and applies gzip.
   6. Archive:    Moves processed binary files to ~/archive (if not locked).
+
+RETURN VALUES
+  0  - Ok
+  1  - 
+  2  - 
+  3  - 
+  4  - 
+  5  - 
+  6  - 
+  7  - 
+  8  - 
+  9  - 
+  10 - 
+  11 - 
+  12 - 
+  13 - 
+  14 - 
+  15 - 
+  16 - 
+  17 - 
+  18 - 
+  19 - 
+  20 - 
 ==============================================================================
 EOF
 }
@@ -610,7 +633,8 @@ if [[ "${QUARTER}" -gt 0 ]]; then
     log -l 0 -m  "Remove processed rnx files if loop processing" -o ""
     rm -f "${RAW_DIR}"/*.rnx
     if [[ $? -ne 0 ]]; then
-        log -l 2 -m  "WARNING: $? Can not remove processed rnx files" -o ""
+        log -l 3 -m  "ERROR: $? Can not remove processed rnx files" -o ""
+        exit 18
     fi
 fi
 
@@ -618,7 +642,8 @@ fi
 log -l 0 -m  "Remove temporary ${TEMP_DIR} folder" -o ""
 rm -rf "${TEMP_DIR}"
 if [[ $? -ne 0 ]]; then
-    log -l 0 -m  "WARNING: $? Can not remove temporary ${TEMP_DIR} folder" -o ""
+    log -l 3 -m  "WARNING: $? Can not remove temporary ${TEMP_DIR} folder" -o ""
+    exit 19
 fi
 
 # Move bin files if not opened by str2str
@@ -627,9 +652,11 @@ for BINFILE in "${RAW_DIR}"/*."${binEXT}"; do
     if is_file_ready "${BINFILE}"; then
         mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move processed bin file to archive folder
         if [[ $? -ne 0 ]]; then
-            log -l 2 -m  "WARNING: $? Can not move processed $BINFILE to archive folder" -o ""
+            log -l 3 -m  "ERROR: $? Can not move processed $BINFILE to archive folder" -o ""
+            exit 20
         fi
     fi
 done
 
 log -l 0 -m  "15-min file(s) with more than: ${nEPOCH2KEEP} 1S EPOCHs are cleaned and ready" -o ""
+exit 0
