@@ -107,11 +107,11 @@ QUARTER REFERENCE GUIDE:
   0: Startup Mode. Processes all existing files in the record folder.
 
 PROCESSING LOGIC:
-  1. Conversion:  Uses convbin for initial RINEX fragments.
-  2. Splitting:   Uses gfzrnx for precise 15-minute grid alignment.
+  1. Conversion:  Uses CONVBIN for initial RINEX fragments.
+  2. Splitting:   Uses GFZRNX for precise 15-minute grid alignment.
   3. Validation:  Filters files by the --epoch threshold.
   4. Renaming:    Applies RINEX 3 naming conventions using Station ID.
-  5. Compression: Converts .rnx to .crx (Hatanaka) and applies gzip.
+  5. Compression: Converts .rnx to .crx (Hatanaka) and applies GZIP.
   6. Archive:     Moves processed binary files to ~/archive (if not locked).
   8. File Name:   Add suffix "m" to File Name if merge sevearal input binary files at once
   7. Log: Echo script execution stages (can be redirected to a log file)
@@ -155,9 +155,9 @@ SAMPLING=1 # sampling rate of GNSS receiver
 ### STOP BLOCK - HAVE TO BE SET MANUAL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 EPOCH30SEC=$((${SAMPLING}*30+1)) # Number of epoch in 30 sec interval (for removing diring startup processing)
 EPOCH_EXPECTED=$(( ${SAMPLING}*60*15))
-log -l 0 -m "In 30 seconds should exists ${EPOCH30SEC} epochs or less" -o ""
-RNX2MRGprev=0 # Initial number of rnx files berore convbin to merge with gfzrnx
-RNX2MRGconv=0 # Number of rnx files produced by convbin to merge with gfzrnx
+log -l 0 -m "In 30 seconds, there should be ${EPOCH30SEC} epochs or fewer" -o ""
+RNX2MRGprev=0 # Initial number of rnx files berore CONVBIN to merge with GFZRNX
+RNX2MRGconv=0 # Number of rnx files produced by CONVBIN to merge with GFZRNX
 RNXMRG=0 # Flag for merging rnx before splitting (0 - single file 1 - merged file (splitting can be not good)
 
 # --- Loop through arguments (your current code) ---
@@ -184,13 +184,13 @@ if [[ -n "${MISSING}" ]]; then
     exit 3
 fi
 
-log -l 0 -m "Number of parameters for Station: $STATION is correct" -o ""
+log -l 0 -m "The number of parameters for station: $STATION is correct" -o ""
 
 # Logic using the arguments
-log -l 0 -m "Qaurter: ${QUARTER} (0 - startup, 1-4 - some quarter)" -o ""
+log -l 0 -m "Qaurter: ${QUARTER} (0 - startup, 1-4 - specific quarter)" -o ""
 log -l 0 -m "Station: ${STATION}" -o ""
 log -l 0 -m "BIN file extension: ${binEXT}" -o ""
-log -l 0 -m "Number of epoch to keep in rinex file: ${nEPOCH2KEEP} or more" -o ""
+log -l 0 -m "Number of epoch to keep in the rinex file: ${nEPOCH2KEEP} or more" -o ""
 
 # SET TZ to UTC
 export TZ=UTC
@@ -225,7 +225,7 @@ if [[ ! -d "${ARCHIVE_DIR}" ]]; then
 fi
 
 # Date/time of run
-log -l 0 -m "Start bin files processing" -o ""
+log -l 0 -m "Start processing BIN files" -o ""
 
 # Get parts of the date and time
 if [[ "${QUARTER}" -lt 4 ]]; then
@@ -242,14 +242,14 @@ else
 
 fi
 
-# Check number of rnx files in RAW_DIR before convbin if any
+# Check number of rnx files in RAW_DIR before CONVBIN if any
 rnx_files=("${RAW_DIR}"/*.rnx)
 RNX2MRGprev=${#rnx_files[@]}
 if [[ ! -e "${rnx_files[0]}" ]]; then
     RNX2MRGprev=0
 fi
 
-if [[ "${QUARTER}" -eq 0 ]]; then # Convbin run at startup
+if [[ "${QUARTER}" -eq 0 ]]; then # CONVBIN run at startup
 
     # Process each BIN file found in the record directory at startup
     for BINFILE in "${RAW_DIR}"/*."${binEXT}"; do
@@ -258,12 +258,12 @@ if [[ "${QUARTER}" -eq 0 ]]; then # Convbin run at startup
         # Create a unique temp name for the RINEX fragment
         TEMP_OUT="${RAW_DIR}/$(basename "${BINFILE}" ."${binEXT}").rnx"
 
-        log -l 0 -m "Runing convbin to convert ${BINFILE} to rnx" -o ""
+        log -l 0 -m "Runing CONVBIN to convert ${BINFILE} to RINEX" -o ""
 
-        # Run convbin for processing at startup
+        # Run CONVBIN for processing at startup
         ~/bin/convbin -ti 1.0000 -od -os -v 3.04 -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}" 2>${TEMP_DIR}/convbin.log
 
-        # Error if convbin fail
+        # Error if CONVBIN fail
             if [[ $? -ne 0 ]]; then
                 # Check if the error log file actually exists and is not empty (-s)
                 if [[ -s "${TEMP_DIR}/convbin.log" ]]; then
@@ -271,25 +271,25 @@ if [[ "${QUARTER}" -eq 0 ]]; then # Convbin run at startup
                     ERR_OUT=$(cat "${TEMP_DIR}/convbin.log")
                 else
                     # Fallback if the command failed but the log is missing/empty
-                    ERR_OUT="Unknown convbin error (No log output generated)"
+                    ERR_OUT="Unknown CONVBIN error (No log output generated)"
                 fi
 
-                log -l 3 -m "ERROR: $? Could not convert ${BINFILE} to rnx: EXIT" -o "${ERR_OUT}"
-                log -l 3 -m "There was an error: $? with convbin. Move corrupt ${BINFILE} to TEMP_DIR folder: EXIT" -o ""
+                log -l 3 -m "ERROR: $? Could not convert ${BINFILE} to RINEX: EXIT" -o "${ERR_OUT}"
+                log -l 3 -m "There was an error $? with CONVBIN. Move the corrupt ${BINFILE} to the TEMP_DIR folder: EXIT" -o ""
                 mv -f "${BINFILE}" "${TEMP_DIR}" # move bin if corrupt to TEMP_DIR folder
                 if [[ $? -ne 0 ]]; then
-                    log -l 3 -m "Can not move corrupt ${BINFILE} to TEMP_DIR folder: EXIT" -o ""
+                    log -l 3 -m "Cannot move corrupt ${BINFILE} to the TEMP_DIR folder: EXIT" -o ""
                     exit 6
                 fi
                 exit 7
             else
-                log -l 0 -m "Convbin successfully converted ${BINFILE} to rnx" -o ""
+                log -l 0 -m "CONVBIN successfully converted ${BINFILE} to RINEX" -o ""
             fi
     done
 
-else # Convbin run in loop
+else # CONVBIN run in loop
 
-    # preapare start-stop date and time for convbin in loop mode
+    # preapare start-stop date and time for CONVBIN in loop mode
     case ${QUARTER} in
 
         1) # QUATER 1
@@ -329,14 +329,14 @@ else # Convbin run in loop
         # Create a unique temp name for the RINEX fragment
         TEMP_OUT="${RAW_DIR}/$(basename "${BINFILE}" ."${binEXT}").rnx"
 
-        log -l 0 -m "Runing convbin to convert ${BINFILE} to rnx" -o ""
+        log -l 0 -m "Runing CONVBIN to convert ${BINFILE} to RINEX" -o ""
 
-        # Run convbin for processing at startup
-        # capture convbin stderr but strip all repetitive stuff ending with \r CR
+        # Run CONVBIN for processing at startup
+        # capture CONVBIN stderr but strip all repetitive stuff ending with \r CR
         ~/bin/convbin -ts "${START_DATE}" "${START_TIME}" -te "${STOP_DATE}" "${STOP_TIME}" \
                       -ti 1.0000 -od -os -v 3.04 -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}" 2>${TEMP_DIR}/convbin.log
 
-        # Error if convbin fail
+        # Error if CONVBIN fail
         if [[ $? -ne 0 ]]; then
             # Check if the error log file actually exists and is not empty (-s)
             if [[ -s "${TEMP_DIR}/convbin.log" ]]; then
@@ -344,46 +344,46 @@ else # Convbin run in loop
                 ERR_OUT=$(cat "${TEMP_DIR}/convbin.log")
             else
                 # Fallback if the command failed but the log is missing/empty
-                ERR_OUT="Unknown convbin error (No log output generated)"
+                ERR_OUT="Unknown CONVBIN error (No log output generated)"
             fi
-            log -l 3 -m "ERROR: $? Could not convert ${BINFILE} to rnx: EXIT" -o "ERR_OUT"
-            log -l 3 -m "There was an error: $? with convbin. Move corrupt ${BINFILE} to TEMP_DIR folder: EXIT" -o ""
+            log -l 3 -m "ERROR: $? Could not convert ${BINFILE} to RINEX: EXIT" -o "ERR_OUT"
+            log -l 3 -m "There was an error: $? with CONVBIN. Move corrupt ${BINFILE} to the TEMP_DIR folder: EXIT" -o ""
             mv -f "${BINFILE}" "${TEMP_DIR}" # move bin if corrupt to TEMP_DIR folder
                 if [[ $? -ne 0 ]]; then
-                    log -l 3 -m "Can not move corrupt ${BINFILE} to TEMP_DIR folder: EXIT" -o ""
+                    log -l 3 -m "Cannot move corrupt ${BINFILE} to the TEMP_DIR folder: EXIT" -o ""
                     exit 6
                 fi
             exit 7
         else
-            log -l 0 -m "Convbin successfully converted ${BINFILE} to rnx" -o ""
+            log -l 0 -m "CONVBIN successfully converted ${BINFILE} to RINEX" -o ""
         fi
     done
 fi
 
 
-# Check number of rnx files in RAW_DIR after convbin
+# Check number of rnx files in RAW_DIR after CONVBIN
 rnx_files=("${RAW_DIR}"/*.rnx)
 RNX2MRGconv=${#rnx_files[@]}
 if [[ ! -e "${rnx_files[0]}" ]]; then
     RNX2MRGconv=0
-    log -l 3 -m "ERROR: No rnx files in ${RAW_DIR} folder for gfzrnx processing: EXIT" -o ""
+    log -l 3 -m "ERROR: No RINEX file(s) in the ${RAW_DIR} folder for GFZRNX processing: EXIT" -o ""
     exit 8
 fi
 
 
-# Process rnx file prepared by convbin
+# Process rnx file prepared by CONVBIN
 if [[ "${QUARTER}" -eq 0 ]]; then       # for QUARTER=0 - at startup
 
 
-    # Prepare single rnx file from one or multiple files for further splitting by gfzrnx
+    # Prepare single rnx file from one or multiple files for further splitting by GFZRNX
     if [[ "${RNX2MRGconv}" -eq 1 ]]; then # one file to copy to merged.rnx
 
-        log -l 0 -m "Only one rnx file from ${RNX2MRGconv} selected for furthure splitting by gfzrnx" -o ""
+        log -l 0 -m "Only one RINEX file from ${RNX2MRGconv} was selected for furthure splitting by GFZRNX" -o ""
         cp "${rnx_files[0]}" "${RAW_DIR}/merged.rnx"
 
     else # merge all existing rnx files to merged.rnx
 
-        log -l 0 -m "Several rnx files merged to one file for furthure splitting by gfzrnx" -o ""
+        log -l 0 -m "Several RINEX files were merged into one file for further splitting by GFZRNX" -o ""
         ~/bin/gfzrnx -finp "${RAW_DIR}"/*.rnx \
           -fout "${RAW_DIR}/merged.rnx" \
           -kv \
@@ -392,7 +392,7 @@ if [[ "${QUARTER}" -eq 0 ]]; then       # for QUARTER=0 - at startup
           -errlog ${TEMP_DIR}/gfz-error.log \
           -chk
 
-        # Error if gfzrnx fail to merge file in single rnx file
+        # Error if GFZRNX fail to merge file in single rnx file
         if [[ $? -ne 0 ]]; then
             # Check if the error log file actually exists and is not empty (-s)
             if [[ -s "${TEMP_DIR}/gfz-error.log" ]]; then
@@ -400,13 +400,13 @@ if [[ "${QUARTER}" -eq 0 ]]; then       # for QUARTER=0 - at startup
                 ERR_OUT=$(cat "${TEMP_DIR}/gfz-error.log")
             else
                 # Fallback if the command failed but the log is missing/empty
-                ERR_OUT="Unknown gfzrnx error (No log output generated)"
+                ERR_OUT="Unknown GFZRNX error (No log output generated)"
             fi
-            log -l 3 -m "ERROR: $? gfzrnx could not merge rnx files to single file: EXIT" -o "ERR_OUT"
-            log -l 3 -m "There was an error with gfzrnx. Move corrupt rnx files to TEMP_DIR folder: EXIT" -o ""
+            log -l 3 -m "ERROR: $? GFZRNX could not merge RINEX files into a single file: EXIT" -o "ERR_OUT"
+            log -l 3 -m "There was an error with GFZRNX. Move the corrupt RINEX files to TEMP_DIR folder: EXIT" -o ""
             mv -f "${RAW_DIR}"/*.rnx "${TEMP_DIR}" # move rnx files if corrupt to TEMP_DIR folder
                 if [ $? != 0 ]; then
-                    log -l 3 -m "Can not move corrupt rnx files to TEMP_DIR folder: EXIT" -o ""
+                    log -l 3 -m "Cannot move corrupt RINEX files to the TEMP_DIR folder: EXIT" -o ""
                     exit 9
                 fi
             exit 10
@@ -418,7 +418,7 @@ if [[ "${QUARTER}" -eq 0 ]]; then       # for QUARTER=0 - at startup
 
     # Split into the 15-min grid and move resulting rnx to $TEMP_DIR
     # Note: Using "$RAW_DIR"/*.rnx to include ALL files in the batch.
-    log -l 0 -m "Merging and splitting into 15-min grid..." -o ""
+    log -l 0 -m "Merging and splitting into a 15-min grid..." -o ""
     ~/bin/gfzrnx -finp "${RAW_DIR}"/merged.rnx \
         -fout "${TEMP_DIR}/::RX3::" \
         -split 900 \
@@ -430,15 +430,15 @@ if [[ "${QUARTER}" -eq 0 ]]; then       # for QUARTER=0 - at startup
 
 else  # For QUARTER>0 - loop processing
 
-    # Preapare single rnx file from one or multiple files for further splitting by gfzrnx while loop processing
+    # Preapare single rnx file from one or multiple files for further splitting by GFZRNX while loop processing
     if (( ( QUARTER < 4 && RNX2MRGconv == 1 ) || ( QUARTER == 4 && RNX2MRGprev == 0 && RNX2MRGconv == 2) )); then # one file to copy to merged.rnx
 
-        log -l 0 -m "Only one rnx file from ${RNX2MRGconv} selected for furthure loop processing by gfzrnx" -o ""
+        log -l 0 -m "Only one RINEX file from ${RNX2MRGconv} was selected for furthure loop processing by GFZRNX" -o ""
         cp "${rnx_files[0]}" "${RAW_DIR}/merged.rnx"
 
     else # merge all existing rnx files to merged.rnx
 
-        log -l 0 -m "Several rnx files merged to one file for furthure loop processing by gfzrnx" -o ""
+        log -l 0 -m "Several RINEX files were merged to one file for furthure loop processing by GFZRNX" -o ""
         ~/bin/gfzrnx -finp "${RAW_DIR}"/*.rnx \
           -fout "${RAW_DIR}/merged.rnx" \
           -kv \
@@ -447,7 +447,7 @@ else  # For QUARTER>0 - loop processing
           -errlog ${TEMP_DIR}/gfz-error.log \
           -chk
 
-        # Error if gfzrnx fail to merge file in single rnx file while loop processing
+        # Error if GFZRNX fail to merge file in single rnx file while loop processing
         if [[ $? -ne 0 ]]; then
             # Check if the error log file actually exists and is not empty (-s)
             if [[ -s "${TEMP_DIR}/gfz-error.log" ]]; then
@@ -455,13 +455,13 @@ else  # For QUARTER>0 - loop processing
                 ERR_OUT=$(cat "${TEMP_DIR}/gfz-error.log")
             else
                 # Fallback if the command failed but the log is missing/empty
-                ERR_OUT="Unknown gfzrnx error (No log output generated)"
+                ERR_OUT="Unknown GFZRNX error (No log output generated)"
             fi
-            log -l 3 -m "ERROR: $? gfzrnx could not merge rnx files to single file while loop processing: EXIT" -o "ERR_OUT"
-            log -l 3 -m "There was an error with gfzrnx. Move corrupt rnx files to archive folder: EXIT" -o ""
+            log -l 3 -m "ERROR: $? GFZRNX could not merge RINEX files into single file during loop processing: EXIT" -o "ERR_OUT"
+            log -l 3 -m "There was an error with GFZRNX. Move the corrupt RINEX files to the archive folder: EXIT" -o ""
             mv -f "${RAW_DIR}"/*.rnx "${TEMP_DIR}" # move rnx files if corrupt to TEMP_DIR folder
             if [ $? != 0 ]; then
-                log -l 3 -m "Can not move corrupt rnx files to TEMP_DIR folder: EXIT" -o ""
+                log -l 3 -m "Cannot move corrupt RINEX files to the TEMP_DIR folder: EXIT" -o ""
                 exit 9
             fi
             exit 10
@@ -471,7 +471,7 @@ else  # For QUARTER>0 - loop processing
 
     fi
 
-    # preapare start time for gfzrnx
+    # preapare start time for GFZRNX
     case ${QUARTER} in
         1) # QUATER 1
         START_TIME="${YEAR}${MONTH}${DAY}_${HOUR}0000"
@@ -492,7 +492,7 @@ else  # For QUARTER>0 - loop processing
 
     # Merge and split into the 15-min rnx file with START_TIME + 900 sec
     # and move resulting rnx to $TEMP_DIR
-    log -l 0 -m "Merging and splitting into 15-min file start time: ${START_TIME}" -o ""
+    log -l 0 -m "Merging and splitting into 15-min file; start time: ${START_TIME}" -o ""
     ~/bin/gfzrnx -finp "${RAW_DIR}"/merged.rnx \
          -fout "${TEMP_DIR}/::RX3::" \
          -kv \
@@ -505,7 +505,7 @@ else  # For QUARTER>0 - loop processing
 fi
 
 
-# Error if gfzrnx fail while making output file(s)
+# Error if GFZRNX fail while making output file(s)
 if [[ $? -ne 0 ]]; then
 
     # Check if the error log file actually exists and is not empty (-s)
@@ -514,13 +514,13 @@ if [[ $? -ne 0 ]]; then
         ERR_OUT=$(cat "${TEMP_DIR}/gfz-split-error.log")
     else
         # Fallback if the command failed but the log is missing/empty
-        ERR_OUT="Unknown gfzrnx error (No log output generated)"
+        ERR_OUT="Unknown GFZRNX error (No log output generated)"
     fi
-    log -l 3 -m "ERROR: $? gfzrnx could not make output rnx file(s) from merged rnx: EXIT" -o "ERR_OUT"
-    log -l 3 -m "There was an error with gfzrnx. Move corrupt rnx files to TEMP_DIR folder: EXIT" -o ""
+    log -l 3 -m "ERROR: $? GFZRNX could not create output RINEX file(s) from merged RINEX file: EXIT" -o "ERR_OUT"
+    log -l 3 -m "There was an error with GFZRNX. Move corrupt RINEX files to the TEMP_DIR folder: EXIT" -o ""
     mv -f "${RAW_DIR}"/*.rnx "${TEMP_DIR}" # move rnx files if corrupt to TEMP_DIR folder
         if [ $? != 0 ]; then
-            log -l 3 -m "Can not move corrupt rnx files to TEMP_DIR folder: EXIT" -o ""
+            log -l 3 -m "Cannot move corrupt RINEX files to the TEMP_DIR folder: EXIT" -o ""
             exit 11
         fi
     exit 12
@@ -532,7 +532,7 @@ else
     log -l 0 -m  "Remove merged.rnx file after processing" -o ""
     rm -f "${RAW_DIR}"/merged.rnx
     if [[ $? -ne 0 ]]; then
-        log -l 3 -m  "ERROR: $? Can not remove processed rnx files: EXIT" -o ""
+        log -l 3 -m  "ERROR: $? Cannot remove processed RINEX files: EXIT" -o ""
         exit 13
     fi
 
@@ -561,9 +561,9 @@ else
         if (( (QUARTER > 0 && EPOCH_COUNT > nEPOCH2KEEP) || (QUARTER == 0 && !( (EPOCH_COUNT <= EPOCH30SEC && MINUTE == 59) || (EPOCH_COUNT <= EPOCH30SEC && MINUTE == 0) ) ) )); then
 
             if [[ "${EPOCH_COUNT}" -ne "${EPOCH_EXPECTED}" ]]; then 
-              log -l 1 -m  "Processing ${RNX_FILE} with  ${EPOCH_COUNT} epochs" -o ""
+              log -l 1 -m  "Processing ${RNX_FILE} with ${EPOCH_COUNT} epochs" -o ""
             else
-              log -l 0 -m  "Processing ${RNX_FILE} with  ${EPOCH_COUNT} epochs" -o ""
+              log -l 0 -m  "Processing ${RNX_FILE} with ${EPOCH_COUNT} epochs" -o ""
             fi
 
             # Get the base filename (e.g., 202200XXX_R_20220410045_15M_01S_MO.rnx)
@@ -581,15 +581,15 @@ else
             EXT_NAME="${NEW_FILE_NAME##*.}"
 
             # New file names and file names with path
-            # If gfzrnx make correct splitting from single rnx file
+            # If GFZRNX make correct splitting from single rnx file
             if [[ "${MRGRNX}" -eq 0 ]]; then
-                log -l 0 -m "Output rnx file made from single rnx" -o ""
+                log -l 0 -m "Output RINEX file created from a single RINEX file" -o ""
                 NEW_FILE_NAMErnx="${BASE_FILE_NAME}.${EXT_NAME}"
                 NEW_FILE_NAMEcrx="${BASE_FILE_NAME}.crx"
                 NEW_FILE_NAMEcrxgz="${BASE_FILE_NAME}.crx.gz"
-                # If gfzrnx make splitting from merged rnx file (may be not correct output rnx
+                # If GFZRNX make splitting from merged rnx file (may be not correct output rnx
             else
-                log -l 1 -m "Output rnx file made from merged rnx files (m added to file name)" -o ""
+                log -l 1 -m "Output RINEX file created from merged RINEX files (m added to file name)" -o ""
                 NEW_FILE_NAMErnx="${BASE_FILE_NAME}m.${EXT_NAME}"
                 NEW_FILE_NAMEcrx="${BASE_FILE_NAME}m.crx"
                 NEW_FILE_NAMEcrxgz="${BASE_FILE_NAME}m.crx.gz"
@@ -612,55 +612,55 @@ else
                     ERR_OUT="Unknown CRX2RNX error (No log output generated)"
                 fi
 
-                log -l 3 -m " ERROR: $? with RNX2CRX could not convert ${NEW_FILE_NAMErnx} to rnx: EXIT" -o "${ERR_OUT}"
-                log -l 3 -m  "There was an error with RNX2CRX. Move corrupt ${NEW_FILE_NAMErnx} to TEMP_DIR folder: EXIT" -o ""
+                log -l 3 -m " ERROR: $? with RNX2CRX could not convert ${NEW_FILE_NAMErnx} to CRX: EXIT" -o "${ERR_OUT}"
+                log -l 3 -m  "There was an error with RNX2CRX. Move the corrupt ${NEW_FILE_NAMErnx} to the TEMP_DIR folder: EXIT" -o ""
                 mv -f "${NEW_FILE_PATHrnx}" "${TEMP_DIR}" # move rnx if corrupt to archive folder
                     if [[ $? -ne 0 ]]; then
-                        log -l 3 -m  "Can not move corrupt ${NEW_FILE_NAMErnx} to TEMP_DIR folder: EXIT" -o ""
+                        log -l 3 -m  "Cannot move corrupt ${NEW_FILE_NAMErnx} to the TEMP_DIR folder: EXIT" -o ""
                         exit 14
                     else
-                        log -l 3 -m  "Corrupt ${NEW_FILE_NAMErnx} moved to TEMP_DIR folder: EXIT" -o ""
+                        log -l 3 -m  "Corrupt ${NEW_FILE_NAMErnx} moved to the TEMP_DIR folder: EXIT" -o ""
                     fi
                     exit 15
             else
 
-                # gzip crx to crx.gz
+                # GZIP crx to crx.gz
                 gzip -f "${NEW_FILE_PATHcrx}"
                     if [[ $? -ne 0 ]]; then
-                        log -l 3 -m  "ERROR: $? gzip could not process ${NEW_FILE_NAMEcrx}: EXIT" -o ""
-                        log -l 3 -m "There was an error with gzip. Move ${NEW_FILE_NAMEcrx} to TEMP_DIR folder: EXIT" -o ""
+                        log -l 3 -m  "ERROR: $? GZIP could not process ${NEW_FILE_NAMEcrx}: EXIT" -o ""
+                        log -l 3 -m "There was an error with GZIP. Move ${NEW_FILE_NAMEcrx} to the TEMP_DIR folder: EXIT" -o ""
                         mv -f "${NEW_FILE_PATHcrx}" "${TEMP_DIR}" # move crx if corrupt to archive
                         if [ $? != 0 ]; then
-                            log -l 3 -m  "Can not move corrupt ${NEW_FILE_NAMEcrx} to TEMP_DIR folder: EXIT" -o ""
+                            log -l 3 -m  "Cannot move corrupt ${NEW_FILE_NAMEcrx} to the TEMP_DIR folder: EXIT" -o ""
                             exit 16
                         else
-                            log -l 3 -m  "Corrupt ${NEW_FILE_NAMErnx} moved to archive folder: EXIT" -o ""
+                            log -l 3 -m  "Corrupt ${NEW_FILE_NAMErnx} moved to the archive folder: EXIT" -o ""
                         fi
                         exit 17
                     fi
             fi
 
         else
-            log -l 2 -m "Skipping ${RNX_FILE}: Only ${EPOCH_COUNT} epochs (less than $nEPOCH2KEEP)" -o ""
+            log -l 2 -m "Skipping ${RNX_FILE}: Only ${EPOCH_COUNT} epochs (fewer than $nEPOCH2KEEP)" -o ""
         fi
     done
 fi
 
 # Remove processed rnx files if loop processing
 if [[ "${QUARTER}" -gt 0 ]]; then
-    log -l 0 -m  "Remove processed rnx files if loop processing" -o ""
+    log -l 0 -m  "Remove processed RINEX files after loop processing" -o ""
     rm -f "${RAW_DIR}"/*.rnx
     if [[ $? -ne 0 ]]; then
-        log -l 3 -m  "ERROR: $? Can not remove processed rnx files: EXIT" -o ""
+        log -l 3 -m  "ERROR: $? Cannot remove processed RINEX files: EXIT" -o ""
         exit 18
     fi
 fi
 
 # Cleanup temp files
-log -l 0 -m  "Remove temporary ${TEMP_DIR} folder" -o ""
+log -l 0 -m  "Remove the temporary ${TEMP_DIR} folder" -o ""
 rm -rf "${TEMP_DIR}"
 if [[ $? -ne 0 ]]; then
-    log -l 3 -m  "ERROR: $? Can not remove temporary ${TEMP_DIR} folder: EXIT" -o ""
+    log -l 3 -m  "ERROR: $? Cannot remove the temporary ${TEMP_DIR} folder: EXIT" -o ""
     exit 19
 fi
 
@@ -670,11 +670,11 @@ for BINFILE in "${RAW_DIR}"/*."${binEXT}"; do
     if is_file_ready "${BINFILE}"; then
         mv -f "${BINFILE}" "${ARCHIVE_DIR}" # move processed bin file to archive folder
         if [[ $? -ne 0 ]]; then
-            log -l 3 -m  "ERROR: $? Can not move processed $BINFILE to archive folder: EXIT" -o ""
+            log -l 3 -m  "ERROR: $? Cannot move processed $BINFILE to the archive folder: EXIT" -o ""
             exit 20
         fi
     fi
 done
 
-log -l 0 -m  "15-min file(s) with more than: ${nEPOCH2KEEP} 1S EPOCHs are cleaned and ready: SUCCESS\n" -o ""
+log -l 0 -m  "15-min file(s) with more than: ${nEPOCH2KEEP} 1S EPOCHs have been cleaned and are ready: SUCCESS\n" -o ""
 exit 0
