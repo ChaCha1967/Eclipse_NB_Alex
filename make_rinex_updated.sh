@@ -34,7 +34,7 @@ is_file_ready() {
 # log function with multiple arguments
 log() {
     # Initialize local variables with default values
-    local err_level=""  # 0 - Ok, 1 - warning, 2 - error, 3 - critical error (require exit from script)
+    local err_level=""  # 0 - Ok, 1 - notice, 2 - warning, 3 - error (require exit from script)
     local err_message="" # Information message
     local err_output="" #  Text output proused by target utility if any
 
@@ -62,8 +62,16 @@ log() {
 
     # Logic using the arguments
     echo -e $(date +"%FT%T") "level: ${err_level} msg: ${err_message}"
-    # echo "${err_output}" # TBD what to do with this
-    # SOME PROCESSING: TBD ...
+
+    if [[ "${err_level}" -gt 0 ]]; then
+        case "${err_level}" in
+            1) priority="local0.info"  ;;
+            2) priority="local0.warn"  ;;
+            3) priority="local0.err"   ;;
+            *) priority="local0.err"   ;;
+        esac
+    logger -t $(basename $0) -p${priority} "${err_message}";
+    fi
 }
 
 # ----- FUNCTION 3 -----------------------------------------------------------------------
@@ -79,7 +87,7 @@ into RINEX version 3.04 format. It handles file merging, 15-minute
 interval splitting, and compression (.crx.gz).
 
 USAGE EXAMPLE:
-  ~/bin/make_rinex.sh -q 1 -s "EC0R" -e "ubx" >> ~/log/make_rinex_log.txt
+  $0 -q 1 -s "EC0R" -e "ubx" >> ~/log/make_rinex.log 2>&1
 
 MANDATORY PARAMETERS:
   -q    Processing window: 0 (Startup), 1, 2, 3, or 4
@@ -146,6 +154,7 @@ nEPOCH2KEEP=0 # if 15 min rinex file conatins less EPOCHS than this value not ke
 SAMPLING=1 # sampling rate of GNSS receiver
 ### STOP BLOCK - HAVE TO BE SET MANUAL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 EPOCH30SEC=$((${SAMPLING}*30+1)) # Number of epoch in 30 sec interval (for removing diring startup processing)
+EPOCH_EXPECTED=$(( ${SAMPLING}*60*15))
 log -l 0 -m "In 30 seconds should exists ${EPOCH30SEC} epochs or less" -o ""
 RNX2MRGprev=0 # Initial number of rnx files berore convbin to merge with gfzrnx
 RNX2MRGconv=0 # Number of rnx files produced by convbin to merge with gfzrnx
@@ -369,7 +378,7 @@ if [[ "${QUARTER}" -eq 0 ]]; then       # for QUARTER=0 - at startup
     # Prepare single rnx file from one or multiple files for further splitting by gfzrnx
     if [[ "${RNX2MRGconv}" -eq 1 ]]; then # one file to copy to merged.rnx
 
-        log -l 0 -m "Only one rnx file from ${RNX2MRGconv} [<0;82;42Mselected for furthure splitting by gfzrnx" -o ""
+        log -l 0 -m "Only one rnx file from ${RNX2MRGconv} selected for furthure splitting by gfzrnx" -o ""
         cp "${rnx_files[0]}" "${RAW_DIR}/merged.rnx"
 
     else # merge all existing rnx files to merged.rnx
@@ -379,6 +388,7 @@ if [[ "${QUARTER}" -eq 0 ]]; then       # for QUARTER=0 - at startup
           -fout "${RAW_DIR}/merged.rnx" \
           -kv \
           -f \
+          -crux ${HOME}/etc/crux.txt \
           -errlog ${TEMP_DIR}/gfz-error.log \
           -chk
 
@@ -433,6 +443,7 @@ else  # For QUARTER>0 - loop processing
           -fout "${RAW_DIR}/merged.rnx" \
           -kv \
           -f \
+          -crux $HOME/etc/crux.txt \
           -errlog ${TEMP_DIR}/gfz-error.log \
           -chk
 
@@ -446,7 +457,7 @@ else  # For QUARTER>0 - loop processing
                 # Fallback if the command failed but the log is missing/empty
                 ERR_OUT="Unknown gfzrnx error (No log output generated)"
             fi
-            log -l 3 -m "WARNING: $? gfzrnx could not merge rnx files to single file while loop processing: EXIT" -o "ERR_OUT"
+            log -l 3 -m "ERROR: $? gfzrnx could not merge rnx files to single file while loop processing: EXIT" -o "ERR_OUT"
             log -l 3 -m "There was an error with gfzrnx. Move corrupt rnx files to archive folder: EXIT" -o ""
             mv -f "${RAW_DIR}"/*.rnx "${TEMP_DIR}" # move rnx files if corrupt to TEMP_DIR folder
             if [ $? != 0 ]; then
@@ -483,14 +494,14 @@ else  # For QUARTER>0 - loop processing
     # and move resulting rnx to $TEMP_DIR
     log -l 0 -m "Merging and splitting into 15-min file start time: ${START_TIME}" -o ""
     ~/bin/gfzrnx -finp "${RAW_DIR}"/merged.rnx \
-           -fout "${TEMP_DIR}/::RX3::" \
-           -epo_beg "${START_TIME}" \
-           -d 900 \
-           -f \
-           -vo 3.04 \
-           -crux $HOME/etc/crux.txt \
-           -errlog ${TEMP_DIR}/gfz-split-error.log \
-           -chk
+         -fout "${TEMP_DIR}/::RX3::" \
+         -kv \
+         -epo_beg "${START_TIME}" \
+         -d 900 \
+         -f \
+         -crux $HOME/etc/crux.txt \
+         -errlog ${TEMP_DIR}/gfz-split-error.log \
+         -chk
 fi
 
 
@@ -505,7 +516,7 @@ if [[ $? -ne 0 ]]; then
         # Fallback if the command failed but the log is missing/empty
         ERR_OUT="Unknown gfzrnx error (No log output generated)"
     fi
-    log -l 3 -m "WARNING: $? gfzrnx could not make output rnx file(s) from merged rnx: EXIT" -o "ERR_OUT"
+    log -l 3 -m "ERROR: $? gfzrnx could not make output rnx file(s) from merged rnx: EXIT" -o "ERR_OUT"
     log -l 3 -m "There was an error with gfzrnx. Move corrupt rnx files to TEMP_DIR folder: EXIT" -o ""
     mv -f "${RAW_DIR}"/*.rnx "${TEMP_DIR}" # move rnx files if corrupt to TEMP_DIR folder
         if [ $? != 0 ]; then
@@ -549,7 +560,11 @@ else
         # Not first 30-31 sec or last 30-31 sec on the edge of the hour for QUARTER 0
         if (( (QUARTER > 0 && EPOCH_COUNT > nEPOCH2KEEP) || (QUARTER == 0 && !( (EPOCH_COUNT <= EPOCH30SEC && MINUTE == 59) || (EPOCH_COUNT <= EPOCH30SEC && MINUTE == 0) ) ) )); then
 
-            log -l 0 -m  "Processing ${RNX_FILE} with  ${EPOCH_COUNT} epochs" -o ""
+            if [[ "${EPOCH_COUNT}" -ne "${EPOCH_EXPECTED}" ]]; then 
+              log -l 1 -m  "Processing ${RNX_FILE} with  ${EPOCH_COUNT} epochs" -o ""
+            else
+              log -l 0 -m  "Processing ${RNX_FILE} with  ${EPOCH_COUNT} epochs" -o ""
+            fi
 
             # Get the base filename (e.g., 202200XXX_R_20220410045_15M_01S_MO.rnx)
             BASE_NAME=$(basename "${RNX_FILE}")
@@ -574,7 +589,7 @@ else
                 NEW_FILE_NAMEcrxgz="${BASE_FILE_NAME}.crx.gz"
                 # If gfzrnx make splitting from merged rnx file (may be not correct output rnx
             else
-                log -l 0 -m "Output rnx file made from merged rnx files (m added to file name)" -o ""
+                log -l 1 -m "Output rnx file made from merged rnx files (m added to file name)" -o ""
                 NEW_FILE_NAMErnx="${BASE_FILE_NAME}m.${EXT_NAME}"
                 NEW_FILE_NAMEcrx="${BASE_FILE_NAME}m.crx"
                 NEW_FILE_NAMEcrxgz="${BASE_FILE_NAME}m.crx.gz"
@@ -604,7 +619,7 @@ else
                         log -l 3 -m  "Can not move corrupt ${NEW_FILE_NAMErnx} to TEMP_DIR folder: EXIT" -o ""
                         exit 14
                     else
-                        log -l 0 -m  "Corrupt ${NEW_FILE_NAMErnx} moved to TEMP_DIR folder" -o ""
+                        log -l 3 -m  "Corrupt ${NEW_FILE_NAMErnx} moved to TEMP_DIR folder: EXIT" -o ""
                     fi
                     exit 15
             else
@@ -619,7 +634,7 @@ else
                             log -l 3 -m  "Can not move corrupt ${NEW_FILE_NAMEcrx} to TEMP_DIR folder: EXIT" -o ""
                             exit 16
                         else
-                            log -l 0 -m  "Corrupt ${NEW_FILE_NAMErnx} moved to archive folder" -o ""
+                            log -l 3 -m  "Corrupt ${NEW_FILE_NAMErnx} moved to archive folder: EXIT" -o ""
                         fi
                         exit 17
                     fi
@@ -643,9 +658,9 @@ fi
 
 # Cleanup temp files
 log -l 0 -m  "Remove temporary ${TEMP_DIR} folder" -o ""
-#rm -rf "${TEMP_DIR}"
+rm -rf "${TEMP_DIR}"
 if [[ $? -ne 0 ]]; then
-    log -l 3 -m  "WARNING: $? Can not remove temporary ${TEMP_DIR} folder: EXIT" -o ""
+    log -l 3 -m  "ERROR: $? Can not remove temporary ${TEMP_DIR} folder: EXIT" -o ""
     exit 19
 fi
 
@@ -661,5 +676,5 @@ for BINFILE in "${RAW_DIR}"/*."${binEXT}"; do
     fi
 done
 
-log -l 0 -m  "15-min file(s) with more than: ${nEPOCH2KEEP} 1S EPOCHs are cleaned and ready: SUCCESS" -o ""
+log -l 0 -m  "15-min file(s) with more than: ${nEPOCH2KEEP} 1S EPOCHs are cleaned and ready: SUCCESS\n" -o ""
 exit 0
