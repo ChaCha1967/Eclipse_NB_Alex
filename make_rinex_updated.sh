@@ -369,7 +369,7 @@ if [[ "${QUARTER}" -eq 0 ]]; then       # for QUARTER=0 - at startup
     # Prepare single rnx file from one or multiple files for further splitting by gfzrnx
     if [[ "${RNX2MRGconv}" -eq 1 ]]; then # one file to copy to merged.rnx
 
-        log -l 0 -m "Only one rnx file selected for furthure splitting by gfzrnx" -o ""
+        log -l 0 -m "Only one rnx file from ${RNX2MRGconv} [<0;82;42Mselected for furthure splitting by gfzrnx" -o ""
         cp "${rnx_files[0]}" "${RAW_DIR}/merged.rnx"
 
     else # merge all existing rnx files to merged.rnx
@@ -423,7 +423,7 @@ else  # For QUARTER>0 - loop processing
     # Preapare single rnx file from one or multiple files for further splitting by gfzrnx while loop processing
     if (( ( QUARTER < 4 && RNX2MRGconv == 1 ) || ( QUARTER == 4 && RNX2MRGprev == 0 && RNX2MRGconv == 2) )); then # one file to copy to merged.rnx
 
-        log -l 0 -m "Only one rnx (${RNX2MRGconv}) file selected for furthure loop processing by gfzrnx" -o ""
+        log -l 0 -m "Only one rnx file from ${RNX2MRGconv} selected for furthure loop processing by gfzrnx" -o ""
         cp "${rnx_files[0]}" "${RAW_DIR}/merged.rnx"
 
     else # merge all existing rnx files to merged.rnx
