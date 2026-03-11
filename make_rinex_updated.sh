@@ -61,7 +61,7 @@ log() {
     done
 
     # Logic using the arguments
-    echo "${err_message}"
+    echo -e $(date +"%FT%T") "level: ${err_level} msg: ${err_message}"
     # echo "${err_output}" # TBD what to do with this
     # SOME PROCESSING: TBD ...
 }
@@ -79,7 +79,7 @@ into RINEX version 3.04 format. It handles file merging, 15-minute
 interval splitting, and compression (.crx.gz).
 
 USAGE EXAMPLE:
-  $0 --quarter 1 --station "ANTC" --extension "ubx"
+  ~/bin/make_rinex.sh -q 1 -s "EC0R" -e "ubx" >> ~/log/make_rinex_log.txt
 
 MANDATORY PARAMETERS:
   -q    Processing window: 0 (Startup), 1, 2, 3, or 4
@@ -99,35 +99,38 @@ QUARTER REFERENCE GUIDE:
   0: Startup Mode. Processes all existing files in the record folder.
 
 PROCESSING LOGIC:
-  1. Conversion: Uses convbin for initial RINEX fragments.
-  2. Splitting:  Uses gfzrnx for precise 15-minute grid alignment.
-  3. Validation: Filters files by the --epoch threshold.
-  4. Renaming:   Applies RINEX 3 naming conventions using Station ID.
+  1. Conversion:  Uses convbin for initial RINEX fragments.
+  2. Splitting:   Uses gfzrnx for precise 15-minute grid alignment.
+  3. Validation:  Filters files by the --epoch threshold.
+  4. Renaming:    Applies RINEX 3 naming conventions using Station ID.
   5. Compression: Converts .rnx to .crx (Hatanaka) and applies gzip.
-  6. Archive:    Moves processed binary files to ~/archive (if not locked).
+  6. Archive:     Moves processed binary files to ~/archive (if not locked).
+  8. File Name:   Add suffix "m" to File Name if merge sevearal input binary files at once
+  7. Log: Echo script execution stages (can be redirected to a log file)
+  8. Error: Save log files and move all corrupted BIN, RNX, CRX files to TEMP_DIR if error happened.
 
 RETURN VALUES
   0  - Ok
-  1  - 
-  2  - 
-  3  - 
-  4  - 
-  5  - 
-  6  - 
-  7  - 
-  8  - 
-  9  - 
-  10 - 
-  11 - 
-  12 - 
-  13 - 
-  14 - 
-  15 - 
-  16 - 
-  17 - 
-  18 - 
-  19 - 
-  20 - 
+  1  - Show this help page
+  2  - Unknown input parameter was used while calling make_rinex.sh
+  3  - Not correct number of input parameters used
+  4  - Can not create DATA_DIR folder
+  5  - Can not create ARCHIVE_DIR folder
+  6  - Can not move corrupt BINFILE to TEMP_DIR folder
+  7  - CONVBIN can not convert BINFILE to *.rnx file
+  8  - CONVBIN did not generate any output files
+  9  - Can not move corrupt *.rnx files that can not be merged by GFZRNX
+  10 - GFZRNX can not merge *.rnx files converted by CONVBIN
+  11 - Can not move corrupt merged.rnx file than can not be splitted by GFZRNX
+  12 - GFZRNX can not split merged.rnx file
+  13 - Can not remove merged.rnx file
+  14 - Can not move corrupted output *.rnx file that can not be converted by RNX2CRX
+  15 - RNX2CRX can not archive output *.rnx file to hatanaka *.crx file
+  16 - Can not move corrupt *.crx that can not be processed by GZIP
+  17 - GZIP can not archibe *.crx file to *.crx.gz file
+  18 - Can not remove *.rnx files from RAW_DIR folder
+  19 - Can not remove TEMP_DIR folder
+  20 - Can not move processed BINFILE ~/archive folder
 ==============================================================================
 EOF
 }
@@ -151,11 +154,11 @@ RNXMRG=0 # Flag for merging rnx before splitting (0 - single file 1 - merged fil
 # --- Loop through arguments (your current code) ---
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        -q)   QUARTER="$2";   shift 2 ;;
-        -s)   STATION="$2";   shift 2 ;;
-        -e)   binEXT="$2";    shift 2 ;;
+        -q)   QUARTER="$2";     shift 2 ;;
+        -s)   STATION="$2";     shift 2 ;;
+        -e)   binEXT="$2";      shift 2 ;;
         -ep)  nEPOCH2KEEP="$2"; shift 2 ;;
-        -h)   printHelp;      exit 1  ;;
+        -h)   printHelp;        exit 1  ;;
         *) log -l 3 -m  "Unknown option: $1" -o ""; printHelp; exit 2 ;;
     esac
 done
@@ -638,7 +641,7 @@ if [[ "${QUARTER}" -gt 0 ]]; then
     fi
 fi
 
-## Cleanup temp files
+# Cleanup temp files
 log -l 0 -m  "Remove temporary ${TEMP_DIR} folder" -o ""
 rm -rf "${TEMP_DIR}"
 if [[ $? -ne 0 ]]; then
