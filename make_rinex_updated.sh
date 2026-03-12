@@ -331,8 +331,7 @@ else # CONVBIN run in loop
 
         log -l 0 -m "Runing CONVBIN to convert ${BINFILE} to RINEX" -o ""
 
-        # Run CONVBIN for processing at startup
-        # capture CONVBIN stderr but strip all repetitive stuff ending with \r CR
+        # Run CONVBIN for processing in loop mode
         ~/bin/convbin -ts "${START_DATE}" "${START_TIME}" -te "${STOP_DATE}" "${STOP_TIME}" \
                       -ti 1.0000 -od -os -v 3.04 -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}" 2>${TEMP_DIR}/convbin.log
 
