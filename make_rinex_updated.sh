@@ -96,6 +96,7 @@ MANDATORY PARAMETERS:
 
 OPTIONAL PARAMETERS:
   -ep   Min epochs to keep a file (Default: 0 - keeps all)
+  -d    Debug level (0 - default (no debug), 1,2,3 - different debug level
   -h    Show this help documentation
 
 QUARTER REFERENCE GUIDE:
@@ -151,6 +152,7 @@ STATION="" # station name
 binEXT="" # bin file extention
 ### STARTP BLOCK - HAVE TO BE SET MANUAL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 nEPOCH2KEEP=0 # if 15 min rinex file conatins less EPOCHS than this value not keep such file
+debug_level=0 # default debug level
 SAMPLING=1 # sampling rate of GNSS receiver
 ### STOP BLOCK - HAVE TO BE SET MANUAL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 EPOCH30SEC=$((${SAMPLING}*30+1)) # Number of epoch in 30 sec interval (for removing diring startup processing)
@@ -167,6 +169,7 @@ while [[ $# -gt 0 ]]; do
         -s)   STATION="$2";     shift 2 ;;
         -e)   binEXT="$2";      shift 2 ;;
         -ep)  nEPOCH2KEEP="$2"; shift 2 ;;
+        -d)   debug_level="$2"; shift 2 ;;
         -h)   printHelp;        exit 1  ;;
         *) log -l 3 -m  "Unknown option: $1: EXIT" -o ""; printHelp; exit 2 ;;
     esac
@@ -542,11 +545,13 @@ if [[ $? -ne 0 ]]; then
 else
 
     # Delete merged.rnx file from RAW_DIR folder after processing
-    log -l 0 -m  "Remove merged.rnx file after processing" -o ""
-    rm -f "${RAW_DIR}"/merged.rnx
-    if [[ $? -ne 0 ]]; then
-        log -l 3 -m  "ERROR: $? Cannot remove processed RINEX files: EXIT" -o ""
-        exit 13
+    if [[ "${debug_level}" -lt 2 ]]; then
+        log -l 0 -m  "Remove merged.rnx file after processing" -o ""
+        rm -f "${RAW_DIR}"/merged.rnx
+        if [[ $? -ne 0 ]]; then
+            log -l 3 -m  "ERROR: $? Cannot remove processed RINEX files: EXIT" -o ""
+            exit 13
+        fi
     fi
 
     for RNX_FILE in "${TEMP_DIR}"/*.rnx; do
@@ -661,20 +666,24 @@ fi
 
 # Remove processed rnx files if loop processing
 if [[ "${QUARTER}" -gt 0 ]]; then
-    log -l 0 -m  "Remove processed RINEX files after loop processing" -o ""
-    rm -f "${RAW_DIR}"/*.rnx
-    if [[ $? -ne 0 ]]; then
-        log -l 3 -m  "ERROR: $? Cannot remove processed RINEX files: EXIT" -o ""
-        exit 18
+    if [[ "${debug_level}" -lt 2 ]]; then
+        log -l 0 -m  "Remove processed RINEX files after loop processing" -o ""
+        rm -f "${RAW_DIR}"/*.rnx
+        if [[ $? -ne 0 ]]; then
+            log -l 3 -m  "ERROR: $? Cannot remove processed RINEX files: EXIT" -o ""
+            exit 18
+        fi
     fi
 fi
 
 # Cleanup temp files
-log -l 0 -m  "Remove the temporary ${TEMP_DIR} folder" -o ""
-rm -rf "${TEMP_DIR}"
-if [[ $? -ne 0 ]]; then
-    log -l 3 -m  "ERROR: $? Cannot remove the temporary ${TEMP_DIR} folder: EXIT" -o ""
-    exit 19
+if [[ "${debug_level}" -lt 1 ]]; then
+    log -l 0 -m  "Remove the temporary ${TEMP_DIR} folder" -o ""
+    rm -rf "${TEMP_DIR}"
+    if [[ $? -ne 0 ]]; then
+        log -l 3 -m  "ERROR: $? Cannot remove the temporary ${TEMP_DIR} folder: EXIT" -o ""
+        exit 19
+    fi
 fi
 
 # Move bin files if not opened by str2str
