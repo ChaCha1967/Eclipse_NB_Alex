@@ -261,7 +261,9 @@ if [[ "${QUARTER}" -eq 0 ]]; then # CONVBIN run at startup
         log -l 0 -m "Runing CONVBIN to convert ${BINFILE} to RINEX" -o ""
 
         # Run CONVBIN for processing at startup
-        ~/bin/convbin -ti 1.0000 -od -os -v 3.04 -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}" 2>${TEMP_DIR}/convbin.log
+        ~/bin/convbin -ti 1.0000 -tt 0.05 -ro "-TADJ=1.0" -tr "${YEAR}/${MONTH}/${DAY} 00:00:00" -od -os -v 3.04 \
+                      -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}" 2>${TEMP_DIR}/convbin.log
+#        ~/bin/convbin -od -os -v 3.04 -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}" 2>${TEMP_DIR}/convbin.log
 
         # Error if CONVBIN fail
             if [[ $? -ne 0 ]]; then
@@ -333,7 +335,10 @@ else # CONVBIN run in loop
 
         # Run CONVBIN for processing in loop mode
         ~/bin/convbin -ts "${START_DATE}" "${START_TIME}" -te "${STOP_DATE}" "${STOP_TIME}" \
-                      -ti 1.0000 -od -os -v 3.04 -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}" 2>${TEMP_DIR}/convbin.log
+                      -ti 1.0000 -tt 0.05 -ro "-TADJ=1.0" -tr "${YEAR}/${MONTH}/${DAY} 00:00:00" -od -os -v 3.04 \
+                      -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}" 2>${TEMP_DIR}/convbin.log
+#        ~/bin/convbin -ts "${START_DATE}" "${START_TIME}" -te "${STOP_DATE}" "${STOP_TIME}" \
+#                      -od -os -v 3.04 -hm "${STATION}" -o "${TEMP_OUT}" "${BINFILE}" 2>${TEMP_DIR}/convbin.log
 
         # Error if CONVBIN fail
         if [[ $? -ne 0 ]]; then
@@ -657,7 +662,7 @@ fi
 
 # Cleanup temp files
 log -l 0 -m  "Remove the temporary ${TEMP_DIR} folder" -o ""
-rm -rf "${TEMP_DIR}"
+#rm -rf "${TEMP_DIR}"
 if [[ $? -ne 0 ]]; then
     log -l 3 -m  "ERROR: $? Cannot remove the temporary ${TEMP_DIR} folder: EXIT" -o ""
     exit 19
