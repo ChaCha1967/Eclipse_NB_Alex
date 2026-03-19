@@ -615,8 +615,32 @@ else
             NEW_FILE_PATHrnx="${DATA_DIR}/${NEW_FILE_NAMErnx}"
             NEW_FILE_PATHcrx="${DATA_DIR}/${NEW_FILE_NAMEcrx}"
 
-            # PERFORM RENAME
-            mv "${RNX_FILE}" "${NEW_FILE_PATHrnx}"
+            # Perform rechecking RNX file content by GFZRNX seving file in correct place and removind initial RNX file
+            ~/bin/gfzrnx -finp "${RNX_FILE}" -fout "${NEW_FILE_PATHrnx}" -errlog ${TEMP_DIR}/gfz-recheck-error.log
+            # Error if GFZRNX fail while making output file(s)
+            if [[ $? -ne 0 ]]; then
+
+                # Check if the error log file actually exists and is not empty (-s)
+                if [[ -s "${TEMP_DIR}/gfz-recheck-error.log" ]]; then
+                    # Read the file if it has content
+                    ERR_OUT=$(cat "${TEMP_DIR}/gfz-recheck-error.log")
+                else
+                    # Fallback if the command failed but the log is missing/empty
+                    ERR_OUT="Unknown GFZRNX error (No log output generated)"
+                fi
+            log -l 3 -m "ERROR: $? GFZRNX could not create output recheked RINEX file(s) from input RINEX file: EXIT" -o "ERR_OUT"
+            log -l 3 -m "There was an error with GFZRNX. Move corrupt RINEX files to the TEMP_DIR folder: EXIT" -o ""
+            mv -f "${RAW_DIR}"/*.rnx "${TEMP_DIR}" # move rnx files if corrupt to TEMP_DIR folder
+                if [ $? != 0 ]; then
+                    log -l 3 -m "Cannot move corrupt RINEX files to the TEMP_DIR folder: EXIT" -o ""
+                    exit 11
+                fi
+
+                exit 12
+            fi
+            # Remive initial rnx file
+            rm -f "${RNX_FILE}"
+            # mv "${RNX_FILE}" "${NEW_FILE_PATHrnx}"
 
             # Convert to crx
             ~/bin/RNX2CRX -d "${NEW_FILE_PATHrnx}" 2>${TEMP_DIR}/hatanaka-error.log
